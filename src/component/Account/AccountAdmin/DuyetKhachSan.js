@@ -31,14 +31,50 @@ export default class DuyetKhachSan extends Component {
         this.setState({modalVisible: visible});
     }
     xacnhan() {
-        alert('Xác nhận thành công ..1')
+        //alert('Xác nhận thành công ..1')
+        fetch(global.server.concat('duyetKS.php'),
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            },
+            body: JSON.stringify({ id: this.state.mang[this.state.index].key })
+        })
+        .then(res => res.text())
+        .then(res => {
+             this.refs.modal3.close();
+             if (res === '1') {
+                 //this.refs.modal3.close();
+                 //alert(this.state.value);
+     
+                 let { mang } = this.state;
+                 //var maxId = Math.max.apply(null, mang.map(item => item.id)) + 1;
+                 mang.splice(this.state.index, 1);
+     
+                 this.setState({
+                     mang,
+                     value: ''
+                 })
+                 ToastAndroid.show('Thành công', ToastAndroid.SHORT);
+             }
+             else {
+                 alert('Lỗi !!')
+             }
+        })
+        .catch((e)=>{console.log(e)});
+
     }
+
     huy() {
         // this.refs.modal3.close();
         // alert(this.state.value);
         // this.setState({value: ''})
        // huyDuyet()
        //alert(this.state.mang[this.state.index].key);
+
+        //alert(this.state.mang[this.state.index].ten);
+
        fetch(global.server.concat('huyDuyetKhachSan.php'),
        {
            method: 'POST',
@@ -46,7 +82,7 @@ export default class DuyetKhachSan extends Component {
                'Content-Type': 'application/json',
                Accept: 'application/json'
            },
-           body: JSON.stringify({ id: this.state.mang[this.state.index].key, noidung: this.state.value })
+           body: JSON.stringify({ id: this.state.mang[this.state.index].key, noidung: this.state.value, tieude: this.state.mang[this.state.index].ten, user: this.state.mang[this.state.index].user })
        })
        .then(res => res.text())
        .then(res => {

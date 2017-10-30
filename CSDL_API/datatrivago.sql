@@ -26,11 +26,6 @@ DELIMITER $$
 --
 -- Functions
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `fixString` (`input` VARCHAR(15)) RETURNS VARCHAR(15) CHARSET utf8 BEGIN
-  declare output varchar(15);
-  SET output = REPLACE(input,'ö','oe');
-  RETURN output;
-END$$
 
 CREATE DEFINER=`root`@`localhost` FUNCTION `tinhKhoangCach` (`lat1` DOUBLE, `long1` DOUBLE, `lat2` DOUBLE, `long2` DOUBLE) RETURNS DOUBLE BEGIN
  DECLARE theta DOUBLE ; 

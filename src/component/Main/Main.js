@@ -49,10 +49,7 @@ export default class Main extends Component {
         global.loadDuLieuLoc = this.loadDataLoc.bind(this);
         global.trangloc = 1;
         //global.server = 'http://192.168.1.20:8080/Demo/';
-        global.latsearch = 10.1686747;
-        global.longsearch = 106.6992098;
-        global.bankinhsearch = 70;
-        global.mapAlready = false;
+        
         //global.server = 'https://webservicestrivago.000webhostapp.com/';
     }
 

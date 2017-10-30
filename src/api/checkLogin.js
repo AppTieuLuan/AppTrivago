@@ -1,7 +1,7 @@
 import global from '../component/global';
 
 const checkLogin = (token) => (
-    fetch(global.server + 'check_login.php',
+    fetch(global.server+'check_login.php',
     {
         method: 'POST',
         headers: {

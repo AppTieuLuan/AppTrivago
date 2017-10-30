@@ -111,7 +111,7 @@ export default class QuanLyKhachSan extends Component {
     }
 
     refresh() {
-        this.setState({ page: 1, mang: []}, function() {
+        this.setState({ page: 1, mang: [] }, function() {
             this.loadDataRefresh();
         });
         

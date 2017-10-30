@@ -56,7 +56,7 @@ export default class TopFilters extends Component {
             value: 0,
             valuemax: 0,
             valueText: '',
-            valuebankinh: 1
+            valuebankinh: global.bankinhsearch
         };
     }
     render() {
@@ -162,7 +162,7 @@ export default class TopFilters extends Component {
                             }}
                     >
                         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <Image source={this.state.wifi2 ? wifi_act : wifi } style={styles.img}/>
+                            <Image source={this.state.wifi2 ? wifi_act : wifi } style={styles.img} />
                             <Text numberOfLines={1} style={{ fontSize: 12, paddingVertical: 5 }}>Wifi phòng</Text>
                         </View>
                     </TouchableOpacity>
@@ -354,6 +354,7 @@ export default class TopFilters extends Component {
                 <View style={{ paddingVertical: 10, padding: 10 }}>
                     <Text>Bán kính tìm kiếm {this.state.valuebankinh} KM</Text>
                 <Slider
+                    value={global.bankinhsearch}
                     minimumValue={1}
                     maximumValue={100}
                     step={1}
