@@ -38,7 +38,7 @@ export default class Welcome extends Component{
   }
   componentDidMount(){
     //set server
-    global.server = 'http://192.168.1.20:8080/Demo/';
+    global.server = 'http://192.168.1.173:8080/Demo/';
     setInterval(refreshToken, 30000);
     getToken()
         .then(token => checkLogin(token))

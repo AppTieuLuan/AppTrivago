@@ -9,22 +9,22 @@ import { NavigationActions } from 'react-navigation';
 
 export default class TrangQuanLyAdmin extends Component {
     goBack() {
-       // this.props.goBack();
+        this.props.navigation.goBack();
     }
     goDuyetKS() {
-        //this.props.goDuyetKS();
+        this.props.navigation.navigate('DuyetKhachSan');
     }
     goQLKS() {
-        //this.props.goQLKS();
+        this.props.navigation.navigate('QuanLyKhachSan');
     }
-    Logout(){
+    Logout() {
         saveToken('');
         global.onSignIn = null;
         this.replaceScreen();
       }
       replaceScreen = () => {
-        const {flag} = this.props.navigation.state.params;
-        if(flag === '1'){
+        const { flag } = this.props.navigation.state.params;
+        if (flag === '1') {
           const resetAction = NavigationActions.reset({
             index: 0,
             actions: [
@@ -32,7 +32,7 @@ export default class TrangQuanLyAdmin extends Component {
             ]
           });
           this.props.navigation.dispatch(resetAction);
-        }else{
+        } else {
           const resetAction = NavigationActions.reset({
             index: 0,
             actions: [
@@ -47,7 +47,7 @@ export default class TrangQuanLyAdmin extends Component {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableOpacity
-                        onPress={() => { this.goBack() }}
+                        onPress={() => { this.goBack(); }}
                     >
                         <Image style={{ width: 25, height: 25 }} source={icback} />
                     </TouchableOpacity>
