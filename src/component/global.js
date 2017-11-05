@@ -5,7 +5,7 @@ module.export = {
     locgiamax: 0,
     locgiamin: 0,
     locsao: 0,
-    isdangnhap: null,
+   
     quyen: null,
     locDL: false,
     trangloc: 1,
@@ -17,6 +17,7 @@ module.export = {
     bankinhsearch: 70,
     mapAlready: false,
     
+
     onSignIn: null,
     address: '',
     lat: '',

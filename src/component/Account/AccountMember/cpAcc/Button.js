@@ -44,27 +44,12 @@ export default class ButtonSubmit extends Component {
 		).start();
 
 		setTimeout(() => {
-			//this._onGrow();
-		}, 2000);
-
-		setTimeout(() => {
 			//Actions.secondScreen();
 			this.props.click();
 			this.setState({ isLoading: false });
 			this.buttonAnimated.setValue(0);
 			this.growAnimated.setValue(0);
 		}, 2300);
-	}
-
-	_onGrow() {
-		Animated.timing(
-			this.growAnimated,
-			{
-				toValue: 1,
-				duration: 200,
-				easing: Easing.linear
-			}
-		).start();
 	}
 
 	render() {

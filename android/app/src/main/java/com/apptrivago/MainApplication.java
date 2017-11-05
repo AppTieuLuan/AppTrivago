@@ -1,8 +1,9 @@
 package com.apptrivago;
 
 import android.app.Application;
-
+import com.showlocationservicesdialogbox.LocationServicesDialogBoxPackage;
 import com.facebook.react.ReactApplication;
+import com.react.rnspinkit.RNSpinkitPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 
@@ -26,8 +27,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSpinkitPackage(),
             new ImagePickerPackage(),
-            new MapsPackage()
+            new MapsPackage(),
+            new LocationServicesDialogBoxPackage()
       );
     }
   };

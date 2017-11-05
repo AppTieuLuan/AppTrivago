@@ -7,10 +7,9 @@ import global from '../global';
 export default class Menu extends Component {
 
     loadDL() {
-        if(global.locgiamax < global.locgiamin) {
+        if (global.locgiamax < global.locgiamin) {
             alert('Chọn lại giá');
-        }
-        else {
+        } else {
             global.locDL = true;
             global.trangloc = 1;
             global.loadDuLieuLoc();
@@ -24,7 +23,7 @@ export default class Menu extends Component {
                 </View>
                 <TouchableOpacity 
                     style={styles.button}
-                    onPress={() => { this.loadDL() }}
+                    onPress={() => { this.loadDL(); }}
                 >
                         <Text style={{ color: 'white' }}>Xong</Text>
                 </TouchableOpacity>

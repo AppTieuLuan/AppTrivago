@@ -123,7 +123,7 @@ export default class SignIn extends Component {
             					returnKeyType='done'
                       autoCorrect={false}
             					value={email}
-            					onChangeText={email =>this.setState({email})}
+            					onChangeText={ email => this.setState({ email })}
             					placeholderTextColor='white'
             					underlineColorAndroid='transparent' />
             			</View>
@@ -148,11 +148,12 @@ export default class SignIn extends Component {
         					>
         						<Image source={eyeImg} style={styles.iconEye} />
         					</TouchableOpacity>
+
+                  <ButtonSubmit click={this.onSignIn.bind(this)} />
+                  
+                  <SignupSection onclick={this.onclick.bind(this)} />
+
         			  </KeyboardAvoidingView>
-
-                <SignupSection onclick={this.onclick.bind(this)} />
-
-                <ButtonSubmit click={this.onSignIn.bind(this)} />
               </View>
             </Wallpaper>
         );

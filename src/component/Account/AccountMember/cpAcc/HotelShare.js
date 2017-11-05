@@ -244,7 +244,7 @@ export default class HotelShare extends Component{
     const resetAction = NavigationActions.reset({
       index: 1,
       actions: [
-        NavigationActions.navigate({ routeName: 'AccountScreen'}),
+        NavigationActions.navigate({ routeName: 'AccountMemberScreen'}),
         NavigationActions.navigate({ routeName: 'UploadImgScreen',
          params: {id}})
       ]

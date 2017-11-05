@@ -26,17 +26,8 @@ export default class Ratings extends Component {
     
     post() {
         if(this.state.value != '') {
-            if(global.isdangnhap)
+            if(global.onSignIn)
             {
-                
-                // const { mang } = this.state;
-                // var maxId = Math.max.apply(null, mang.map(item => item.id)) + 1;
-                // mang.unshift({ id: maxId, ten: 'ABC', binhluan: this.state.value, sodanhgia: 4 });
-                
-                // this.setState({
-                //     mang,
-                //     value: '',
-                // });
                
                 fetch(global.server.concat('themBinhLuan.php'),
                 {
@@ -45,7 +36,7 @@ export default class Ratings extends Component {
                         'Content-Type': 'application/json',
                         Accept: 'application/json'
                     },
-                    body: JSON.stringify({ iduser: global.userdangnhap, idks: global.idKS, nd: this.state.value })
+                    body: JSON.stringify({ iduser: global.onSignIn.id, idks: global.idKS, nd: this.state.value })
                 })
                 .then(res => res.text())
                 .then(res => {
@@ -53,7 +44,7 @@ export default class Ratings extends Component {
                         ToastAndroid.show('Thành công', ToastAndroid.SHORT);
                         const { mang } = this.state;
                         let maxId = Math.max.apply(null, mang.map(item => item.id)) + 1;
-                        mang.unshift({ id: maxId, ten: 'Trần Văn A', binhluan: this.state.value });
+                        mang.unshift({ id: maxId, ten: global.onSignIn.hoten, binhluan: this.state.value });
                         
                         this.setState({
                             mang,
@@ -63,7 +54,8 @@ export default class Ratings extends Component {
                     else {
                         alert(this.state.value);
                     }
-                    //alert(res);
+
+                    
                 })
                 .catch((e)=>{console.log(e)});
                 
