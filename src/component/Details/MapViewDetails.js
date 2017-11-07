@@ -31,8 +31,8 @@ export default class MapViewDetails extends Component {
                     latitudeDelta: 0.102,
                     longitudeDelta: 0.102,
                 }
-            });  
-
+            }); 
+            global.loadbando = true;
         })
         .catch((e) => { console.log(e) });
     }
@@ -51,7 +51,7 @@ export default class MapViewDetails extends Component {
                                 marker => (
                                 <MapView.Marker
                                     key={marker.latitude}
-                                    //coordinate={marker}
+                                    image={require('../img/marker.png')}
                                     coordinate={
                                         marker
                                     } 

@@ -37,6 +37,7 @@ export default class Details extends Component {
                 item: this.state.mang.length,
                 islove: false
             });  
+            global.loadhinhanh = true;
         })
         .catch((e) => { console.log(e) });
         

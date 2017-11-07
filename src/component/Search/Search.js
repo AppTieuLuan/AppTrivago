@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    View, Text, TouchableOpacity, StyleSheet, Image, TextInput, FlatList, TouchableHighlight
+    View, Text, TouchableOpacity, StyleSheet, Image, TextInput, FlatList, TouchableHighlight, ActivityIndicator
 } from 'react-native';
 import global from '../global';
 import icback from '../img/icback.png';
@@ -9,7 +9,8 @@ export default class Search extends Component {
         super(props);
         this.state = {
             value: '',
-            mang: []
+            mang: [],
+            isloading: false
         }
     }
     search() {
@@ -23,7 +24,7 @@ export default class Search extends Component {
     }
     loadData() {
         //alert("load "+this.state.value)
-        fetch('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + this.state.value + '&types=geocode&language=vn&key=AIzaSyC9hXBNhK5zuePc2RftV09n3Ao9IPE2tRA')
+        fetch('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + this.state.value + '&types=geocode&language=vi&key=AIzaSyC9hXBNhK5zuePc2RftV09n3Ao9IPE2tRA')
         .then((response) => response.json())
         .then((responseJson) => {
             // this.setState({
@@ -36,7 +37,8 @@ export default class Search extends Component {
             {  
                 //console.log(responseJson.predictions[i].description + '---' + responseJson.predictions[i].place_id);
                 this.setState({
-                    mang: this.state.mang.concat({description: responseJson.predictions[i].description, id: responseJson.predictions[i].place_id })
+                    mang: this.state.mang.concat({description: responseJson.predictions[i].description, id: responseJson.predictions[i].place_id }),
+                    isloading: false
                 })
             }
             
@@ -77,7 +79,7 @@ export default class Search extends Component {
                             placeholder='Tìm kiếm'
                             underlineColorAndroid='rgba(0,0,0,0)'
                             onChangeText={(value) => {
-                                this.setState({ value });
+                                this.setState({ value, isloading: true });
                                 this.loadData();
                             }}
                             value={this.state.value}
@@ -85,7 +87,9 @@ export default class Search extends Component {
                     </View>
                 
                 </View>
-
+                <ActivityIndicator
+                    animating={this.state.isloading}
+                />           
                 <FlatList
                     data={this.state.mang}
                     renderItem={({ item }) =>
@@ -118,7 +122,8 @@ export default class Search extends Component {
 
 var styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'white'
     },
     header: {
         flexDirection: 'row',

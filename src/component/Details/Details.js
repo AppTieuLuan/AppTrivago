@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, ToastAndroid
+    View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, ToastAndroid, Modal
 } from 'react-native';
 import global from '../global';
 import { TbDetails } from './RouterDetails';
@@ -9,15 +9,33 @@ import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager';
 import icback from '../img/icback.png';
 import iclove from '../img/love.png';
 import iclove_ac from '../img/love_active.png';
+var Spinner = require('react-native-spinkit');
+
 export default class Details extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            islove: false
+            islove: false,
+            isVisible: true
         }
+        global.closeModalLoadDetail = this.closeModal.bind(this);
+    }
+    closeModal() {
+        this.setState({ isVisible: false });
     }
     componentDidMount() {
+        //console.log('11111111111111');
+        var dd = setInterval(function () {
+            if( global.loadchitiet &&
+                global.loadhinhanh &&
+                global.loaddanhgia &&
+                global.loadbando) {
+                    clearInterval(dd);
+                    global.closeModalLoadDetail();
+                    //this.setState({ isVisible: false });
+                }
+        }, 1000)
         this.loadData();
     }
 
@@ -79,6 +97,38 @@ export default class Details extends Component {
                 <View style={{ flex: 1 }}>
                     <TbDetails />
                 </View>
+
+                <Modal
+                    transparent={true}
+                    visible={this.state.isVisible}
+                   onRequestClose={() => this.setState({ isVisible: false })}
+                >
+                    <TouchableOpacity
+                        style={{ flex: 1 }}
+                        onPress={() => {
+                            this.setState({ isVisible: false })
+                        }}
+                    >
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <View style={{
+                                backgroundColor: '#333333',
+                                borderRadius: 10,
+                                width: 80,
+                                height: 80,
+                                padding: 5,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <Spinner size={40} type={'Circle'} color={'white'} />
+                                <Text style={{ fontSize: 13, color: 'white' }}>Loading...</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
             </View>
         )
     }

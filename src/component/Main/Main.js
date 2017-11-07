@@ -44,7 +44,6 @@ export default class Main extends Component {
         global.locgiamax = 0;
         global.locgiamin = 0;
 
-        //global.quyen = 1;
         global.userdangnhap = 1;
         global.locsao = '12345';
         global.locDL = false;

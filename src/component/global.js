@@ -16,7 +16,11 @@ module.export = {
     longsearch: 106.6992098,
     bankinhsearch: 70,
     mapAlready: false,
-    
+    closeModalLoadDetail: null,
+    loadchitiet: null,
+    loadhinhanh: null,
+    loaddanhgia: null,
+    loadbando: null,
 
     onSignIn: null,
     address: '',
