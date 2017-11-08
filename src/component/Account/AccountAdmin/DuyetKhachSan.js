@@ -170,7 +170,7 @@ export default class DuyetKhachSan extends Component {
                     <Text numberOfLines={1} style={{ fontWeight: 'bold', paddingLeft: 10 }}>Duyệt Khách Sạn</Text>
                     
                 </View>
-
+                
                 <FlatList
                     refreshing={this.state.refresh}
                     onRefresh={() => { this.refresh() }}

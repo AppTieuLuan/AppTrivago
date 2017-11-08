@@ -1,0 +1,44 @@
+<?php
+//đăng kí
+include('connect/connect.php');
+$json = file_get_contents('php://input');
+$obj = json_decode($json, true);
+
+$id = $obj['id'];
+$namehotel = $obj['namehotel'];
+$price = $obj['price'];
+$dataimg = $obj['dataimg'];
+$hoteltype = $obj['hoteltype'];
+$phone = $obj['phone'];
+$date = $obj['date'];
+$address = $obj['address'];
+$lat = $obj['lat'];
+$lng = $obj['lng'];
+$tiennghi = $obj['tiennghi'];
+$website = $obj['website'];
+//decode dataimg và up ảnh lên host
+$data = base64_decode($dataimg);
+//set nơi lưu vào và tên file.png
+$uri = '';
+if($data){
+	$file = 'images/'. uniqid() . '.png';
+	$success = file_put_contents($file, $data);
+	$uri = $myhost.$file;
+}
+// echo $userid.' '.$namehotel.' '.$price.' '.$hoteltype.' '.$phone.' '.$date.' '.$address.' '.$lat.' '.$lng.' '.$website.' '.$uri;
+if($namehotel !=='' && $price !== '' && $dataimg!=='' && $hoteltype !=='' && $phone !== '' && $date!=='' && $address !=='' && $lat !== '' && $lng!=='' && $tiennghi !== '' && $uri !== ''){
+	
+ 	$sql = "UPDATE khachsan SET ten = '$namehotel', gia = '$price', hinhanh = '$uri', diachi = '$address', loai = '$hoteltype', website = '$website', sdt = '$phone', tiennghihangdau = '$tiennghi', ngaycapnhat = '$date', lat = '$lat', `long` = '$lng' WHERE id = '$id'";
+	$result = $mysqli->query($sql);
+	if($result){
+		echo 'THANH_CONG';
+	}
+	else{
+		echo 'KHONG_THANH_CONG';
+	}
+}
+else{
+		echo 'KHONG_THANH_CONG';
+}
+
+?>
