@@ -210,7 +210,7 @@ export default class Ratings extends Component {
                         // });
                         if (responseJson == '1') {
                             temp[index].islike = '1';
-                            temp[index].solike = temp[index].solike + 1;
+                            temp[index].solike = parseInt(temp[index].solike) + 1;
                             this.setState({
                                 mang: temp
                             });
@@ -228,7 +228,7 @@ export default class Ratings extends Component {
                         if (responseJson == '1') {
 
                             temp[index].islike = '0';
-                            temp[index].solike = temp[index].solike - 1;
+                            temp[index].solike = parseInt(temp[index].solike) - 1;
 
                             this.setState({
                                 mang: temp
