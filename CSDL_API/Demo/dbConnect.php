@@ -161,6 +161,27 @@
 		}
 	}
 
+	class DemoThongTinKS {
+		public $gia;
+		public $diachi;
+		public $loai;
+		public $website;
+		public $sdt;
+		public $tiennghihangdau;
+		public $thietbikhachsan;
+		function DemoThongTinKS($gia,$diachi,$loai,$website,$sdt,$tiennghihangdau,$thietbikhachsan) {
+			$this->gia = $gia;
+			$this->diachi = $diachi;
+			$this->loai = $loai;
+			$this->website = $website;
+			$this->sdt = $sdt;
+			$this->tiennghihangdau = $tiennghihangdau;
+			$this->thietbikhachsan = $thietbikhachsan;
+		}
+	}
+
+
+
 	/**
 	* 
 	*/
