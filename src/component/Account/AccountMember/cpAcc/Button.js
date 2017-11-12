@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import loading from './img/loading.gif';
+import global from '../../../global';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -44,7 +45,6 @@ export default class ButtonSubmit extends Component {
 		).start();
 
 		setTimeout(() => {
-			//Actions.secondScreen();
 			this.props.click();
 			this.setState({ isLoading: false });
 			this.buttonAnimated.setValue(0);

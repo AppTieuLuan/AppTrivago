@@ -12,7 +12,8 @@ import{
   KeyboardAvoidingView,
   TouchableOpacity,
   FlatList,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 
 import PopupDialog, {
@@ -107,7 +108,8 @@ export default class HotelShare extends Component{
       gym: false,
 
       textbtn: 'Chia sẻ ngay',
-      flag: false
+      flag: false,
+      isLoad: false,
     }
   }
   //kiểm tra hợp lệ
@@ -244,7 +246,7 @@ export default class HotelShare extends Component{
     const resetAction = NavigationActions.reset({
       index: 1,
       actions: [
-        NavigationActions.navigate({ routeName: 'AccountMemberScreen'}),
+        NavigationActions.navigate({ routeName: 'AccountScreen'}),
         NavigationActions.navigate({ routeName: 'UploadImgScreen',
          params: {id}})
       ]
@@ -285,23 +287,30 @@ export default class HotelShare extends Component{
       if(!flag){
         return false;
       }
+      this.setState({isLoad: true});// bắt đầu loading
       registerhotel(namehotel, price, dataimg, hoteltype, phone, this.state.date,
         address, lat, lng, this.state.tiennghi, website, global.onSignIn.id)
       .then(res => {
+        this.setState({isLoad: false});// khi khi dữ liệu được fetch xong
         if(res.rp === 'THANH_CONG') return this.onSuccess(res.id);
         this.onFail();
       })
       .catch(err => console.log(err));
     }else{ // thực hiện cập nhật thông tin khách sạn đã thêm từ người dùng
-      updatehotel(global.hotel.id, namehotel, price, dataimg, hoteltype, phone, this.state.date,
+      this.setState({isLoad: true});// bắt đầu loading
+      updatehotel(global.hotel.id, namehotel, price, dataimg, hoteltype, this.state.phone, this.state.date,
         address, lat, lng, this.state.tiennghi, website)
         .then(res => {
+          this.setState({isLoad: false});// khi khi dữ liệu được fetch xong
           if(res === 'THANH_CONG'){
             Alert.alert(
               'Thông báo',
               'Cập nhật thành công!',
               [
-                {text: 'OK', onPress: () => this.props.navigation.goBack()}
+                {text: 'OK', onPress: () => {
+                  this.props.navigation.state.params.refresh();
+                  this.props.navigation.goBack();
+                }}
               ],
               { cancelable: false }
             )
@@ -375,6 +384,7 @@ export default class HotelShare extends Component{
       (<Image source={this.state.avatarSource}
             style={{height:250, width:250, marginBottom: 10, borderRadius: 10}}/>);
     return(
+      <View>
       <ScrollView contentContainerStyle={styles.scrollview}>
         <KeyboardAvoidingView behavior='padding'
           style={styles.container}>
@@ -606,12 +616,20 @@ export default class HotelShare extends Component{
           </KeyboardAvoidingView>
 
       </ScrollView>
+
+      {
+        this.state.isLoad ? 
+        (<ActivityIndicator size={50} style={styles.loading}/>):
+        null
+      }
+      
+      </View>
     )
   }
 }
 const styles = StyleSheet.create({
 	inputWrapper: {
-		height: height/10
+		height: 60
 	},
 	inlineImg: {
 		position: 'absolute',
@@ -661,5 +679,14 @@ const styles = StyleSheet.create({
       marginHorizontal: 10,
       flex: 1,
       resizeMode: 'contain'
+  },
+  loading:{
+    position: 'absolute', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    top: 0, 
+    bottom: 0, 
+    right: 0, 
+    left: 0
   }
 });

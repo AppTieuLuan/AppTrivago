@@ -23,7 +23,7 @@ import iconedit from '../images/edit.png';
 import global from '../../../global';
 import LoadMyHotelShare from '../../../../api/LoadMyHotelShare';
 
-export default class HotelShared extends Component {
+export default class HotelShared extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -60,6 +60,7 @@ export default class HotelShared extends Component {
         .catch(err => console.log(err));
     }
     render(){
+        const { navigate } = this.props.navigation; 
         return(
             this.state.ishare ?
             (<View style={styles.container}>
@@ -86,6 +87,10 @@ export default class HotelShared extends Component {
                     renderItem={({ item } ) =>
                         <View style={styles.rowFlatlist}>
                             <TouchableWithoutFeedback
+                                onPress={() => { 
+                                        global.idKS = item.id;
+                                        navigate('DetailScreen', { name: item.ten, id: item.id })
+                                        }}
                             >
                              <View style={{ height: width / 3, flexDirection: 'row', backgroundColor: 'white', borderRadius: 5 }}>
                                         <Image source={{ uri: item.hinhanh }} style={{ height: width / 3, width: width / 3, flex: 1 }}/>
@@ -102,7 +107,7 @@ export default class HotelShared extends Component {
                                                             <TouchableOpacity
                                                                 onPress={() => {
                                                                     global.hotel = item;
-                                                                    this.props.navigation.navigate('ShareScreen', {flag: true})
+                                                                    this.props.navigation.navigate('ShareScreen', {flag: true, refresh: this.refresh.bind(this)})
                                                                 }}
                                                                 style={{flexDirection: 'row', flex: 1 }}
                                                             >
@@ -145,7 +150,10 @@ export default class HotelShared extends Component {
 
                                                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                             <TouchableOpacity
-                                                                
+                                                            onPress={() => { 
+                                                                    global.idKS = item.id;
+                                                                    navigate('DetailScreen', { name: item.ten, id: item.id })
+                                                                    }}
                                                             >
                                                                 <Text style = {{ backgroundColor: '#248f24', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 3, color: 'white' }}>Chi tiết</Text>
                                                             </TouchableOpacity>

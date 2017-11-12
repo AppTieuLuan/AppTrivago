@@ -24,6 +24,7 @@ import LocationAddress from './Account/AccountMember/cpAcc/Location_Address';
 import ChangePass from './Account/AccountMember/cpAcc/ChangePass';
 import UploadImg from './Account/AccountMember/cpAcc/UploadImg';
 import HotelShared from './Account/AccountMember/cpAcc/Hotel_Shared';
+import Message from './Account/AccountMember/cpAcc/Message';
 
 
 var { height, width } = Dimensions.get('window');
@@ -133,6 +134,12 @@ export const MainStack = StackNavigator({
     },
     HotelSharedScreen: {
         screen: HotelShared,
+        navigationOptions: {
+            headerTitle: 'Quay lại'
+        }
+    },
+    MessageScreen: {
+        screen: Message,
         navigationOptions: {
             headerTitle: 'Quay lại'
         }

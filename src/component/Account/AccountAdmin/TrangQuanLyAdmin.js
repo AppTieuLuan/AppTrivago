@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
 import {
-    View, Text, StyleSheet, ScrollView, TouchableWithoutFeedback, TouchableOpacity,Image
+    View, Text, StyleSheet, ScrollView, 
+    TouchableWithoutFeedback, TouchableOpacity,Image,
+    Dimensions
 } from 'react-native';
 import icback from '../../img/icback.png';
 import global from '../../global';
 import saveToken from '../../../api/saveToken';
 import { NavigationActions } from 'react-navigation';
 
+const {height, width} = Dimensions.get('window');
+
+import BTNAC from '../AccountMember/view/buttonAccount';
+import mk from '../AccountMember/images/changepass.png';
+import sharehotel from '../AccountMember/images/sharehotel.png';
+import logout from '../AccountMember/images/logout.png';
+import pending from '../AccountMember/images/pending.png';
+import user from '../AccountMember/images/user.png';
 export default class TrangQuanLyAdmin extends Component {
     goBack() {
         this.props.navigation.goBack();
@@ -51,44 +61,40 @@ export default class TrangQuanLyAdmin extends Component {
                     >
                         <Image style={{ width: 25, height: 25 }} source={icback} />
                     </TouchableOpacity>
-                    <Text numberOfLines={1} style={{ fontWeight: 'bold', paddingLeft: 10 }}>Trang chủ Admin</Text>
+                    <Text numberOfLines={1} style={{ fontWeight: 'bold', paddingLeft: 10, color: 'black', fontSize: 15 }}>Trang quản trị Admin</Text>
                     
                 </View>
 
-                <ScrollView>
-                    <TouchableWithoutFeedback
-                        onPress={() => {
-                            this.goDuyetKS();
-                        }}
-                    >
-                        <View style={styles.row}>
-                            <Text>Chờ duyệt</Text>
+                <ScrollView contentContainerStyle={{paddingVertical: 10, height: height}}>
+                    <View>
+                        <View style={{alignItems: 'center', justifyContent: 'center', top: 20}}>
+                            <Image source={user} style={styles.image} />
+                            <Text style={styles.text}>Admin</Text>
                         </View>
-                    </TouchableWithoutFeedback>
-                    <TouchableWithoutFeedback
-                        onPress={() => {
-                            this.goQLKS();
-                        }}
-                    >
-                        <View style={styles.row}>
-                            <Text>Quản lý khách sạn</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
 
-                    <TouchableWithoutFeedback
-                    >
-                        <View style={styles.row}>
-                            <Text>Cá nhân</Text>
+                        <View style={{top: 35}}>
+                            <BTNAC
+                            text={'Chờ duyệt'}
+                            source={pending}
+                            click={this.goDuyetKS.bind(this)}
+                            />
+                            <BTNAC
+                            text={'Quản lý khách sạn'}
+                            source={sharehotel}
+                            click={this.goQLKS.bind(this)}
+                            />
+                            <BTNAC
+                            text={'Cá nhân'}
+                            source={mk}
+                            click={this.goQLKS.bind(this)}
+                            />
+                            <BTNAC
+                            text={'Đăng xuất'}
+                            source={logout}
+                            click={this.Logout.bind(this)}
+                            />
                         </View>
-                    </TouchableWithoutFeedback>
-
-                    <TouchableWithoutFeedback
-                        onPress={() => this.Logout()}
-                    >
-                        <View style={styles.row}>
-                            <Text>Đăng xuất</Text>
-                        </View>
-                    </TouchableWithoutFeedback>
+                    </View>
                 </ScrollView>
             </View>
         )
@@ -112,5 +118,16 @@ const styles = StyleSheet.create({
         
         borderBottomWidth: 1,
         paddingHorizontal: 5
-    }
+    },
+    image: {
+  		width: 100,
+  		height: 100,
+  	},
+  	text: {
+      fontSize: 25,
+  		color: 'black',
+  		fontWeight: 'bold',
+  		backgroundColor: 'transparent',
+  		marginTop: 20,
+  	}
 })

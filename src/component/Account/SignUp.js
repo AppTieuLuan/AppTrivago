@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, TextInput, Text,
   TouchableOpacity, StyleSheet, Alert,
-  Dimensions, KeyboardAvoidingView, Image
+  Dimensions, KeyboardAvoidingView, Image, ActivityIndicator
 } from 'react-native';
 import register from '../../api/register';
 
@@ -28,7 +28,8 @@ export default class SignUp extends Component {
             showPass: true,
             press: false,
             reshowPass: true,
-            rePress: false
+            rePress: false,
+            isLoad: false,
         };
     }
     showPass() {
@@ -122,8 +123,10 @@ export default class SignUp extends Component {
           return false;
         }
         //Tiến hành đăng ký
+        this.setState({isLoad: true});
         register(email, name, password)
         .then(res => {
+          this.setState({isLoad: false});
             //alert(res);
             if (res === 'THANH_CONG') return this.onSuccess();
               this.onFail();
@@ -138,80 +141,85 @@ export default class SignUp extends Component {
               </View>
               <View style={styles.textinput}>
                 <KeyboardAvoidingView behavior='padding'
-          				style={styles.container}>
+                  style={styles.container}>
                   <View style={styles.inputWrapper}>
-            				<Image source={usernameImg}
-            					style={styles.inlineImg} />
-            				<TextInput style={styles.input}
-            					placeholder='Nhập họ tên'
-            					autoCapitalize='none'
-            					returnKeyType='done'
+                    <Image source={usernameImg}
+                      style={styles.inlineImg} />
+                    <TextInput style={styles.input}
+                      placeholder='Nhập họ tên'
+                      autoCapitalize='none'
+                      returnKeyType='done'
                       autoCorrect={false}
-            					value={name}
-            					onChangeText={name =>this.setState({name})}
-            					placeholderTextColor='white'
-            					underlineColorAndroid='transparent' />
-            			</View>
+                      value={name}
+                      onChangeText={name =>this.setState({name})}
+                      placeholderTextColor='white'
+                      underlineColorAndroid='transparent' />
+                  </View>
                   <View style={styles.inputWrapper}>
-            				<Image source={emailImg}
-            					style={styles.inlineImg} />
-            				<TextInput style={styles.input}
-            					placeholder='Nhập email'
-            					autoCapitalize='none'
-            					returnKeyType='done'
+                    <Image source={emailImg}
+                      style={styles.inlineImg} />
+                    <TextInput style={styles.input}
+                      placeholder='Nhập email'
+                      autoCapitalize='none'
+                      returnKeyType='done'
                       autoCorrect={false}
-            					value={email}
-            					onChangeText={email =>this.setState({email})}
-            					placeholderTextColor='white'
-            					underlineColorAndroid='transparent' />
-            			</View>
+                      value={email}
+                      onChangeText={email =>this.setState({email})}
+                      placeholderTextColor='white'
+                      underlineColorAndroid='transparent' />
+                  </View>
                   <View style={styles.inputWrapper}>
-            				<Image source={passwordImg}
-            					style={styles.inlineImg} />
-            				<TextInput style={styles.input}
-            					placeholder='Nhập mật khẩu'
-            					secureTextEntry={showPass}
+                    <Image source={passwordImg}
+                      style={styles.inlineImg} />
+                    <TextInput style={styles.input}
+                      placeholder='Nhập mật khẩu'
+                      secureTextEntry={showPass}
                       autoCorrect={false}
-            					autoCapitalize='none'
-            					returnKeyType='done'
-            					value={password}
-            					onChangeText={password => this.setState({password})}
-            					placeholderTextColor='white'
-            					underlineColorAndroid='transparent' />
-            			</View>
+                      autoCapitalize='none'
+                      returnKeyType='done'
+                      value={password}
+                      onChangeText={password => this.setState({password})}
+                      placeholderTextColor='white'
+                      underlineColorAndroid='transparent' />
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={styles.btnEye}
+                      onPress={this.showPass.bind(this)}
+                    >
+                      <Image source={eyeImg} style={styles.iconEye} />
+                    </TouchableOpacity>
+                  </View>
                   <View style={styles.inputWrapper}>
-            				<Image source={passwordImg}
-            					style={styles.inlineImg} />
-            				<TextInput style={styles.input}
-            					placeholder='Nhập lại mật khẩu'
-            					secureTextEntry={reshowPass}
+                    <Image source={passwordImg}
+                      style={styles.inlineImg} />
+                    <TextInput style={styles.input}
+                      placeholder='Nhập lại mật khẩu'
+                      secureTextEntry={reshowPass}
                       autoCorrect={false}
-            					autoCapitalize='none'
-            					returnKeyType='done'
-            					value={rePassword}
-            					onChangeText={rePassword => this.setState({rePassword})}
-            					placeholderTextColor='white'
-            					underlineColorAndroid='transparent' />
-            			</View>
-        					<TouchableOpacity
-        						activeOpacity={0.7}
-        						style={styles.btnEye}
-        						onPress={this.showPass.bind(this)}
-        					>
-        						<Image source={eyeImg} style={styles.iconEye} />
-        					</TouchableOpacity>
-        					<TouchableOpacity
-        						activeOpacity={0.7}
-        						style={styles.btnEye1}
-        						onPress={this.reshowPass.bind(this)}
-        					>
-        						<Image source={eyeImg} style={styles.iconEye} />
-        					</TouchableOpacity>
-        			  </KeyboardAvoidingView>
+                      autoCapitalize='none'
+                      returnKeyType='done'
+                      value={rePassword}
+                      onChangeText={rePassword => this.setState({rePassword})}
+                      placeholderTextColor='white'
+                      underlineColorAndroid='transparent' />
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={styles.btnEye}
+                      onPress={this.reshowPass.bind(this)}
+                    >
+                      <Image source={eyeImg} style={styles.iconEye} />
+                    </TouchableOpacity>
+                  </View>
+                </KeyboardAvoidingView>
 
                 <ButtonSubmit click={this.registerUser.bind(this)}
                                     text={'Đăng ký ngay'}/>
               </View>
+              {
+                this.state.isLoad ? 
+                (<ActivityIndicator size={50} style={styles.loading}/>):
+                null
+              }
             </Wallpaper>
         );
     }
@@ -237,7 +245,7 @@ const styles = StyleSheet.create({
 		color: '#ffffff',
 	},
 	inputWrapper: {
-		height: height/12,
+		height: 50,
 	},
 	inlineImg: {
 		position: 'absolute',
@@ -252,17 +260,21 @@ const styles = StyleSheet.create({
 	},
 	btnEye: {
     position: 'absolute',
-    top: 105,
-    right: 28,
-  },
-	btnEye1: {
-    position: 'absolute',
-    top: 155,
+    top: 7,
     right: 28,
   },
   iconEye: {
     width: 25,
     height: 25,
     tintColor: 'rgba(0,0,0,0.2)',
+  },
+  loading:{
+    position: 'absolute', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    top: 0, 
+    bottom: 0, 
+    right: 0, 
+    left: 0
   }
 });

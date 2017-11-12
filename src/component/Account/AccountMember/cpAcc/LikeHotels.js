@@ -92,9 +92,7 @@ export default class LikeHotels extends Component{
         }
         />
     </View>:
-		<View style={{justifyContent: 'center', alignItems: 'center'}}>
-      <Image source={bgSrc} />
-    </View>
+      <Image source={bgSrc} style={{height: height*0.9, width: width}}  />
     return(
       <View>
         {draw}
