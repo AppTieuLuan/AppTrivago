@@ -1,10 +1,12 @@
 import React,{ Component } from 'react';
 import {
-    View, Text, StyleSheet, ScrollView, TouchableOpacity, Image
+    View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import saveToken from '../../../api/saveToken';
 import global from '../../global';
+
+const {height, width} = Dimensions.get('window');
 
 import BTNAC from './view/buttonAccount';
 
@@ -14,6 +16,7 @@ import share from './images/share.png';
 import sharehotel from './images/sharehotel.png';
 import logout from './images/logout.png';
 import user from './images/user.png';
+import mail from './images/message.png';
 
 export default class Account extends Component {
     constructor(props){
@@ -63,9 +66,12 @@ export default class Account extends Component {
     replaceHotelShared(){
         this.props.navigation.navigate('HotelSharedScreen');
     }
+    replaceMailScreen(){
+      this.props.navigation.navigate('MessageScreen');
+    }
     render() {
         return (
-          <ScrollView contentContainerStyle={{paddingVertical: 10, height: 500}}>
+          <ScrollView contentContainerStyle={{paddingVertical: 10, height: height}}>
             <View>
               <View style={{alignItems: 'center', justifyContent: 'center', top: 20}}>
                 <Image source={user} style={styles.image} />
@@ -91,6 +97,11 @@ export default class Account extends Component {
                   text={'Đổi mật khẩu'}
                   source={mk}
                   click={this.replaceChangePassScreen.bind(this)}
+                />
+                <BTNAC
+                  text={'Tin nhắn'}
+                  source={mail}
+                  click={this.replaceMailScreen.bind(this)}
                 />
                 <BTNAC
                   text={'Đăng xuất'}

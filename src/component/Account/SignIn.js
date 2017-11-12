@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, TextInput, Text,
    TouchableOpacity, StyleSheet,
-   Dimensions, Image, Alert, KeyboardAvoidingView
+   Dimensions, Image, Alert, KeyboardAvoidingView, ActivityIndicator
  } from 'react-native';
 import signIn from '../../api/signIn';
 import global from '../global';
@@ -27,7 +27,8 @@ export default class SignIn extends Component {
             email: '',
             password: '',
             showPass: true,
-            press: false
+            press: false,
+            isLoad: false,
         };
     		this.showPass = this.showPass.bind(this);
     }
@@ -55,8 +56,10 @@ export default class SignIn extends Component {
           this.alert();
           return false;
         }
+        this.setState({isLoad: true});// bắt đầu loading và fecth
         signIn(email, password)
             .then(res => {
+              this.setState({isLoad: false});// ddwungf loading sau khi fetch thành công
               if(res.err){
                this.alert();
                return false;
@@ -113,48 +116,53 @@ export default class SignIn extends Component {
               </View>
               <View style={styles.textinput}>
                 <KeyboardAvoidingView behavior='padding'
-          				style={styles.container}>
+                  style={styles.container}>
                   <View style={styles.inputWrapper}>
-            				<Image source={usernameImg}
-            					style={styles.inlineImg} />
-            				<TextInput style={styles.input}
-            					placeholder='Nhập email'
-            					autoCapitalize='none'
-            					returnKeyType='done'
+                    <Image source={usernameImg}
+                      style={styles.inlineImg} />
+                    <TextInput style={styles.input}
+                      placeholder='Nhập email'
+                      autoCapitalize='none'
+                      returnKeyType='done'
                       autoCorrect={false}
-            					value={email}
-            					onChangeText={ email => this.setState({ email })}
-            					placeholderTextColor='white'
-            					underlineColorAndroid='transparent' />
-            			</View>
+                      value={email}
+                      onChangeText={email =>this.setState({email})}
+                      placeholderTextColor='white'
+                      underlineColorAndroid='transparent' />
+                  </View>
                   <View style={styles.inputWrapper}>
-            				<Image source={passwordImg}
-            					style={styles.inlineImg} />
-            				<TextInput style={styles.input}
-            					placeholder='Nhập mật khẩu'
-            					secureTextEntry={showPass}
+                    <Image source={passwordImg}
+                      style={styles.inlineImg} />
+                    <TextInput style={styles.input}
+                      placeholder='Nhập mật khẩu'
+                      secureTextEntry={showPass}
                       autoCorrect={false}
-            					autoCapitalize='none'
-            					returnKeyType='done'
-            					value={password}
-            					onChangeText={password => this.setState({password})}
-            					placeholderTextColor='white'
-            					underlineColorAndroid='transparent' />
-            			</View>
-        					<TouchableOpacity
-        						activeOpacity={0.7}
-        						style={styles.btnEye}
-        						onPress={this.showPass}
-        					>
-        						<Image source={eyeImg} style={styles.iconEye} />
-        					</TouchableOpacity>
+                      autoCapitalize='none'
+                      returnKeyType='done'
+                      value={password}
+                      onChangeText={password => this.setState({password})}
+                      placeholderTextColor='white'
+                      underlineColorAndroid='transparent' />
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        style={styles.btnEye}
+                        onPress={this.showPass}
+                      >
+                        <Image source={eyeImg} style={styles.iconEye} />
+                      </TouchableOpacity>
+                  </View>
+                </KeyboardAvoidingView>
 
-                  <ButtonSubmit click={this.onSignIn.bind(this)} />
-                  
-                  <SignupSection onclick={this.onclick.bind(this)} />
+                <ButtonSubmit click={this.onSignIn.bind(this)} />
 
-        			  </KeyboardAvoidingView>
+                <SignupSection onclick={this.onclick.bind(this)} />
+
               </View>
+              {
+                this.state.isLoad ? 
+                (<ActivityIndicator size={50} style={styles.loading}/>):
+                null
+              }
             </Wallpaper>
         );
     }
@@ -180,7 +188,7 @@ const styles = StyleSheet.create({
 		color: '#ffffff',
 	},
 	inputWrapper: {
-		height: height/12,
+		height: 50,
 	},
 	inlineImg: {
 		position: 'absolute',
@@ -195,12 +203,21 @@ const styles = StyleSheet.create({
 	},
 	btnEye: {
     position: 'absolute',
-    top: 55,
     right: 28,
+    top: 7
   },
   iconEye: {
     width: 25,
     height: 25,
     tintColor: 'rgba(0,0,0,0.2)',
+  },
+  loading:{
+    position: 'absolute', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    top: 0, 
+    bottom: 0, 
+    right: 0, 
+    left: 0
   }
 });

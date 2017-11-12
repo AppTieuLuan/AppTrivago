@@ -29,7 +29,7 @@ export default class logout extends Component{
 }
 const styles = StyleSheet.create({
 	inputWrapper: {
-		height: height/12,
+		height: 50,
 	},
 	inlineImg: {
 		position: 'absolute',

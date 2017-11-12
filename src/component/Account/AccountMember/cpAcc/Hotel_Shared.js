@@ -23,8 +23,8 @@ import iconedit from '../images/edit.png';
 import global from '../../../global';
 import LoadMyHotelShare from '../../../../api/LoadMyHotelShare';
 
-export default class HotelShared extends Component {
-    constructor(props) {
+export default class HotelShared extends Component{
+    constructor(props){
         super(props);
         this.state = {
             mang: [],
@@ -59,43 +59,43 @@ export default class HotelShared extends Component {
             })
             .catch(err => console.log(err));
     }
-    render() {
-        return (
-            this.state.ishare ?
-                (<View style={styles.container}>
-                    <FlatList
-                        ListFooterComponent={(
-                            <View style={{ padding: 10 }}>
-                                {
-                                    !this.state.loading ?
-                                        (null) :
-                                        (
-                                            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                                <ActivityIndicator size={24} />
-                                                <Text>   Loading ...</Text>
-                                            </View>
-                                        )
-                                }
 
-                            </View>
-                        )}
-                        refreshing={this.state.refresh}
-                        onRefresh={() => { this.refresh() }}
-                        data={this.state.mang}
-                        keyExtractor={item => item.id}
-                        renderItem={({ item }) =>
-                            <View style={styles.rowFlatlist}>
-                                <TouchableWithoutFeedback
-                                    onPress={() => {
+    render(){
+        const { navigate } = this.props.navigation; 
+        return(
+            this.state.ishare ?
+            (<View style={styles.container}>
+                <FlatList
+                ListFooterComponent={(
+                        <View style= {{ padding: 10 }}>
+                            {
+                                !this.state.loading ?
+                                    (null) :
+                                    (
+                                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                            <ActivityIndicator size={24} />
+                                            <Text>   Loading ...</Text>
+                                        </View>
+                                    )
+                            }
+
+                        </View>
+                    )}
+                    refreshing={this.state.refresh}
+                    onRefresh={() => { this.refresh() }}
+                    data={this.state.mang}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item } ) =>
+                        <View style={styles.rowFlatlist}>
+                            <TouchableWithoutFeedback
+                                onPress={() => { 
                                         global.idKS = item.id;
-                                        this.props.navigation.navigate('DetailScreen', { name: item.ten, id: item.id })
-                                        
-                                        //alert(item.id)
-                                    
-                                    }}
-                                >
-                                    <View style={{ height: width / 3, flexDirection: 'row', backgroundColor: 'white', borderRadius: 5 }}>
-                                        <Image source={{ uri: item.hinhanh }} style={{ height: width / 3, width: width / 3, flex: 1 }} />
+                                        navigate('DetailScreen', { name: item.ten, id: item.id })
+                                        }}
+                            >
+                             <View style={{ height: width / 3, flexDirection: 'row', backgroundColor: 'white', borderRadius: 5 }}>
+                                        <Image source={{ uri: item.hinhanh }} style={{ height: width / 3, width: width / 3, flex: 1 }}/>
+
                                         <View style={{ flex: 2 }}>
                                             <View style={{ flex: 1 }}>
                                                 <View style={{ flex: 1, paddingLeft: 5, paddingVertical: 2, paddingRight: 2 }}>
@@ -109,7 +109,7 @@ export default class HotelShared extends Component {
                                                             <TouchableOpacity
                                                                 onPress={() => {
                                                                     global.hotel = item;
-                                                                    this.props.navigation.navigate('ShareScreen', { flag: true })
+                                                                    this.props.navigation.navigate('ShareScreen', {flag: true, refresh: this.refresh.bind(this)})
                                                                 }}
                                                                 style={{ flexDirection: 'row', flex: 1 }}
                                                             >
@@ -152,7 +152,10 @@ export default class HotelShared extends Component {
 
                                                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                             <TouchableOpacity
-
+                                                            onPress={() => { 
+                                                                    global.idKS = item.id;
+                                                                    navigate('DetailScreen', { name: item.ten, id: item.id })
+                                                                    }}
                                                             >
                                                                 <Text style={{ backgroundColor: '#248f24', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 3, color: 'white' }}>Chi tiết</Text>
                                                             </TouchableOpacity>

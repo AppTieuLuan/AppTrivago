@@ -8,7 +8,8 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -39,7 +40,8 @@ export default class ChangePass extends Component {
 
       press: false,
       newpress: false,
-      renewpress: false
+      renewpress: false,
+      isLoad: false,
     }
   }
   showPass(){
@@ -98,8 +100,10 @@ export default class ChangePass extends Component {
       return false;
     }
     //
+    this.setState({isLoad: true});
     check_Pass(global.onSignIn.id, password)
     .then(res => {
+      this.setState({isLoad: false});
       if(res === 'THANH_CONG'){
         ChangedPass(global.onSignIn.id, newpassword)
         .then(resp => {
@@ -159,6 +163,14 @@ export default class ChangePass extends Component {
                 onChangeText={password =>this.setState({password})}
                 placeholderTextColor='white'
                 underlineColorAndroid='transparent' />
+                
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.btnEye}
+                onPress={this.showPass.bind(this)}
+              >
+                <Image source={eyeImg} style={styles.iconEye} />
+              </TouchableOpacity>
             </View>
             <View style={styles.inputWrapper}>
               <Image source={passwordImg}
@@ -173,6 +185,14 @@ export default class ChangePass extends Component {
                 onChangeText={newpassword => this.setState({newpassword})}
                 placeholderTextColor='white'
                 underlineColorAndroid='transparent' />
+                
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.btnEye}
+                onPress={this.newshowPass.bind(this)}
+              >
+                <Image source={eyeImg} style={styles.iconEye} />
+              </TouchableOpacity>
             </View>
             <View style={styles.inputWrapper}>
               <Image source={passwordImg}
@@ -187,35 +207,25 @@ export default class ChangePass extends Component {
                 onChangeText={renewpassword => this.setState({renewpassword})}
                 placeholderTextColor='white'
                 underlineColorAndroid='transparent' />
+                
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.btnEye}
+                onPress={this.renewshowPass.bind(this)}
+              >
+                <Image source={eyeImg} style={styles.iconEye} />
+              </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.btnEye}
-              onPress={this.showPass.bind(this)}
-            >
-              <Image source={eyeImg} style={styles.iconEye} />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.btnEye1}
-              onPress={this.newshowPass.bind(this)}
-            >
-              <Image source={eyeImg} style={styles.iconEye} />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.btnEye2}
-              onPress={this.renewshowPass.bind(this)}
-            >
-              <Image source={eyeImg} style={styles.iconEye} />
-            </TouchableOpacity>
           </KeyboardAvoidingView>
           <ButtonSubmit click={this.OnChangePass.bind(this)}
                         text={'Thay đổi ngay'}/>
         </View>
+        {
+          this.state.isLoad ? 
+          (<ActivityIndicator size={50} style={styles.loading}/>):
+          null
+        }
       </Wallpaper>
     )
   }
@@ -263,14 +273,13 @@ const styles = StyleSheet.create({
     height: 25,
     tintColor: 'rgba(0,0,0,0.2)',
   },
-  btnEye1: {
-    position: 'absolute',
-    top: 53,
-    right: 28,
-  },
-  btnEye2: {
-    position: 'absolute',
-    top: 107,
-    right: 28,
+  loading:{
+    position: 'absolute', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    top: 0, 
+    bottom: 0, 
+    right: 0, 
+    left: 0
   }
 });

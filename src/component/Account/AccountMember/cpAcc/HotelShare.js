@@ -12,7 +12,10 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   FlatList,
-  Alert, ToastAndroid
+
+  Alert,
+  ActivityIndicator,
+  ToastAndroid
 } from 'react-native';
 
 import PopupDialog, {
@@ -109,10 +112,8 @@ export default class HotelShare extends Component {
 
       textbtn: 'Chia sẻ ngay',
       flag: false,
-
       textInput: [],
-      //valueTextIput: []
-
+      isLoad: false,
     }
   }
   //kiểm tra hợp lệ
@@ -248,7 +249,7 @@ export default class HotelShare extends Component {
     const resetAction = NavigationActions.reset({
       index: 1,
       actions: [
-        NavigationActions.navigate({ routeName: 'AccountMemberScreen' }),
+        NavigationActions.navigate({ routeName: 'AccountScreen' }),
         NavigationActions.navigate({
           routeName: 'UploadImgScreen',
           params: { id }
@@ -279,12 +280,30 @@ export default class HotelShare extends Component {
       { cancelable: false }
     );
   }
+
+  // let tiengnghikhachsan = '';
+  // for (let i = 0; i < this.state.textInput.length; i++) {
+  //   tiengnghikhachsan = tiengnghikhachsan + this.state.textInput[i].value + '-';
+  // }
+  // alert(tiengnghikhachsan.slice(0, -1));
+
+
   Submit() {
     const { namehotel, price, dataimg, hoteltype, phone, address } = this.state;
     const { lat, lng, website } = this.state;
     this.setTienNghi();
     this.getdatetime();
     //flag = false thì thực hiện việc thêm mới khách sạn
+
+    let tiennghikhachsan = '';
+    for (let i = 0; i < this.state.textInput.length; i++) {
+      tiennghikhachsan = tiennghikhachsan + this.state.textInput[i].value + '-';
+    }
+
+    tiennghikhachsan = tiennghikhachsan.slice(0, -1);
+    //alert(tiengnghikhachsan.slice(0, -1));
+
+
     if (!this.state.flag) {
       //kiểm tra tính hợp lệ của dữ liệu
       let flag = this.validation();
@@ -292,41 +311,41 @@ export default class HotelShare extends Component {
         return false;
       }
 
-      // let tiengnghikhachsan = '';
-      // for (let i = 0; i < this.state.textInput.length; i++) {
-      //   tiengnghikhachsan = tiengnghikhachsan + this.state.textInput[i].value + '-';
-      // }
-      // alert(tiengnghikhachsan.slice(0, -1));
-
+      this.setState({ isLoad: true });// bắt đầu loading
       registerhotel(namehotel, price, dataimg, hoteltype, phone, this.state.date,
-        address, lat, lng, this.state.tiennghi, website, global.onSignIn.id)
+        address, lat, lng, this.state.tiennghi, website, global.onSignIn.id, tiennghikhachsan)
         .then(res => {
-          if (res.rp === 'THANH_CONG') return this.onSuccess(res.id);
+          this.setState({ isLoad: false });// khi khi dữ liệu được fetch xong
+          if (res.rp.trim() === 'THANH_CONG') return this.onSuccess(res.id);
           this.onFail();
         })
         .catch(err => console.log(err));
-    } else { // thực hiện cập nhật thông tin khách sạn đã thêm từ người dùng
-
-      let tiengnghikhachsan = '';
-      for (let i = 0; i < this.state.textInput.length; i++) {
-        tiengnghikhachsan = tiengnghikhachsan + this.state.textInput[i].value + '-';
-      }
-      tiengnghikhachsan = tiengnghikhachsan.slice(0, -1);
-      //alert(tiengnghikhachsan.slice(0, -1));
-      
-      updatehotel(global.hotel.id, namehotel, price, dataimg, hoteltype, phone, this.state.date,
-        address, lat, lng, this.state.tiennghi, website)
+    } else { // th ực hiện cập nhật thông tin khách sạn đã thêm từ người dùng
+      //alert(global.hotel.id +'-----'+namehotel+'-----'+ price+'-----'+ dataimg+'-----'+ hoteltype+'-----'+ this.state.phone+'-----'+ this.state.date+'-----'+ address+'-----'+ lat+'-----'+ lng+'-----'+ this.state.tiennghi+'-----'+ website+'-----'+ tiennghikhachsan);
+     
+      this.setState({ isLoad: true });// bắt đầu loading
+      updatehotel(global.hotel.id, namehotel, price, dataimg, hoteltype, this.state.phone, this.state.date,
+        address, lat, lng, this.state.tiennghi, website, tiennghikhachsan)
         .then(res => {
-          if (res === 'THANH_CONG') {
+          this.setState({ isLoad: false });// khi khi dữ liệu được fetch xong
+          
+          if (res.trim() === 'THANH_CONG') {
             Alert.alert(
               'Thông báo',
               'Cập nhật thành công!',
               [
-                { text: 'OK', onPress: () => this.props.navigation.goBack() }
+                {
+                  text: 'OK', onPress: () => {
+                    this.props.navigation.state.params.refresh();
+                    this.props.navigation.goBack();
+                  }
+                }
               ],
               { cancelable: false }
             )
-          } else {
+            //ToastAndroid.show('Thành công', ToastAndroid.SHORT);
+           } 
+           else {
             Alert.alert(
               'Thông báo',
               'Cập nhật thất bại!\nVui lòng thử lại!',
@@ -335,7 +354,8 @@ export default class HotelShare extends Component {
               ],
               { cancelable: false }
             )
-          }
+            //ToastAndroid.show('Lỗi ! Thử lại sau..', ToastAndroid.SHORT);
+          } 
         })
         .catch(err => console.log(err));
     }
@@ -386,7 +406,7 @@ export default class HotelShare extends Component {
   }
 
   deleteTextInput(index) {
-   
+
     let textInput = this.state.textInput;
     textInput.splice(index, 1);
     this.setState({ textInput });
@@ -408,20 +428,20 @@ export default class HotelShare extends Component {
         flag: true,
 
       });
-      if(global.hotel.thietbikhachsan !== null) {
+      if (global.hotel.thietbikhachsan !== null) {
 
         let temp = global.hotel.thietbikhachsan.split('-');
         //alert(temp.length);
         let temp2 = [];
         for (let i = 0; i < temp.length; i++) {
 
-          temp2 = temp2.concat({id: i, value: temp[i]});
-          
-        } 
+          temp2 = temp2.concat({ id: i, value: temp[i] });
+
+        }
         this.setState({
           textInput: temp2
         });
-        
+
         // this.setState({
         //   textInput: global.hotel.thietbikhachsan.split('');
         // })
@@ -466,284 +486,292 @@ export default class HotelShare extends Component {
       (<Image source={this.state.avatarSource}
         style={{ height: 250, width: 250, marginBottom: 10, borderRadius: 10 }} />);
     return (
-      <ScrollView contentContainerStyle={styles.scrollview}>
-        <KeyboardAvoidingView behavior='padding'
-          style={styles.container}>
-          <View style={styles.inputWrapper}>
-            <Image source={sharehotel}
-              style={styles.inlineImg} />
-            <TextInput style={styles.input}
-              placeholder='Nhập tên khách sạn'
-              autoCapitalize='none'
-              returnKeyType='done'
-              autoCorrect={false}
-              value={this.state.namehotel}
-              onChangeText={namehotel => this.setState({ namehotel })}
-              placeholderTextColor='black'
-              underlineColorAndroid='transparent' />
-          </View>
+      <View>
+        <ScrollView contentContainerStyle={styles.scrollview}>
+          <KeyboardAvoidingView behavior='padding'
+            style={styles.container}>
+            <View style={styles.inputWrapper}>
+              <Image source={sharehotel}
+                style={styles.inlineImg} />
+              <TextInput style={styles.input}
+                placeholder='Nhập tên khách sạn'
+                autoCapitalize='none'
+                returnKeyType='done'
+                autoCorrect={false}
+                value={this.state.namehotel}
+                onChangeText={namehotel => this.setState({ namehotel })}
+                placeholderTextColor='black'
+                underlineColorAndroid='transparent' />
+            </View>
 
-          <View style={styles.inputWrapper}>
-            <Image source={iconprice}
-              style={styles.inlineImg} />
-            <NumbericInput style={styles.input}
-              placeholder='Nhập giá phòng'
-              autoCapitalize='none'
-              returnKeyType='done'
-              autoCorrect={false}
-              value={this.state.price.toString()}
-              onChangeText={price => this.setState({ price })}
-              placeholderTextColor='black'
-              underlineColorAndroid='transparent' />
-          </View>
+            <View style={styles.inputWrapper}>
+              <Image source={iconprice}
+                style={styles.inlineImg} />
+              <NumbericInput style={styles.input}
+                placeholder='Nhập giá phòng'
+                autoCapitalize='none'
+                returnKeyType='done'
+                autoCorrect={false}
+                value={this.state.price.toString()}
+                onChangeText={price => this.setState({ price })}
+                placeholderTextColor='black'
+                underlineColorAndroid='transparent' />
+            </View>
 
-          <View style={styles.inputWrapper}>
-            <Image source={iconpicture}
-              style={styles.inlineImg} />
-            <TouchableOpacity style={styles.input}
-              onPress={this.ShowImgPicker.bind(this)}>
-              {this.state.dataimg ?
-                <Text style={styles.text}>
-                  Thay đổi ảnh đại diện
+            <View style={styles.inputWrapper}>
+              <Image source={iconpicture}
+                style={styles.inlineImg} />
+              <TouchableOpacity style={styles.input}
+                onPress={this.ShowImgPicker.bind(this)}>
+                {this.state.dataimg ?
+                  <Text style={styles.text}>
+                    Thay đổi ảnh đại diện
                   </Text> :
-                <Text style={styles.text}>
-                  Chọn một ảnh đại diện cho khách sạn
+                  <Text style={styles.text}>
+                    Chọn một ảnh đại diện cho khách sạn
                   </Text>
-              }
-            </TouchableOpacity>
-          </View>
-          {img}
-
-          <View style={styles.inputWrapper}>
-            <Image source={iconlocation}
-              style={styles.inlineImg} />
-            <TouchableOpacity style={styles.input}
-              onPress={() => { this.props.navigation.navigate('LocationScreen', { setAddress: this.setAddress.bind(this) }) }}>
-              <Text style={styles.text}>
-                {this.state.address}
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.inputWrapper}>
-            <Image source={icontype}
-              style={styles.inlineImg} />
-            <View style={styles.input}>
-              <Picker
-                selectedValue={this.state.hoteltype}
-                onValueChange={(value) => this.setState({ hoteltype: value })}
-              >
-                {this.renderItem()}
-              </Picker>
+                }
+              </TouchableOpacity>
             </View>
-          </View>
+            {img}
 
-          <View style={styles.inputWrapper}>
-            <Image source={iconphone}
-              style={styles.inlineImg} />
-            <TextInput style={styles.input}
-              placeholder='Nhập số điện thoại'
-              autoCapitalize='none'
-              returnKeyType='done'
-              autoCorrect={false}
-              value={this.state.phone}
-              onChangeText={phone => this.onChanged(phone)}
-              placeholderTextColor='black'
-              underlineColorAndroid='transparent' />
-          </View>
+            <View style={styles.inputWrapper}>
+              <Image source={iconlocation}
+                style={styles.inlineImg} />
+              <TouchableOpacity style={styles.input}
+                onPress={() => { this.props.navigation.navigate('LocationScreen', { setAddress: this.setAddress.bind(this) }) }}>
+                <Text style={styles.text}>
+                  {this.state.address}
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.inputWrapper}>
-            <Image source={iconwebsite}
-              style={styles.inlineImg} />
-            <TextInput style={styles.input}
-              placeholder='Nhập địa chỉ website nếu có'
-              autoCapitalize='none'
-              returnKeyType='done'
-              autoCorrect={false}
-              value={this.state.website}
-              onChangeText={website => this.setState({ website })}
-              placeholderTextColor='black'
-              underlineColorAndroid='transparent' />
-          </View>
-
-          <View style={{ padding: 7, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: 20 }}>
-            <Text style={styles.textHead}>Tiện nghi hàng đầu</Text>
-            <View style={styles.row}>
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.wifisanh ? this.setState({ wifisanh: false }) : this.setState({ wifisanh: true })
-                }>
-                  {this.renderimg(this.state.wifisanh, wifiactive, wifinotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Wifi tại sảnh</Text>
-                </View>
-              </View>
-
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.wifiphong ? this.setState({ wifiphong: false }) : this.setState({ wifiphong: true })
-                }>
-                  {this.renderimg(this.state.wifiphong, wifiactive, wifinotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Wifi trong phòng</Text>
-                </View>
+            <View style={styles.inputWrapper}>
+              <Image source={icontype}
+                style={styles.inlineImg} />
+              <View style={styles.input}>
+                <Picker
+                  selectedValue={this.state.hoteltype}
+                  onValueChange={(value) => this.setState({ hoteltype: value })}
+                >
+                  {this.renderItem()}
+                </Picker>
               </View>
             </View>
 
-
-            <View style={styles.row}>
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.beboi ? this.setState({ beboi: false }) : this.setState({ beboi: true })
-                }>
-                  {this.renderimg(this.state.beboi, poolactive, poolnotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Bể bơi</Text>
-                </View>
-              </View>
-
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.spa ? this.setState({ spa: false }) : this.setState({ spa: true })
-                }>
-                  {this.renderimg(this.state.spa, spaactive, spanotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Spa</Text>
-                </View>
-              </View>
+            <View style={styles.inputWrapper}>
+              <Image source={iconphone}
+                style={styles.inlineImg} />
+              <TextInput style={styles.input}
+                placeholder='Nhập số điện thoại'
+                autoCapitalize='none'
+                returnKeyType='done'
+                autoCorrect={false}
+                value={this.state.phone}
+                onChangeText={phone => this.onChanged(phone)}
+                placeholderTextColor='black'
+                underlineColorAndroid='transparent' />
             </View>
 
-            <View style={styles.row}>
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.doxe ? this.setState({ doxe: false }) : this.setState({ doxe: true })
-                }>
-                  {this.renderimg(this.state.doxe, Pactive, Pnotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Bãi đồ xe</Text>
-                </View>
-              </View>
-
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.vatnuoi ? this.setState({ vatnuoi: false }) : this.setState({ vatnuoi: true })
-                }>
-                  {this.renderimg(this.state.vatnuoi, petactive, petnotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Cho phép thú nuôi</Text>
-                </View>
-              </View>
+            <View style={styles.inputWrapper}>
+              <Image source={iconwebsite}
+                style={styles.inlineImg} />
+              <TextInput style={styles.input}
+                placeholder='Nhập địa chỉ website nếu có'
+                autoCapitalize='none'
+                returnKeyType='done'
+                autoCorrect={false}
+                value={this.state.website}
+                onChangeText={website => this.setState({ website })}
+                placeholderTextColor='black'
+                underlineColorAndroid='transparent' />
             </View>
 
-            <View style={styles.row}>
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.dieuhoa ? this.setState({ dieuhoa: false }) : this.setState({ dieuhoa: true })
-                }>
-                  {this.renderimg(this.state.dieuhoa, aircondiactive, aircondinotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Điều hòa nhiệt độ</Text>
-                </View>
-              </View>
-
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.nhahang ? this.setState({ nhahang: false }) : this.setState({ nhahang: true })
-                }>
-                  {this.renderimg(this.state.nhahang, restaurantactive, restaurantnotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Nhà hàng</Text>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.row}>
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.bar ? this.setState({ bar: false }) : this.setState({ bar: true })
-                }>
-                  {this.renderimg(this.state.bar, baractive, barnotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Quầy bar</Text>
-                </View>
-              </View>
-
-              <View style={[styles.item, {}]}>
-                <TouchableOpacity onPress={() =>
-                  this.state.gym ? this.setState({ gym: false }) : this.setState({ gym: true })
-                }>
-                  {this.renderimg(this.state.gym, gymactive, gymnotactive)}
-                </TouchableOpacity>
-                <View style={{ flex: 4 }}>
-                  <Text numberOfLines={1}>Phòng Gym</Text>
-                </View>
-              </View>
-            </View>
-
-          </View>
-          <View style={{ height: 10 }}></View>
-
-          <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 7, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ fontWeight: 'bold' }}>Tiện nghi khách sạn</Text>
-            <View style={styles.row} />
-            {
-              this.state.textInput.map((e, index) => (
-                <View style={styles.row2} key={index}>
-                  <View style={styles.khungtimkiem}>
-                    <TextInput
-                      style={{ flex: 1 }}
-                      placeholder="Thêm tiện nghi khách sạn"
-                      underlineColorAndroid="transparent"
-                      value={e.value}
-                      onChangeText={(txt) => this.onChangeText(txt, index)}
-                    />
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.deleteTextInput(index);
-                    }}
-                  >
-                    <View style={{ paddingHorizontal: 7 }}>
-
-                      <Image source={icdelete} style={{ height: 25, width: 25 }} />
-                    </View>
+            <View style={{ padding: 7, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: 20 }}>
+              <Text style={styles.textHead}>Tiện nghi hàng đầu</Text>
+              <View style={styles.row}>
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.wifisanh ? this.setState({ wifisanh: false }) : this.setState({ wifisanh: true })
+                  }>
+                    {this.renderimg(this.state.wifisanh, wifiactive, wifinotactive)}
                   </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Wifi tại sảnh</Text>
+                  </View>
                 </View>
-              ))
-            }
-            <TouchableOpacity
-              onPress={() => {
-                this.addTextInput(this.state.textInput.length);
-              }}
-            >
-              <View style={{ paddingHorizontal: 7 }}>
-                <Image source={icthem} style={{ height: 30, width: 30 }} />
+
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.wifiphong ? this.setState({ wifiphong: false }) : this.setState({ wifiphong: true })
+                  }>
+                    {this.renderimg(this.state.wifiphong, wifiactive, wifinotactive)}
+                  </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Wifi trong phòng</Text>
+                  </View>
+                </View>
               </View>
-            </TouchableOpacity>
 
-          </View>
+              <View style={styles.row}>
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.beboi ? this.setState({ beboi: false }) : this.setState({ beboi: true })
+                  }>
+                    {this.renderimg(this.state.beboi, poolactive, poolnotactive)}
+                  </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Bể bơi</Text>
+                  </View>
+                </View>
 
-          <ButtonSubmit click={this.Submit.bind(this)}
-            text={this.state.textbtn} />
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.spa ? this.setState({ spa: false }) : this.setState({ spa: true })
+                  }>
+                    {this.renderimg(this.state.spa, spaactive, spanotactive)}
+                  </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Spa</Text>
+                  </View>
+                </View>
+              </View>
 
-        </KeyboardAvoidingView>
+              <View style={styles.row}>
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.doxe ? this.setState({ doxe: false }) : this.setState({ doxe: true })
+                  }>
+                    {this.renderimg(this.state.doxe, Pactive, Pnotactive)}
+                  </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Bãi đồ xe</Text>
+                  </View>
+                </View>
 
-      </ScrollView>
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.vatnuoi ? this.setState({ vatnuoi: false }) : this.setState({ vatnuoi: true })
+                  }>
+                    {this.renderimg(this.state.vatnuoi, petactive, petnotactive)}
+                  </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Cho phép thú nuôi</Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.row}>
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.dieuhoa ? this.setState({ dieuhoa: false }) : this.setState({ dieuhoa: true })
+                  }>
+                    {this.renderimg(this.state.dieuhoa, aircondiactive, aircondinotactive)}
+                  </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Điều hòa nhiệt độ</Text>
+                  </View>
+                </View>
+
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.nhahang ? this.setState({ nhahang: false }) : this.setState({ nhahang: true })
+                  }>
+                    {this.renderimg(this.state.nhahang, restaurantactive, restaurantnotactive)}
+                  </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Nhà hàng</Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.row}>
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.bar ? this.setState({ bar: false }) : this.setState({ bar: true })
+                  }>
+                    {this.renderimg(this.state.bar, baractive, barnotactive)}
+                  </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Quầy bar</Text>
+                  </View>
+                </View>
+
+                <View style={[styles.item, {}]}>
+                  <TouchableOpacity onPress={() =>
+                    this.state.gym ? this.setState({ gym: false }) : this.setState({ gym: true })
+                  }>
+                    {this.renderimg(this.state.gym, gymactive, gymnotactive)}
+                  </TouchableOpacity>
+                  <View style={{ flex: 4 }}>
+                    <Text numberOfLines={1}>Phòng Gym</Text>
+                  </View>
+                </View>
+              </View>
+
+            </View>
+            <View style={{ height: 10 }}></View>
+
+            <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 7, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={{ fontWeight: 'bold' }}>Tiện nghi khách sạn</Text>
+              <View style={styles.row} />
+              {
+                this.state.textInput.map((e, index) => (
+                  <View style={styles.row2} key={index}>
+                    <View style={styles.khungtimkiem}>
+                      <TextInput
+                        style={{ flex: 1 }}
+                        placeholder="Thêm tiện nghi khách sạn"
+                        underlineColorAndroid="transparent"
+                        value={e.value}
+                        onChangeText={(txt) => this.onChangeText(txt, index)}
+                      />
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.deleteTextInput(index);
+                      }}
+                    >
+                      <View style={{ paddingHorizontal: 7 }}>
+
+                        <Image source={icdelete} style={{ height: 25, width: 25 }} />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                ))
+              }
+              <TouchableOpacity
+                onPress={() => {
+                  this.addTextInput(this.state.textInput.length);
+                }}
+              >
+                <View style={{ paddingHorizontal: 7 }}>
+                  <Image source={icthem} style={{ height: 30, width: 30 }} />
+                </View>
+              </TouchableOpacity>
+
+            </View>
+
+            <ButtonSubmit click={this.Submit.bind(this)}
+              text={this.state.textbtn} />
+
+          </KeyboardAvoidingView>
+
+        </ScrollView>
+
+        {
+          this.state.isLoad ?
+            (<ActivityIndicator size={50} style={styles.loading} />) :
+            null
+        }
+
+      </View >
     )
   }
 }
 const styles = StyleSheet.create({
   inputWrapper: {
-    height: height / 10
+    height: 60
   },
   inlineImg: {
     position: 'absolute',
@@ -825,6 +853,14 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     marginTop: 10,
-
+  },
+  loading: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0
   }
 });

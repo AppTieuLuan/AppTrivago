@@ -7,7 +7,8 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 const {width, height} = Dimensions.get('window');
 
@@ -36,7 +37,8 @@ export default class UploadImg extends Component{
     this.state = {
       avatarSource: null,
       dataimg: null,
-      text: 'Chọn ảnh'
+      text: 'Chọn ảnh',
+      isLoad: false,
     };
   }
   componentDidMount(){
@@ -93,9 +95,11 @@ export default class UploadImg extends Component{
       );
       return false;
     }
+    this.setState({isLoad: true});
     // Bắt đầu tải ảnh lên
     uploadImg(global.idks, dataimg)
     .then(res => {
+      this.setState({isLoad: false});
       if(!res){
         this.setState({
           text: 'Chọn ảnh mới',
@@ -148,7 +152,11 @@ export default class UploadImg extends Component{
   			</View>
 
         <ButtonImg click={this.Upload.bind(this)} text={'Tải ảnh lên ngay'}/>
-
+        {
+          this.state.isLoad ? 
+          (<ActivityIndicator size={50} style={styles.loading}/>):
+          null
+        }
         </View>
       </ScrollView>
     )
@@ -176,4 +184,13 @@ const styles = StyleSheet.create({
 		color: 'black',
 		backgroundColor: 'transparent',
 	},
+  loading:{
+    position: 'absolute', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    top: 0, 
+    bottom: 0, 
+    right: 0, 
+    left: 0
+  }
 });

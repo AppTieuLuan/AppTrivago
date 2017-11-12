@@ -1,7 +1,7 @@
 import global from '../component/global';
 
 const updatehotel = (id, namehotel, price, dataimg, hoteltype, phone,
-    date, address, lat, lng, tiennghi, website) => (
+    date, address, lat, lng, tiennghi, website, tiennghikhachsan) => (
         fetch(global.server + 'updatehotel.php',
             {
                 method: 'POST',
@@ -11,7 +11,7 @@ const updatehotel = (id, namehotel, price, dataimg, hoteltype, phone,
                 },
                 body: JSON.stringify({
                     id, namehotel, price, dataimg, hoteltype, phone,
-                    date, address, lat, lng, tiennghi, website
+                    date, address, lat, lng, tiennghi, website, tiennghikhachsan
                 })
             })
             .then(res => res.text())

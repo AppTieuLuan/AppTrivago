@@ -102,17 +102,18 @@ export default class MapViewComponent extends Component {
                   data={this.state.mang}
                   keyExtractor={item => item.place_id}
                   renderItem={({ item }) =>
-                  <View style={{borderBottomWidth: 0.5, borderTopWidth: 0.5,
-                    height: height/12, backgroundColor: '#fff', width: width}}>
                     <TouchableOpacity
                     onPress={() =>
                       this.click(item.geometry.location.lat,
                         item.geometry.location.lng,
                         item.formatted_address)}
                     >
-                      <Text>{item.formatted_address}</Text>
+                      <View style={{borderBottomWidth: 0.5, borderTopWidth: 0.5,
+                        height: height/12, backgroundColor: '#fff', width: width}}>
+
+                          <Text>{item.formatted_address}</Text>
+                      </View>
                     </TouchableOpacity>
-                  </View>
                   }
                 />
               </View>
