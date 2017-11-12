@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    View, Text, ScrollView, TouchableOpacity, StyleSheet, Image
+    View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, TextInput
 } from 'react-native';
 import global from '../global';
 
@@ -20,7 +20,10 @@ export default class Details_Info extends Component {
             dieuhoa: false,
             nhahang: false,
             bar: false,
-            gym: false
+            gym: false,
+            arrtiennghi: [],
+            moTienNghiKS: false,
+
         }
     }
 
@@ -30,18 +33,25 @@ export default class Details_Info extends Component {
         });
         this.loadThongTin();
     }
-
-    loadThongTin() {
+    moTienNghiKS() {
         this.setState({
-            refresh: true
+            moTienNghiKS: !this.state.moTienNghiKS
         })
-        fetch(global.server.concat('getThongTinKhachSan.php?id=' + global.idKS))
+    }
+    loadThongTin() {
+        //fetch(global.server.concat('getThongTinKhachSan.php?id=' + global.idKS))
+        fetch(global.server.concat('demoGetTTKS.php?id=' + global.idKS))
             .then((response) => response.json())
             .then((responseJson) => {
                 this.setState({
-                    mang: responseJson
+                    mang: responseJson,
+                    //arrtiennghi: responseJson[0].thietbikhachsan.split('-')
                 });
-
+                if (responseJson[0].thietbikhachsan !== null) {
+                    this.setState({
+                        arrtiennghi: responseJson[0].thietbikhachsan.split('-')
+                    });
+                }
                 var temp = this.state.mang[0].tiennghihangdau.split('');
 
                 if (temp[0] === '1') {
@@ -77,6 +87,7 @@ export default class Details_Info extends Component {
 
 
                 global.loadchitiet = true;
+                //alert(this.state.arrtiennghi.length);
             })
             .catch((e) => { console.log(e) });
 
@@ -169,10 +180,44 @@ export default class Details_Info extends Component {
                     </View>
 
                 </View>
+                <TouchableOpacity
+                    onPress={() => {
+                        this.moTienNghiKS();
+                    }}
+                >
+                    <Text style={{ padding: 10 }}>+ Hiện thị tất cả thiết bị khách sạn</Text>
+                </TouchableOpacity>
+                {
+                    this.state.moTienNghiKS ?
+                        <View>
+                            <View style={{ borderBottomWidth: 1 / 2, borderBottomColor: '#767b83' }}></View>
+                            <View style={{ padding: 7 }}>
+                                <Text style={styles.textHead}>Thiết bị khách sạn</Text>
+                                {
+                                    this.state.arrtiennghi.map(e => (
+                                        <Text key={e} style={{ paddingLeft: 10, paddingVertical: 5 }}>{e}</Text>
+                                    ))
+                                }
+
+                            </View>
+                        </View>
+                        : null
+                }
+
+
+
+
+
                 <View style={{ borderBottomWidth: 1 / 2, borderBottomColor: '#767b83' }}></View>
                 <View style={{ padding: 7 }}>
                     <Text style={styles.textHead}>Hình thức chỗ ở</Text>
                     <Text>{this.state.mang.length > 0 ? this.state.mang[0].loai : ''}</Text>
+                </View>
+
+                <View style={{ borderBottomWidth: 1 / 2, borderBottomColor: '#767b83' }}></View>
+                <View style={{ padding: 7 }}>
+                    <Text style={styles.textHead}>Giá từ</Text>
+                    <Text style={{ fontWeight: 'bold' }}>{this.state.mang.length > 0 ? this.state.mang[0].gia + ' VNĐ' : ''}</Text>
                 </View>
 
                 <View style={{ borderBottomWidth: 1 / 2, borderBottomColor: '#767b83' }}></View>
