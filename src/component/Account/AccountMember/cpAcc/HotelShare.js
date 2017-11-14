@@ -322,13 +322,13 @@ export default class HotelShare extends Component {
         .catch(err => console.log(err));
     } else { // th ực hiện cập nhật thông tin khách sạn đã thêm từ người dùng
       //alert(global.hotel.id +'-----'+namehotel+'-----'+ price+'-----'+ dataimg+'-----'+ hoteltype+'-----'+ this.state.phone+'-----'+ this.state.date+'-----'+ address+'-----'+ lat+'-----'+ lng+'-----'+ this.state.tiennghi+'-----'+ website+'-----'+ tiennghikhachsan);
-     
+
       this.setState({ isLoad: true });// bắt đầu loading
       updatehotel(global.hotel.id, namehotel, price, dataimg, hoteltype, this.state.phone, this.state.date,
         address, lat, lng, this.state.tiennghi, website, tiennghikhachsan)
         .then(res => {
           this.setState({ isLoad: false });// khi khi dữ liệu được fetch xong
-          
+
           if (res.trim() === 'THANH_CONG') {
             Alert.alert(
               'Thông báo',
@@ -344,8 +344,8 @@ export default class HotelShare extends Component {
               { cancelable: false }
             )
             //ToastAndroid.show('Thành công', ToastAndroid.SHORT);
-           } 
-           else {
+          }
+          else {
             Alert.alert(
               'Thông báo',
               'Cập nhật thất bại!\nVui lòng thử lại!',
@@ -355,7 +355,7 @@ export default class HotelShare extends Component {
               { cancelable: false }
             )
             //ToastAndroid.show('Lỗi ! Thử lại sau..', ToastAndroid.SHORT);
-          } 
+          }
         })
         .catch(err => console.log(err));
     }

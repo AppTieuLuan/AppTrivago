@@ -25,6 +25,7 @@ import ChangePass from './Account/AccountMember/cpAcc/ChangePass';
 import UploadImg from './Account/AccountMember/cpAcc/UploadImg';
 import HotelShared from './Account/AccountMember/cpAcc/Hotel_Shared';
 import Message from './Account/AccountMember/cpAcc/Message';
+import UploadAnyImg from './Account/AccountMember/cpAcc/UploadAnyImg';
 
 
 var { height, width } = Dimensions.get('window');
@@ -127,7 +128,7 @@ export const MainStack = StackNavigator({
         }
     },
     UploadImgScreen: {
-        screen: UploadImg,
+        screen: UploadAnyImg,
         navigationOptions: {
             headerTitle: 'Quay lại'
         }
