@@ -16,7 +16,6 @@ $lat = $obj['lat'];
 $lng = $obj['lng'];
 $tiennghi = $obj['tiennghi'];
 $website = $obj['website'];
-$thietbikhachsan = $obj['tiennghikhachsan'];
 //decode dataimg và up ảnh lên host
 $data = base64_decode($dataimg);
 //set nơi lưu vào và tên file.png
@@ -30,7 +29,7 @@ if($data){
 // echo $userid.' '.$namehotel.' '.$price.' '.$hoteltype.' '.$phone.' '.$date.' '.$address.' '.$lat.' '.$lng.' '.$website.' '.$uri;
 if($namehotel !=='' && $price !== '' && $dataimg!=='' && $hoteltype !=='' && $phone !== '' && $date!=='' && $address !=='' && $lat !== '' && $lng!=='' && $tiennghi !== '' && $uri !== ''){
 	
- 	$sql = "INSERT INTO khachsan(ten, gia, hinhanh, diachi, loai, website, sdt, tiennghihangdau, ngaycapnhat, user, tinhtrang, daduyet, lat, `long`,thietbikhachsan) VALUES('$namehotel','$price','$uri', '$address', '$hoteltype', '$website', '$phone', '$tiennghi', '$date', '$userid', '0', '0', '$lat', '$lng','$thietbikhachsan')";
+ 	$sql = "INSERT INTO khachsan(ten, gia, hinhanh, diachi, loai, website, sdt, tiennghihangdau, ngaycapnhat, user, tinhtrang, daduyet, lat, `long`) VALUES('$namehotel','$price','$uri', '$address', '$hoteltype', '$website', '$phone', '$tiennghi', '$date', '$userid', '0', '0', '$lat', '$lng')";
 	$result = $mysqli->query($sql);
 	if($result){
 		$sql1 = "SELECT MAX(id) as id from khachsan";
