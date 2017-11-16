@@ -188,7 +188,7 @@ export default class Main extends Component {
                         this.setState({
                             refresh: true,
                         })
-                        
+
                         fetch(global.server + 'getDanhSachKhachSanLocSao.php?trang=' + global.trangloc + '&sosao=' + global.locsao + '&lat=' + global.latsearch + '&long=' + global.longsearch + '&bankinh=' + global.bankinhsearch)
                             .then((response) => response.json())
                             .then((responseJson) => {
@@ -476,16 +476,14 @@ export default class Main extends Component {
                         <TouchableWithoutFeedback
                             onPress={() => {
                                 global.onSignIn ?
-                                global.onSignIn.quyen === '1' ? navigate('AccountScreen', { flag: '2' }) :
-                                    navigate('AccountMemberScreen', { flag: '2' }) :
-                                navigate('SigninScreen', { flag: '2' })
+                                    global.onSignIn.quyen === '1' ? navigate('AccountScreen', { flag: '2' }) :
+                                        navigate('AccountMemberScreen', { flag: '2' }) :
+                                    navigate('SigninScreen', { flag: '2' })
                             }}
                         >
                             <Image style={styles.imgHeader} source={icAc} />
                         </TouchableWithoutFeedback>
                     </View>
-
-
                 </View>
                 <TouchableOpacity
                     onPress={() => { this.refs.ds.scrollToIndex({ animated: true, index: 0, viewPosition: 0 }); }}
@@ -630,8 +628,7 @@ const styles = StyleSheet.create({
         height: height / 12,
         padding: 10,
         alignItems: 'center',
-        justifyContent: 'space-between',
-
+        justifyContent: 'space-between'
     },
     imgHeader: {
         width: 25,

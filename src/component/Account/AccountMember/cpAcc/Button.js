@@ -54,27 +54,27 @@ export default class ButtonSubmit extends Component {
 
 	render() {
 		const changeWidth = this.buttonAnimated.interpolate({
-	    inputRange: [0, 1],
-	    outputRange: [DEVICE_WIDTH - MARGIN, MARGIN]
-	  });
-	  const changeScale = this.growAnimated.interpolate({
-	    inputRange: [0, 1],
-	    outputRange: [1, MARGIN]
-	  });
+			inputRange: [0, 1],
+			outputRange: [DEVICE_WIDTH - MARGIN, MARGIN]
+		});
+		const changeScale = this.growAnimated.interpolate({
+			inputRange: [0, 1],
+			outputRange: [1, MARGIN]
+		});
 
 		return (
 			<View style={styles.container}>
-				<Animated.View style={{width: changeWidth}}>
+				<Animated.View style={{ width: changeWidth }}>
 					<TouchableOpacity style={styles.button}
 						onPress={this._onPress.bind(this)}
 						activeOpacity={1} >
-							{this.state.isLoading ?
-								<Image source={loading} style={styles.image} />
-								:
-								<Text style={styles.text}>{this.props.text}</Text>
-							}
+						{this.state.isLoading ?
+							<Image source={loading} style={styles.image} />
+							:
+							<Text style={styles.text}>{this.props.text}</Text>
+						}
 					</TouchableOpacity>
-					<Animated.View style={[ styles.circle, {transform: [{scale: changeScale}]} ]} />
+					<Animated.View style={[styles.circle, { transform: [{ scale: changeScale }] }]} />
 				</Animated.View>
 			</View>
 		);

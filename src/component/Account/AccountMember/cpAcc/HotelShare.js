@@ -249,7 +249,7 @@ export default class HotelShare extends Component {
     const resetAction = NavigationActions.reset({
       index: 1,
       actions: [
-        NavigationActions.navigate({ routeName: 'AccountScreen' }),
+        NavigationActions.navigate({ routeName: 'AccountMemberScreen' }),
         NavigationActions.navigate({
           routeName: 'UploadImgScreen',
           params: { id }
@@ -280,14 +280,6 @@ export default class HotelShare extends Component {
       { cancelable: false }
     );
   }
-
-  // let tiengnghikhachsan = '';
-  // for (let i = 0; i < this.state.textInput.length; i++) {
-  //   tiengnghikhachsan = tiengnghikhachsan + this.state.textInput[i].value + '-';
-  // }
-  // alert(tiengnghikhachsan.slice(0, -1));
-
-
   Submit() {
     const { namehotel, price, dataimg, hoteltype, phone, address } = this.state;
     const { lat, lng, website } = this.state;
@@ -302,7 +294,6 @@ export default class HotelShare extends Component {
 
     tiennghikhachsan = tiennghikhachsan.slice(0, -1);
     //alert(tiengnghikhachsan.slice(0, -1));
-
 
     if (!this.state.flag) {
       //kiểm tra tính hợp lệ của dữ liệu
@@ -406,7 +397,6 @@ export default class HotelShare extends Component {
   }
 
   deleteTextInput(index) {
-
     let textInput = this.state.textInput;
     textInput.splice(index, 1);
     this.setState({ textInput });
@@ -491,8 +481,7 @@ export default class HotelShare extends Component {
           <KeyboardAvoidingView behavior='padding'
             style={styles.container}>
             <View style={styles.inputWrapper}>
-              <Image source={sharehotel}
-                style={styles.inlineImg} />
+              <Image source={sharehotel} style={styles.inlineImg} />
               <TextInput style={styles.input}
                 placeholder='Nhập tên khách sạn'
                 autoCapitalize='none'
@@ -771,7 +760,11 @@ export default class HotelShare extends Component {
 }
 const styles = StyleSheet.create({
   inputWrapper: {
-    height: 60
+    //backgroundColor: 'red',
+    height: 60,
+    //justifyContent: 'center',
+    //width: width - 40,
+    //marginVertical: 15
   },
   inlineImg: {
     position: 'absolute',

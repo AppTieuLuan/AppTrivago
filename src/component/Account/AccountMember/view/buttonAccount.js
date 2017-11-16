@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
 	View,
 	Text,
@@ -10,20 +10,20 @@ import {
 
 const { height, width } = Dimensions.get('window');
 
-export default class logout extends Component{
-	render(){
-		return(
-		<View style={styles.container}>
-			<View style={styles.inputWrapper}>
-				<Image source={this.props.source}
-					style={styles.inlineImg} />
-				<TouchableOpacity style={styles.input}
-					onPress={this.props.click}
-				>
-					<Text style={styles.text}>{this.props.text}</Text>
-				</TouchableOpacity>
+export default class logout extends Component {
+	render() {
+		return (
+			<View style={styles.container}>
+				<View style={styles.inputWrapper}>
+					<Image source={this.props.source}
+						style={styles.inlineImg} />
+					<TouchableOpacity style={styles.input}
+						onPress={this.props.click}
+					>
+						<Text style={styles.text}>{this.props.text}</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
-		</View>
 		);
 	}
 }
@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
 		height: 22,
 		left: 35,
 		top: 10
-  },
-  container: {
+	},
+	container: {
 		alignItems: 'center',
 		top: 10
 	},
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
 		borderRadius: 20,
 	},
 	text: {
-		top:10,
+		top: 10,
 		color: 'black',
 		fontSize: 17
 	}

@@ -31,7 +31,7 @@ export default class Welcome extends Component {
     global.bankinhsearch = 20;
     global.mapAlready = false;
     global.loadDataMap = false;
-   
+
   }
   WelSearch = () => {
     global.keysearch = this.state.text;
@@ -78,13 +78,13 @@ export default class Welcome extends Component {
   }
   componentDidMount() {
     //set server
-    //global.server = 'http://192.168.1.7:8080/Demo/';
+    //global.server = 'http://192.168.1.3:8080/Demo/';
     global.server = 'https://webservicestrivago.000webhostapp.com/';
     global.loadchitiet = false;
     global.loadhinhanh = false;
     global.loaddanhgia = false;
     global.loadbando = false;
-    
+
     setInterval(refreshToken, 30000);
     getToken()
       .then(token => checkLogin(token))
@@ -159,7 +159,7 @@ export default class Welcome extends Component {
             </View> */}
 
             <View style={style.khungtimkiem}>
-              <View>
+              <View style={{}}>
                 <TouchableOpacity
                   onPress={() => {
                     this.layViTriHienTai();
@@ -170,13 +170,15 @@ export default class Welcome extends Component {
                   </View>
                 </TouchableOpacity>
               </View>
-              <TextInput
-                style={style.search}
-                placeholder="Vị trí hiện tại"
-                underlineColorAndroid="transparent"
-                value={this.state.text}
-                onChangeText={(text) => this.setState({ text })}
-              />
+             
+                <TextInput
+                  style={style.search}
+                  placeholder="Vị trí hiện tại"
+                  underlineColorAndroid="transparent"
+                  value={this.state.text}
+                  onChangeText={(text) => this.setState({ text })}
+                />
+             
             </View>
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
               <TouchableOpacity
@@ -214,7 +216,8 @@ var style = StyleSheet.create({
   search: {
     //borderWidth: 3,
     //borderColor: '#fafafa'
-    flex: 1
+    flex: 1,
+
   },
   iconsearch: {
     width: 30,
@@ -224,7 +227,7 @@ var style = StyleSheet.create({
     alignItems: 'center',
     margin: 5,
     marginHorizontal: 10,
-
+    justifyContent: 'center',
     flex: 1,
     flexDirection: 'row',
 

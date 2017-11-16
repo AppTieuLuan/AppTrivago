@@ -12,8 +12,8 @@ export default class MapViewDetails extends Component {
         this.state = {
             marker: [],
             region: {
-                latitude: 10.781071020876045,
-                longitude: 106.64713607239723,
+                latitude: 10.84515136083,
+                longitude: 106.79982841015,
                 latitudeDelta: 0.102,
                 longitudeDelta: 0.102,
             }

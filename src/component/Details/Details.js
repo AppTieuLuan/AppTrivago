@@ -33,6 +33,10 @@ export default class Details extends Component {
                 global.loadbando) {
                     clearInterval(dd);
                     global.closeModalLoadDetail();
+                    global.loadchitiet = false;
+                    global.loadhinhanh = false;
+                    global.loaddanhgia = false;
+                    global.loadbando = false;
                     //this.setState({ isVisible: false });
                 }
         }, 1000)
