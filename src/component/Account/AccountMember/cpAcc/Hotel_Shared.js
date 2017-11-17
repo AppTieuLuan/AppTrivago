@@ -136,7 +136,7 @@ export default class HotelShared extends Component {
                                                                 </View>
 
                                                                 <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
-                                                                    <Text style={{ fontSize: 12, color: 'black' }}>Thêm ảnh</Text>
+                                                                    <Text style={{ fontSize: 12, color: 'black' }}>Sửa ảnh</Text>
                                                                 </View>
                                                             </TouchableOpacity>
 

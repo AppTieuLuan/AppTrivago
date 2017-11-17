@@ -44,29 +44,18 @@ export default class ButtonSubmit extends Component {
 		).start();
 
 		setTimeout(() => {
-			//this._onGrow();
-		}, 2200);
-
-		setTimeout(() => {
-			//Actions.secondScreen();
-			this.props.click();
-			this.setState({ isLoading: false });
-			this.buttonAnimated.setValue(0);
-			this.growAnimated.setValue(0);
+			this.props.click((load) => {
+				if(load){//đóng animation khi nhận thông điệp callback
+					this.closeAnimation();
+				}
+			});
 		}, 2300);
 	}
-
-	_onGrow() {
-		Animated.timing(
-			this.growAnimated,
-			{
-				toValue: 1,
-				duration: 200,
-				easing: Easing.linear
-			}
-		).start();
+	closeAnimation(){//đóng animation
+		this.setState({ isLoading: false });
+		this.buttonAnimated.setValue(0);
+		this.growAnimated.setValue(0); 
 	}
-
 	render() {
 		const changeWidth = this.buttonAnimated.interpolate({
 	    inputRange: [0, 1],

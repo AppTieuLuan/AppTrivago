@@ -113,7 +113,6 @@ export default class HotelShare extends Component {
       textbtn: 'Chia sẻ ngay',
       flag: false,
       textInput: [],
-      isLoad: false,
     }
   }
   //kiểm tra hợp lệ
@@ -281,14 +280,41 @@ export default class HotelShare extends Component {
     );
   }
 
-  // let tiengnghikhachsan = '';
-  // for (let i = 0; i < this.state.textInput.length; i++) {
-  //   tiengnghikhachsan = tiengnghikhachsan + this.state.textInput[i].value + '-';
-  // }
-  // alert(tiengnghikhachsan.slice(0, -1));
+  onChangeText(txt, index) {
+    let textInput = this.state.textInput;
+    textInput[index].value = txt;
+    this.setState({ textInput });
+  }
 
+  addTextInput = (index) => {
+    if (index === 0)
+      this.setState({
+        textInput: this.state.textInput.concat({ id: 0, value: '' })
+      });
+    else {
+      if (this.state.textInput[index - 1].value === '') {
+        ToastAndroid.show('Vui lòng nhập đầy đủ trước khi thêm mới !', ToastAndroid.SHORT);
+      } else {
 
-  Submit() {
+        let { textInput } = this.state;
+        let maxId = Math.max.apply(null, textInput.map(item => item.id)) + 1;
+
+        this.setState({
+          textInput: this.state.textInput.concat({ id: maxId, value: '' })
+        });
+      }
+    }
+
+  }
+
+  deleteTextInput(index) {
+
+    let textInput = this.state.textInput;
+    textInput.splice(index, 1);
+    this.setState({ textInput });
+  }
+  //
+  Submit(cb) {
     const { namehotel, price, dataimg, hoteltype, phone, address } = this.state;
     const { lat, lng, website } = this.state;
     this.setTienNghi();
@@ -299,36 +325,31 @@ export default class HotelShare extends Component {
     for (let i = 0; i < this.state.textInput.length; i++) {
       tiennghikhachsan = tiennghikhachsan + this.state.textInput[i].value + '-';
     }
-
     tiennghikhachsan = tiennghikhachsan.slice(0, -1);
     //alert(tiengnghikhachsan.slice(0, -1));
-
-
     if (!this.state.flag) {
       //kiểm tra tính hợp lệ của dữ liệu
       let flag = this.validation();
       if (!flag) {
+        let load = true;//gửi thông điệp để tắt animation
+        cb(load);
         return false;
       }
-
-      this.setState({ isLoad: true });// bắt đầu loading
       registerhotel(namehotel, price, dataimg, hoteltype, phone, this.state.date,
         address, lat, lng, this.state.tiennghi, website, global.onSignIn.id, tiennghikhachsan)
         .then(res => {
-          this.setState({ isLoad: false });// khi khi dữ liệu được fetch xong
+          let load = true;//gửi thông điệp để tắt animation
+          cb(load);
           if (res.rp.trim() === 'THANH_CONG') return this.onSuccess(res.id);
           this.onFail();
         })
         .catch(err => console.log(err));
     } else { // th ực hiện cập nhật thông tin khách sạn đã thêm từ người dùng
-      //alert(global.hotel.id +'-----'+namehotel+'-----'+ price+'-----'+ dataimg+'-----'+ hoteltype+'-----'+ this.state.phone+'-----'+ this.state.date+'-----'+ address+'-----'+ lat+'-----'+ lng+'-----'+ this.state.tiennghi+'-----'+ website+'-----'+ tiennghikhachsan);
-
-      this.setState({ isLoad: true });// bắt đầu loading
       updatehotel(global.hotel.id, namehotel, price, dataimg, hoteltype, this.state.phone, this.state.date,
         address, lat, lng, this.state.tiennghi, website, tiennghikhachsan)
         .then(res => {
-          this.setState({ isLoad: false });// khi khi dữ liệu được fetch xong
-
+          let load = true;//gửi thông điệp để tắt animation
+          cb(load);
           if (res.trim() === 'THANH_CONG') {
             Alert.alert(
               'Thông báo',
@@ -361,56 +382,6 @@ export default class HotelShare extends Component {
     }
   }
 
-
-  onChangeText(txt, index) {
-    let textInput = this.state.textInput;
-    textInput[index].value = txt;
-    this.setState({ textInput });
-    //valueTextIput[key - 1].value = txt;
-    //this.setState({ valueTextIput });
-
-    //alert(this.state.textInput[key-1].id);
-
-    //alert(key + '----' + txt);
-  }
-
-  addTextInput = (index) => {
-    // let textInput = this.state.textInput;
-    // this.setState({
-    //   valueTextIput: this.state.valueTextIput.concat('')
-    // });
-
-    // textInput.push(<TextInput key={key} value={this.state.valueTextIput[key]} onChangeText={(txt) => this.onChangeText(txt, key)} />);
-    // this.setState({ textInput });
-
-
-
-    if (index === 0)
-      this.setState({
-        textInput: this.state.textInput.concat({ id: 0, value: '' })
-      });
-    else {
-      if (this.state.textInput[index - 1].value === '') {
-        ToastAndroid.show('Vui lòng nhập đầy đủ trước khi thêm mới !', ToastAndroid.SHORT);
-      } else {
-
-        let { textInput } = this.state;
-        let maxId = Math.max.apply(null, textInput.map(item => item.id)) + 1;
-
-        this.setState({
-          textInput: this.state.textInput.concat({ id: maxId, value: '' })
-        });
-      }
-    }
-
-  }
-
-  deleteTextInput(index) {
-
-    let textInput = this.state.textInput;
-    textInput.splice(index, 1);
-    this.setState({ textInput });
-  }
   componentDidMount() {
     if (this.props.navigation.state.params.flag) {
       this.setState({
@@ -442,9 +413,6 @@ export default class HotelShare extends Component {
           textInput: temp2
         });
 
-        // this.setState({
-        //   textInput: global.hotel.thietbikhachsan.split('');
-        // })
       }
       var temp = global.hotel.tiennghihangdau.split('');
       if (temp[0] === '1') {
@@ -759,12 +727,6 @@ export default class HotelShare extends Component {
 
         </ScrollView>
 
-        {
-          this.state.isLoad ?
-            (<ActivityIndicator size={50} style={styles.loading} />) :
-            null
-        }
-
       </View >
     )
   }
@@ -853,14 +815,5 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     marginTop: 10,
-  },
-  loading: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0
   }
 });

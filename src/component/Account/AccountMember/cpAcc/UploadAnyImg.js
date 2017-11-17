@@ -38,7 +38,6 @@ export default class UploadAnyImg extends Component {
     super(props);
     this.state = {
       text: 'Thêm ảnh',
-      isLoad: false,
       arrimg: [],
       arrimguribase64: [],
       arrimgbase64: [],
@@ -164,10 +163,11 @@ export default class UploadAnyImg extends Component {
     })
   }
   // Tải ảnh lên
-  UploadSubmit() {
-    //console.log(this.state.arriddelete, this.state.arrimgbase64, global.idks);
+  UploadSubmit(cb) {
     Upload(this.state.arriddelete, this.state.arrimgbase64, global.idks)
       .then(res => {
+        let load = true;// gửi thông điệp đi để tắt animation
+        cb(load);
         if (res.trim() === 'THANH_CONG') {
           Alert.alert(
             'Thông báo',
@@ -199,7 +199,7 @@ export default class UploadAnyImg extends Component {
             {
               this.state.len === 0 ? null : (
                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ top: 10, fontSize: 17 }}>Ảnh đã thêm trước đó</Text>
+                  <Text style={{ top: 10, fontSize: 20, color: 'black' }}>Ảnh đã thêm trước đó</Text>
                   <View style={{ top: 20, marginBottom: 20 }}>
                     {
                       this.state.arrimg.map((e, index) => (
@@ -227,7 +227,7 @@ export default class UploadAnyImg extends Component {
             {
               this.state.lenght === 0 ? null : (
                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ top: 10, fontSize: 17 }}>Ảnh mới thêm</Text>
+                  <Text style={{ top: 10, fontSize: 20, color: 'black' }}>Ảnh mới thêm</Text>
                   <View style={{ top: 20, marginBottom: 20 }}>
                     {
                       this.state.arrimguribase64.map((e, index) => (
@@ -269,11 +269,6 @@ export default class UploadAnyImg extends Component {
           </View>
 
           <ButtonImg click={this.UploadSubmit.bind(this)} text={'Tải & Cập nhật ảnh ngay'} />
-          {
-            this.state.isLoad ?
-              (<ActivityIndicator size={50} style={styles.loading} />) :
-              null
-          }
         </View>
       </ScrollView>
     )
@@ -300,14 +295,5 @@ const styles = StyleSheet.create({
   text: {
     color: 'black',
     backgroundColor: 'transparent',
-  },
-  loading: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0
   }
 });

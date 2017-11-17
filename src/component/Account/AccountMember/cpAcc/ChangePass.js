@@ -8,8 +8,7 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  Alert,
-  ActivityIndicator
+  Alert
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -18,7 +17,7 @@ import passwordImg from '../images/password.png';
 import eyeImg from '../images/eye_black.png';
 
 import Wallpaper from '../view/Wallpaper';
-import ButtonSubmit from '../view/ButtonSubmitNoGrow';
+import ButtonSubmit from '../view/ButtonSubmit';
 import Logo from '../view/Logo';
 
 import check_Pass from '../../../../api/check_Pass';
@@ -41,7 +40,6 @@ export default class ChangePass extends Component {
       press: false,
       newpress: false,
       renewpress: false,
-      isLoad: false,
     }
   }
   showPass() {
@@ -93,20 +91,22 @@ export default class ChangePass extends Component {
       this.props.navigation.goBack();
     }, 3000)
   }
-  OnChangePass() {
+  OnChangePass(cb) {
     const { password, newpassword } = this.state;
     //kiểm tra tính hợp lệ
     if (!this.validate()) {
+      let load = true;//callback
+      cb(load);
       return false;
     }
     //
-    this.setState({ isLoad: true });
     check_Pass(global.onSignIn.id, password)
       .then(res => {
-        this.setState({ isLoad: false });
         if (res === 'THANH_CONG') {
           ChangedPass(global.onSignIn.id, newpassword)
             .then(resp => {
+              let load = true;//callback
+              cb(load);
               if (resp === 'THANH_CONG') {
                 Alert.alert(
                   'Thông báo',
@@ -129,6 +129,8 @@ export default class ChangePass extends Component {
             })
             .catch(err => console.log(err));
         } else {
+          let load = true;//callback
+          cb(load);
           Alert.alert(
             'Thông báo',
             'Bạn đã nhập sai mật khẩu cũ!',
@@ -221,11 +223,6 @@ export default class ChangePass extends Component {
           <ButtonSubmit click={this.OnChangePass.bind(this)}
             text={'Thay đổi ngay'} />
         </View>
-        {
-          this.state.isLoad ?
-            (<ActivityIndicator size={50} style={styles.loading} />) :
-            null
-        }
       </Wallpaper>
     )
   }
@@ -272,14 +269,5 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     tintColor: 'rgba(0,0,0,0.2)',
-  },
-  loading: {
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0
   }
 });
