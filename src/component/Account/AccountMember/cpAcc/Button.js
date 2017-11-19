@@ -44,8 +44,10 @@ export default class ButtonSubmit extends Component {
 			}
 		).start();
 
+		
 		setTimeout(() => {
 			this.props.click();
+			
 			this.setState({ isLoading: false });
 			this.buttonAnimated.setValue(0);
 			this.growAnimated.setValue(0);

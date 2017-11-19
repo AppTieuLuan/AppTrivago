@@ -5,16 +5,16 @@ import {
     StyleSheet
 } from 'react-native';
 
-export default class Message extends Component{
+export default class Message extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
 
         }
     }
-    render(){
-        return(
+    render() {
+        return (
             <View>
                 <Text>This is Message Component!</Text>
             </View>
@@ -22,5 +22,5 @@ export default class Message extends Component{
     }
 }
 const styles = StyleSheet.create({
-    
+
 });

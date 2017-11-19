@@ -16,6 +16,12 @@ import imgex from '../img/imgexam.png';
 import s1 from '../img/sad.png';
 import s2 from '../img/s2.png';
 import s3 from '../img/s3.png';
+import icrt1 from '../img/icrt1.png';
+import icrt2 from '../img/icrt2.png';
+import icrt3 from '../img/icrt3.png';
+import icrt4 from '../img/icrt4.png';
+import icrt5 from '../img/icrt5.png';
+
 
 const { height, width } = Dimensions.get('window');
 const height1 = height / 13;
@@ -527,15 +533,17 @@ export default class Main extends Component {
                                                         <View style={{ flex: 1, paddingHorizontal: 2, paddingVertical: 2, flexDirection: 'row' }}>
                                                             {/* <Image resizeMode={'contain'} source={item.key%2===0 ? s1: s3} style={{ flex: 1 }} /> */}
                                                             <View style={{ flex: 2, paddingVertical: 2 }}>
-                                                                <Image resizeMode={'contain'} source={item.key % 2 === 0 ? s1 : s3} style={{ flex: 1 }} />
+                                                                <Image resizeMode={'contain'} source={item.sosao == 1 ? icrt1 : (item.sosao == 2 ? icrt2 : (item.sosao == 3 ? icrt3 : (item.sosao == 4 ? icrt4 : icrt5 ) ))} style={{ flex: 1 }} />
                                                             </View>
 
                                                             <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
-                                                                <Text style={{ fontSize: 12 }}>91/100</Text>
-                                                                <Text style={{ fontSize: 10 }}>135 reviews</Text>
+                                                                {/* <Text style={{ fontSize: 12 }}>{item.sosao == 0 ? 'Chưa đánh giá' : item.sosao + '/5'}</Text> */}
+                                                                <Text numberOfLines={1} style={{ fontSize: 10 }}>{item.sodanhgia} lượt đánh giá</Text>
+                                                                <Text numberOfLines={1} style={{ fontSize: 10 }}>{item.sobl} bình luận</Text>
                                                             </View>
                                                         </View>
                                                         <View style={{ flex: 1, borderTopWidth: 1, borderTopColor: '#e9ebee' }}>
+                                                            {/* <Text numberOfLines={1} style={{ fontSize: 10 }}>{item.sobl} bình luận</Text> */}
                                                         </View>
                                                     </View>
                                                     <View style={{ flex: 1, borderLeftWidth: 1, borderLeftColor: '#e9ebee' }}>

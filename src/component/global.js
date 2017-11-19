@@ -28,5 +28,7 @@ module.export = {
     lng: '',
   
     idks: '',
-    hotel: null
+    hotel: null,
+
+    loadingFetch: null
 }

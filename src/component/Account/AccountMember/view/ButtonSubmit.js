@@ -31,8 +31,8 @@ export default class ButtonSubmit extends Component {
 	}
 
 	_onPress() {
-		if (this.state.isLoading) return;
 
+		if (this.state.isLoading) return;
 		this.setState({ isLoading: true });
 		Animated.timing(
 			this.buttonAnimated,
@@ -43,53 +43,58 @@ export default class ButtonSubmit extends Component {
 			}
 		).start();
 
-		setTimeout(() => {
-			//this._onGrow();
-		}, 2200);
 
 		setTimeout(() => {
-			//Actions.secondScreen();
-			this.props.click();
-			this.setState({ isLoading: false });
-			this.buttonAnimated.setValue(0);
-			this.growAnimated.setValue(0);
+			let promise = new Promise(function (resolve, reject) {
+				this.click();
+			});
+			promise.then(
+				function (success){
+					//this.closeAnimation.bind(this);
+				},
+				function (error){
+					//this.closeAnimation.bind(this);
+				}
+			);
+			// this.setState({ isLoading: false });
+			// this.buttonAnimated.setValue(0);
+			// this.growAnimated.setValue(0);
 		}, 2300);
 	}
 
-	_onGrow() {
-		Animated.timing(
-			this.growAnimated,
-			{
-				toValue: 1,
-				duration: 200,
-				easing: Easing.linear
-			}
-		).start();
+	click() {
+		this.props.click();
+		
+	}
+	closeAnimation() {
+		this.setState({ isLoading: false });
+		this.buttonAnimated.setValue(0);
+		this.growAnimated.setValue(0);
 	}
 
 	render() {
 		const changeWidth = this.buttonAnimated.interpolate({
-	    inputRange: [0, 1],
-	    outputRange: [DEVICE_WIDTH - MARGIN, MARGIN]
-	  });
-	  const changeScale = this.growAnimated.interpolate({
-	    inputRange: [0, 1],
-	    outputRange: [1, MARGIN]
-	  });
+			inputRange: [0, 1],
+			outputRange: [DEVICE_WIDTH - MARGIN, MARGIN]
+		});
+		const changeScale = this.growAnimated.interpolate({
+			inputRange: [0, 1],
+			outputRange: [1, MARGIN]
+		});
 
 		return (
 			<View style={styles.container}>
-				<Animated.View style={{width: changeWidth}}>
+				<Animated.View style={{ width: changeWidth }}>
 					<TouchableOpacity style={styles.button}
 						onPress={this._onPress.bind(this)}
 						activeOpacity={1} >
-							{this.state.isLoading ?
-								<Image source={spinner} style={styles.image} />
-								:
-								<Text style={styles.text}>Đăng nhập ngay</Text>
-							}
+						{this.state.isLoading ?
+							<Image source={spinner} style={styles.image} />
+							:
+							<Text style={styles.text}>Đăng nhập ngay</Text>
+						}
 					</TouchableOpacity>
-					<Animated.View style={[ styles.circle, {transform: [{scale: changeScale}]} ]} />
+					<Animated.View style={[styles.circle, { transform: [{ scale: changeScale }] }]} />
 				</Animated.View>
 			</View>
 		);

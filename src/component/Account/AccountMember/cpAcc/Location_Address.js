@@ -31,6 +31,7 @@ export default class MapViewComponent extends Component {
     this.setState({
       text: searchtext
     });
+
     fetch('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + this.state.text + '&types=geocode&language=vi&key=AIzaSyC9hXBNhK5zuePc2RftV09n3Ao9IPE2tRA')
       //fetch('https://maps.googleapis.com/maps/api/geocode/json?&address=' + this.state.text)
       .then(res => res.json())
@@ -52,7 +53,6 @@ export default class MapViewComponent extends Component {
       markers.push(
         <MapView.Marker
           key={marker.longitude}
-          //draggable
           coordinate={marker}
           onPress={this.clickmarker.bind(this)}
         />
@@ -77,10 +77,10 @@ export default class MapViewComponent extends Component {
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121
       },
-      coordinate: [{
+      coordinate: [
         latitude: data.latitude,
         longitude: data.longitude,
-      }],
+      ],
       mang: [],
       lat: data.latitude,
       lng: data.longitude

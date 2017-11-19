@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   Alert,
   ActivityIndicator
 } from 'react-native';
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 import ButtonImg from './Button';
 import iconpicture from '../images/iconpicture.png';
@@ -23,7 +23,7 @@ var ImagePicker = require('react-native-image-picker');
 var options = {
   title: 'Select Avatar',
   customButtons: [
-    {name: 'fb', title: 'Choose Photo from Facebook'},
+    { name: 'fb', title: 'Choose Photo from Facebook' },
   ],
   storageOptions: {
     skipBackup: true,
@@ -31,8 +31,8 @@ var options = {
   }
 };
 
-export default class UploadImg extends Component{
-  constructor(props){
+export default class UploadImg extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       avatarSource: null,
@@ -41,20 +41,20 @@ export default class UploadImg extends Component{
       isLoad: false,
     };
   }
-  componentDidMount(){
+  componentDidMount() {
     Alert.alert(
       'Thông báo',
-      '1. Bạn hãy chọn ảnh liên quan của khách sạn để tải lên!\n'+
-      '2. Bấm chọn ảnh và sau đó nhấn tải lên để tiến hành tải lên, mỗi lần chỉ tải lên được một ảnh!\n'+
+      '1. Bạn hãy chọn ảnh liên quan của khách sạn để tải lên!\n' +
+      '2. Bấm chọn ảnh và sau đó nhấn tải lên để tiến hành tải lên, mỗi lần chỉ tải lên được một ảnh!\n' +
       '3. Để thoát nhấn quay lại!',
       [
-        {text: 'OK'}
+        { text: 'OK' }
       ],
-      {cancelable: false}
+      { cancelable: false }
     )
   }
   //Mở trình chọn ảnh hoặc chụp ảnh
-  ShowImgPicker(){
+  ShowImgPicker() {
     ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
 
@@ -82,81 +82,81 @@ export default class UploadImg extends Component{
     });
   }
   // Tải ảnh lên
-  Upload(){
+  Upload() {
     const { dataimg } = this.state;
-    if(dataimg === null){
+    if (dataimg === null) {
       Alert.alert(
         'Thông báo',
         'Chưa chọn ảnh!\nVui lòng chọn ảnh!',
         [
-          {text: 'OK'}
+          { text: 'OK' }
         ],
-        {cancelable: false}
+        { cancelable: false }
       );
       return false;
     }
-    this.setState({isLoad: true});
+    this.setState({ isLoad: true });
     // Bắt đầu tải ảnh lên
     uploadImg(global.idks, dataimg)
-    .then(res => {
-      this.setState({isLoad: false});
-      if(!res){
-        this.setState({
-          text: 'Chọn ảnh mới',
-          dataimg: null,
-          avatarSource: null
-        });
-        Alert.alert(
-          'Thông báo',
-          'Đã tải ảnh lên thành công!\nVui lòng chọn ảnh mới để tải lên!',
-          [
-            {text: 'OK'}
-          ],
-          { cancelable: false }
-        );
-      }
-      else{
-        Alert.alert(
-          'Thông báo',
-          'Đã xảy ra lỗi!\nVui lòng thử lại!',
-          [
-            {text: 'OK'}
-          ],
-          { cancelable: false }
-        );
-      }
-    })
-    .catch(err => console.log(err));
-  }
-  render(){
-    let img = this.state.avatarSource?<Image source={this.state.avatarSource}
-    style={{height:250, width:250, marginBottom: 10, borderRadius: 10}} />:
-    <Image source={iconpicture}
-    style={{height:250, width:250, marginBottom: 10, borderRadius: 10}} />
-    return(
-      <ScrollView>
-      <View  style={{alignItems: 'center', justifyContent: 'center'}}>
-        <View style={{top: 20, marginBottom: 20}}>
-          {img}
-        </View>
-
-  			<View style={styles.container}>
-					<TouchableOpacity style={styles.button}
-						onPress={this.ShowImgPicker.bind(this)}
-						activeOpacity={1}
-            >
-							{
-								<Text style={styles.text}>{this.state.text}</Text>
-							}
-					</TouchableOpacity>
-  			</View>
-
-        <ButtonImg click={this.Upload.bind(this)} text={'Tải ảnh lên ngay'}/>
-        {
-          this.state.isLoad ? 
-          (<ActivityIndicator size={50} style={styles.loading}/>):
-          null
+      .then(res => {
+        this.setState({ isLoad: false });
+        if (!res) {
+          this.setState({
+            text: 'Chọn ảnh mới',
+            dataimg: null,
+            avatarSource: null
+          });
+          Alert.alert(
+            'Thông báo',
+            'Đã tải ảnh lên thành công!\nVui lòng chọn ảnh mới để tải lên!',
+            [
+              { text: 'OK' }
+            ],
+            { cancelable: false }
+          );
         }
+        else {
+          Alert.alert(
+            'Thông báo',
+            'Đã xảy ra lỗi!\nVui lòng thử lại!',
+            [
+              { text: 'OK' }
+            ],
+            { cancelable: false }
+          );
+        }
+      })
+      .catch(err => console.log(err));
+  }
+  render() {
+    let img = this.state.avatarSource ? <Image source={this.state.avatarSource}
+      style={{ height: 250, width: 250, marginBottom: 10, borderRadius: 10 }} /> :
+      <Image source={iconpicture}
+        style={{ height: 250, width: 250, marginBottom: 10, borderRadius: 10 }} />
+    return (
+      <ScrollView>
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ top: 20, marginBottom: 20 }}>
+            {img}
+          </View>
+
+          <View style={styles.container}>
+            <TouchableOpacity style={styles.button}
+              onPress={this.ShowImgPicker.bind(this)}
+              activeOpacity={1}
+            >
+              {
+                <Text style={styles.text}>{this.state.text}</Text>
+              }
+            </TouchableOpacity>
+          </View>
+
+          <ButtonImg click={this.Upload.bind(this)} text={'Tải ảnh lên ngay'} />
+          {
+            this.state.isLoad ?
+              (<ActivityIndicator size={50} style={styles.loading} />) :
+              null
+          }
         </View>
       </ScrollView>
     )
@@ -164,33 +164,33 @@ export default class UploadImg extends Component{
 }
 const styles = StyleSheet.create({
   container: {
-		flex: 1,
-		top: 0,
-		alignItems: 'center',
-		justifyContent: 'flex-start',
-		marginTop: 10,
-		marginBottom: 10,
-	},
-	button: {
-		alignItems: 'center',
-		justifyContent: 'center',
-		backgroundColor: '#fff',
-		height: 40,
-		borderRadius: 20,
-		zIndex: 100,
+    flex: 1,
+    top: 0,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    height: 40,
+    borderRadius: 20,
+    zIndex: 100,
     width: width - 40
-	},
-	text: {
-		color: 'black',
-		backgroundColor: 'transparent',
-	},
-  loading:{
-    position: 'absolute', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    top: 0, 
-    bottom: 0, 
-    right: 0, 
+  },
+  text: {
+    color: 'black',
+    backgroundColor: 'transparent',
+  },
+  loading: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 0,
+    bottom: 0,
+    right: 0,
     left: 0
   }
 });
