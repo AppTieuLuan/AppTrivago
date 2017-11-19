@@ -43,35 +43,19 @@ export default class ButtonSubmit extends Component {
 			}
 		).start();
 
-
 		setTimeout(() => {
-			let promise = new Promise(function (resolve, reject) {
-				this.click();
-			});
-			promise.then(
-				function (success){
-					//this.closeAnimation.bind(this);
-				},
-				function (error){
-					//this.closeAnimation.bind(this);
+			this.props.click((load) => {
+				if(load){//đóng animation khi nhận thông điệp callback
+					this.closeAnimation();
 				}
-			);
-			// this.setState({ isLoading: false });
-			// this.buttonAnimated.setValue(0);
-			// this.growAnimated.setValue(0);
+			});
 		}, 2300);
 	}
-
-	click() {
-		this.props.click();
-		
-	}
-	closeAnimation() {
+	closeAnimation(){//đóng animation
 		this.setState({ isLoading: false });
 		this.buttonAnimated.setValue(0);
-		this.growAnimated.setValue(0);
+		this.growAnimated.setValue(0); 
 	}
-
 	render() {
 		const changeWidth = this.buttonAnimated.interpolate({
 			inputRange: [0, 1],

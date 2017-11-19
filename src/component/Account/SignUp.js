@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, TextInput, Text,
   TouchableOpacity, StyleSheet, Alert,
-  Dimensions, KeyboardAvoidingView, Image, ActivityIndicator
+  Dimensions, KeyboardAvoidingView, Image
 } from 'react-native';
 import register from '../../api/register';
 
@@ -13,7 +13,7 @@ import passwordImg from './AccountMember/images/password.png';
 import eyeImg  from './AccountMember/images/eye_black.png';
 
 import Wallpaper from './AccountMember/view/Wallpaper';
-import ButtonSubmit from './AccountMember/view/ButtonSubmitNoGrow';
+import ButtonSubmit from './AccountMember/view/ButtonSubmit';
 import SignupSection from './AccountMember/view/SignupSection';
 import Logo from './AccountMember/view/Logo';
 
@@ -29,7 +29,6 @@ export default class SignUp extends Component {
             press: false,
             reshowPass: true,
             rePress: false,
-            isLoad: false,
         };
     }
     showPass() {
@@ -107,26 +106,32 @@ export default class SignUp extends Component {
           { cancelable: false }
       );
     }
-    registerUser() {
+    registerUser(cb) {
         const { name, email, password, rePassword } = this.state
         //Kiểm tra hợp lệ
         if(name === '' || email === '' || password === ''){
           this.alert();
+          let load = true;//callback
+          cb(load);
           return false;
         }
         if(password != rePassword){
           this.alert1();
+          let load = true;//callback
+          cb(load);
           return false;
         }
         if(!this.checkEmail()){
           this.alert2();
+          let load = true;//callback
+          cb(load);
           return false;
         }
         //Tiến hành đăng ký
-        this.setState({isLoad: true});
         register(email, name, password)
         .then(res => {
-          this.setState({isLoad: false});
+          let load = true;//callback
+          cb(load);
             //alert(res);
             if (res === 'THANH_CONG') return this.onSuccess();
               this.onFail();
@@ -215,11 +220,6 @@ export default class SignUp extends Component {
                 <ButtonSubmit click={this.registerUser.bind(this)}
                                     text={'Đăng ký ngay'}/>
               </View>
-              {
-                this.state.isLoad ? 
-                (<ActivityIndicator size={50} style={styles.loading}/>):
-                null
-              }
             </Wallpaper>
         );
     }
@@ -267,14 +267,5 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     tintColor: 'rgba(0,0,0,0.2)',
-  },
-  loading:{
-    position: 'absolute', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    top: 0, 
-    bottom: 0, 
-    right: 0, 
-    left: 0
   }
 });

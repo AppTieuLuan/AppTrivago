@@ -132,7 +132,8 @@ var styles = StyleSheet.create({
         padding: 4,
         alignItems: 'center',
         borderBottomWidth: 0.5,
-        paddingHorizontal: 5
+        paddingHorizontal: 5,
+        marginTop: 10
     },
     rowFlatlist: {
         padding: 10,
