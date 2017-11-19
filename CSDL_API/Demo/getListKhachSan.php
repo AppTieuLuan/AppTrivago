@@ -4,7 +4,7 @@
 	$trang = $_GET["trang"];
 	settype($trang, "int");
 
-	$from = ($trang - 1) * 4;
+	$from = ($trang - 1) * 10;
 
 
 	require "khoangCachGiua2Diem.php";
@@ -25,11 +25,12 @@
 	// 		                limit $from,4) t1
 	// 		where t1.idNguoi = tbluser.id";
 
-	$qr = "select id,ten,hinhanh,gia,diachi,khachsan.lat latitude,khachsan.long longitude
+	$qr = "select id,ten,hinhanh,gia,diachi,khachsan.lat latitude,khachsan.long longitude,sosao,(select COUNT(iduser) from danhgia where idks=khachsan.id) sodanhgia,(select COUNT(*) + (select COUNT(id) from binhluan where idks = khachsan.id)  slbl
+from replybinhluan where idbl in (select id from binhluan where idks = khachsan.id)) sobl
 			from khachsan
 			where tinhtrang = 1 and tinhKhoangCach($lat,$long,lat,khachsan.long) < $bankinh
 			order by ngaycapnhat desc
-			limit $from,4";
+			limit $from,10";
 
 	// $ds = mysql_query($qr);
 	// $mang = array();
@@ -53,7 +54,10 @@
 				$row["gia"],
 				$row["diachi"],
 				$row["latitude"],
-				$row["longitude"]
+				$row["longitude"],
+				$row["sosao"],
+				$row["sodanhgia"],
+				$row["sobl"]
 			));
 	}
 	echo json_encode($mang);

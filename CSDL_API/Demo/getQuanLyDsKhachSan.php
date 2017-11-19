@@ -4,12 +4,12 @@
 	$trang = $_GET["trang"];
 	settype($trang, "int");
 
-	$from = ($trang - 1) * 4;
+	$from = ($trang - 1) * 10;
 
 	$qr = "select id,ten,hinhanh,gia,diachi,tinhtrang
 			from khachsan
 			order by ngaycapnhat desc
-			limit $from,4";
+			limit $from,10";
 
 
 

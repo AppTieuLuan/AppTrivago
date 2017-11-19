@@ -2,7 +2,7 @@
 	require "dbConnect.php";
 	$trang = $_GET["trang"];
 	settype($trang, "int");
-	$from = ($trang - 1) * 4;
+	$from = ($trang - 1) * 10;
 
 	$tiennghi = $_GET["tiennghi"];
 	settype($tiennghi, "string");
@@ -30,11 +30,12 @@
 	$bankinh = $_GET["bankinh"];
 	settype($bankinh, "double");
 
-	$qr = "select id,ten,hinhanh,gia,diachi,khachsan.lat,khachsan.long
+	$qr = "select id,ten,hinhanh,gia,diachi,khachsan.lat,khachsan.long,sosao,(select COUNT(iduser) from danhgia where idks=khachsan.id) sodanhgia,(select COUNT(*) + (select COUNT(id) from binhluan where idks = khachsan.id)  slbl
+from replybinhluan where idbl in (select id from binhluan where idks = khachsan.id)) sobl
 			from khachsan
 			where tiennghihangdau = $tiennghi and sosao in $tempstr and gia<= $giamax && gia >= $giamin and tinhtrang = 1 and tinhKhoangCach($lat,$long,lat,khachsan.long) < $bankinh
 			order by ngaycapnhat DESC
-			limit $from,4";
+			limit $from,10";
 
 
 
@@ -48,7 +49,10 @@
 				$row["gia"],
 				$row["diachi"],
 				$row["lat"],
-				$row["long"]
+				$row["long"],
+				$row["sosao"],
+				$row["sodanhgia"],
+				$row["sobl"]
 			));
 	}
 	echo json_encode($mang);

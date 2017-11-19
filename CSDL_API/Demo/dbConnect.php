@@ -13,6 +13,7 @@
 		public $hinh;
 		public $diachi;
 		public $gia;
+		
 		function KhachSan($id,$ten,$hinh,$gia,$diachi)
 		{
 			$this->key = $id;
@@ -20,6 +21,7 @@
 			$this->hinh = $hinh;
 			$this->gia = $gia;
 			$this->diachi = $diachi;
+
 		}
 	}
 
@@ -51,7 +53,10 @@
 		public $gia;
 		public $latitude;
 		public $long;
-		function KhachSann($id,$ten,$hinh,$gia,$diachi,$lat,$long)
+		public $sosao;
+		public $sodanhgia;
+		public $sobl;
+		function KhachSann($id,$ten,$hinh,$gia,$diachi,$lat,$long,$sosao,$sodanhgia,$sobl)
 		{
 			$this->key = $id;
 			$this->ten =$ten;
@@ -60,6 +65,9 @@
 			$this->diachi = $diachi;
 			$this->latitude = floatval($lat);
 			$this->longitude = floatval($long);
+			$this->sosao = $sosao;
+			$this->sodanhgia = $sodanhgia;
+			$this->sobl = $sobl;
 		}
 	}
 
@@ -180,7 +188,24 @@
 			$this->quyen=$quyen;
 		}
 	}
-
+	class DemoThongTinKS {
+		public $gia;
+		public $diachi;
+		public $loai;
+		public $website;
+		public $sdt;
+		public $tiennghihangdau;
+		public $thietbikhachsan;
+		function DemoThongTinKS($gia,$diachi,$loai,$website,$sdt,$tiennghihangdau,$thietbikhachsan) {
+			$this->gia = $gia;
+			$this->diachi = $diachi;
+			$this->loai = $loai;
+			$this->website = $website;
+			$this->sdt = $sdt;
+			$this->tiennghihangdau = $tiennghihangdau;
+			$this->thietbikhachsan = $thietbikhachsan;
+		}
+	}
 	class LatLong
 	{
 		public $latitude;
