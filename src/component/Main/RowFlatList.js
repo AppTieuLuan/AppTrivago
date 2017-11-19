@@ -7,9 +7,15 @@ import s1 from '../img/sad.png';
 import s2 from '../img/s2.png';
 import s3 from '../img/s3.png';
 import global from '../global';
+
+import icrt1 from '../img/icrt1.png';
+import icrt2 from '../img/icrt2.png';
+import icrt3 from '../img/icrt3.png';
+import icrt4 from '../img/icrt4.png';
+import icrt5 from '../img/icrt5.png';
+
+
 const { height, width } = Dimensions.get('window');
-const height1 = height / 13;
-const height2 = height / 12;
 
 export default class RowFlatList extends Component {
     constructor(props) {
@@ -27,25 +33,27 @@ export default class RowFlatList extends Component {
                         <Text numberOfLines={1} style={{ fontWeight: 'bold' }} >
                             {this.props.item.ten}
                         </Text>
-                        <Text numberOfLines={1} style={{  }} >
+                        <Text numberOfLines={1} style={{}} >
                             {this.props.item.diachi}
                         </Text>
                     </View>
-                  
+
                     <View style={{ flex: 2, borderTopWidth: 1, borderTopColor: '#e9ebee', paddingTop: 4, flexDirection: 'row' }}>
                         <View style={{ flex: 1, borderRightWidth: 1, borderRightColor: '#e9ebee' }}>
-                            
+
                             <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
-                                <Image source={this.props.item.key % 2 === 0 ? s1 : s3} style={{ height: 35, width: 35 }} />
+                                <Image resizeMode={'contain'} source={this.props.item.sosao == 1 ? icrt1 : (this.props.item.sosao == 2 ? icrt2 : (this.props.item.sosao == 3 ? icrt3 : (this.props.item.sosao == 4 ? icrt4 : icrt5)))} style={{ flex: 1 }} />
                             </View>
 
                             <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text numberOfLines={1} style={{ fontSize: 12 }}>91/100</Text>
-                                <Text numberOfLines={1} style={{ fontSize: 10 }}>135 bình luận</Text>
-                            </View> 
+                                {/* <Text numberOfLines={1} style={{ fontSize: 12 }}>91/100</Text>
+                                <Text numberOfLines={1} style={{ fontSize: 10 }}>135 bình luận</Text> */}
+                                <Text numberOfLines={1} style={{ fontSize: 10 }}>{this.props.item.sodanhgia} lượt đánh giá</Text>
+                                <Text numberOfLines={1} style={{ fontSize: 10 }}>{this.props.item.sobl} bình luận</Text>
+                            </View>
                         </View>
 
-                        <View style={{ flex: 1}}>
+                        <View style={{ flex: 1 }}>
                             <View style={{ flex: 1, paddingHorizontal: 2, paddingVertical: 2 }}>
                                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                                     <Text numberOfLines={1} style={{ fontSize: 10 }}>Giá từ</Text>
@@ -59,7 +67,7 @@ export default class RowFlatList extends Component {
                         </View>
                     </View>
                 </View>
-                
+
             </View>
         );
     }
@@ -67,14 +75,14 @@ export default class RowFlatList extends Component {
 
 
 const styles = StyleSheet.create({
-    
+
     rowFlatlist: {
         flexDirection: 'row',
-       height: 120,
-       width: 340,
-       paddingVertical: 4,
-       backgroundColor: 'white',
-       borderRadius: 10,
-       padding: 4
+        height: 120,
+        width: 340,
+        paddingVertical: 4,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 4
     }
 })  

@@ -232,7 +232,7 @@ export default class Main extends Component {
                         }
 
                         if (this.state.refresh === false) {
-                            alert('1111');
+                            //alert('1111');
                             this.setState({
                                 refresh: true,
                             });

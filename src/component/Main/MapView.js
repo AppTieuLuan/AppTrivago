@@ -222,14 +222,6 @@ export default class MapViewComponent extends Component {
             </View>
           </TouchableOpacity>
         </Modal>
-        <TouchableHighlight
-          onPress={() => {
-            let rss = this.getLatLongDelta(global.latsearch, global.longsearch);
-            alert(rss.latitudeDelta);
-          }}
-        >
-          <Text>{this.state.textt}</Text>
-        </TouchableHighlight>
       </View>
     );
   }
