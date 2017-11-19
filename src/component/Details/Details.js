@@ -27,14 +27,14 @@ export default class Details extends Component {
     componentDidMount() {
         //console.log('11111111111111');
         var dd = setInterval(function () {
-            if( global.loadchitiet &&
+            if (global.loadchitiet &&
                 global.loadhinhanh &&
                 global.loaddanhgia &&
                 global.loadbando) {
-                    clearInterval(dd);
-                    global.closeModalLoadDetail();
-                    //this.setState({ isVisible: false });
-                }
+                clearInterval(dd);
+                global.closeModalLoadDetail();
+                //this.setState({ isVisible: false });
+            }
         }, 1000)
         this.loadData();
     }
@@ -101,7 +101,7 @@ export default class Details extends Component {
                 <Modal
                     transparent={true}
                     visible={this.state.isVisible}
-                   onRequestClose={() => this.setState({ isVisible: false })}
+                    onRequestClose={() => this.setState({ isVisible: false })}
                 >
                     <TouchableOpacity
                         style={{ flex: 1 }}
