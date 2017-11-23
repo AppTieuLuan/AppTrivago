@@ -1,21 +1,21 @@
 ﻿import React, { Component } from 'react';
 import {
     View, Text, TouchableOpacity, StyleSheet, Dimensions, Image, TouchableWithoutFeedback,
-    TextInput, FlatList, BackHandler
+    TextInput, FlatList, BackHandler, Alert
 } from 'react-native';
-import PopupDialog, { SlideAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
-import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
+//import PopupDialog, { SlideAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
+//import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
 import global from '../global';
-import HeaderFlatList from './HeaderFlatList';
+//import HeaderFlatList from './HeaderFlatList';
 import MapViewComponent from './MapView';
 import opemenu from '../img/openmenu.png';
 import icsearch from '../img/Search.png';
 import icMap from '../img/Map.png';
 import icAc from '../img/Account.png';
-import imgex from '../img/imgexam.png';
-import s1 from '../img/sad.png';
-import s2 from '../img/s2.png';
-import s3 from '../img/s3.png';
+// import imgex from '../img/imgexam.png';
+// import s1 from '../img/sad.png';
+// import s2 from '../img/s2.png';
+// import s3 from '../img/s3.png';
 import icrt1 from '../img/icrt1.png';
 import icrt2 from '../img/icrt2.png';
 import icrt3 from '../img/icrt3.png';
@@ -40,9 +40,9 @@ export default class Main extends Component {
             isModalVisible: false,
             sortIndex: 0,
             page: 1,
-
+            closeApp: true,
             arrMap: [],
-
+           
 
         };
         global.searchData = this.loadDataFromSearch.bind(this);
@@ -61,11 +61,38 @@ export default class Main extends Component {
 
         //global.server = 'https://webservicestrivago.000webhostapp.com/';
     }
+    onBackPress () {
+        Alert.alert(
+            'Xác nhận thoát ứng dụng',
+            'Bạn có chắc muống thoát ứng dụng ?',
+            [
+              
+              {text: 'Cancel', onPress: () =>  {  } , style: 'cancel'},
+              {text: 'OK', onPress: () => { BackHandler.exitApp(); }  },
+            ],
+            { cancelable: true }
+          );
 
+        return true;
+  }
+   
     componentWillMount() {
-        
+        BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
     }
     componentDidMount() {
+            //BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+            
+            
+            //return this.state.closeApp;
+           // alert(this.state.closeApp);
+            
+            //   if (rs) {
+            //       return true;
+            //   } else {
+            //       return false;
+            //   }
+              //return rs;
+        //});
         this.loadData(this.state.page);
     }
     refresh() {
@@ -196,7 +223,7 @@ export default class Main extends Component {
                             refresh: true,
                         })
                         //alert('vao');
-                        alert(global.trangloc + ' --- ' + global.locsao);
+                        //alert(global.trangloc + ' --- ' + global.locsao);
                         fetch(global.server + 'getDanhSachKhachSanLocSao.php?trang=' + global.trangloc + '&sosao=' + global.locsao + '&lat=' + global.latsearch + '&long=' + global.longsearch + '&bankinh=' + global.bankinhsearch)
                             .then((response) => response.json())
                             .then((responseJson) => {

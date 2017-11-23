@@ -1,7 +1,8 @@
 ﻿import React, { Component } from 'react';
 import {
   View, Text, Image, Dimensions,
-  StyleSheet, TextInput, TouchableOpacity, BackHandler, FlatList, TouchableHighlight, KeyboardAvoidingView
+  StyleSheet, TextInput, TouchableOpacity, BackHandler, FlatList, TouchableHighlight, KeyboardAvoidingView,
+  ToastAndroid, Alert
 } from 'react-native';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
 import user from '../img/user.png';
@@ -25,26 +26,51 @@ export default class Welcome extends Component {
     this.state = {
       text: '',
       name: '',
-      mang: []
+      mang: [],
+      closeapp: true
     };
-    global.latsearch = 10.1686747;
-    global.longsearch = 106.6992098;
+    global.latsearch = '';
+    global.longsearch = '';
     global.bankinhsearch = 20;
     global.mapAlready = false;
     global.loadDataMap = false;
 
   }
   WelSearch = () => {
-    global.keysearch = this.state.text;
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [
-        NavigationActions.navigate({ routeName: 'MainScreen' })
-      ]
-    });
-    this.props.navigation.dispatch(resetAction);
+    if(global.latsearch == null || global.longsearch == null || global.latsearch == '' || global.longsearch == '') {
+      ToastAndroid.show('Nhập địa điểm bạn muốn tìm kiếm',ToastAndroid.SHORT);
+    } else {
+      global.keysearch = this.state.text;
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({ routeName: 'MainScreen' })
+        ]
+      });
+      this.props.navigation.dispatch(resetAction);
+    }
+    
     //this.props.navigation.navigate('MainScreen');
   }
+
+  onBackPress () {
+        Alert.alert(
+            'Xác nhận thoát ứng dụng',
+            'Bạn có chắc muống thoát ứng dụng ?',
+            [
+              
+              {text: 'Cancel', onPress: () =>  {  } , style: 'cancel'},
+              {text: 'OK', onPress: () => { BackHandler.exitApp(); }  },
+            ],
+            { cancelable: true }
+          );
+
+        return true;
+  }
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+  }
+
 
   layViTriHienTai() {
     LocationServicesDialogBox.checkLocationServicesIsEnabled({
@@ -227,8 +253,6 @@ export default class Welcome extends Component {
                 }}
               />
             </View>
-
-
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
               <TouchableOpacity
                 onPress={this.WelSearch}
