@@ -1,5 +1,6 @@
+import global from '../component/global';
 const DangNhapModule = (username, password) => (
-    fetch('http://192.168.1.173:8080/Demo/DangNhap.php',
+    fetch(global.server+ '/DangNhap.php',
     {   
         method: 'POST',
         headers: {

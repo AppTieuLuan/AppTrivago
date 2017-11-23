@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import {
     View, Text, TouchableOpacity, StyleSheet, Dimensions, Image, TouchableWithoutFeedback,
-    TextInput, FlatList
+    TextInput, FlatList, BackHandler
 } from 'react-native';
 import PopupDialog, { SlideAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { RadioGroup, RadioButton } from 'react-native-flexi-radio-button';
@@ -25,7 +25,7 @@ import icrt5 from '../img/icrt5.png';
 
 const { height, width } = Dimensions.get('window');
 const height1 = height / 13;
-const height2 = height / 12;
+//const height2 = height / 12;
 
 export default class Main extends Component {
     constructor(props) {
@@ -34,7 +34,7 @@ export default class Main extends Component {
             mang: [],
             refresh: false,
             map: true,
-            maxheight: height - height1 - height2,
+            maxheight: height - height1,
             heightbottom: height1,
             heigthmapview: 0,
             isModalVisible: false,
@@ -55,13 +55,16 @@ export default class Main extends Component {
         global.locDL = false;
         global.loadDuLieuLoc = this.loadDataLoc.bind(this);
         global.trangloc = 1;
-
+        global.locDL = true;
 
         //global.server = 'http://192.168.1.20:8080/Demo/';
 
         //global.server = 'https://webservicestrivago.000webhostapp.com/';
     }
 
+    componentWillMount() {
+        
+    }
     componentDidMount() {
         this.loadData(this.state.page);
     }
@@ -87,12 +90,12 @@ export default class Main extends Component {
             map: !this.state.map
         });
         if (this.state.map) {
-            this.setState({ maxheight: 0, heightbottom: 0, heigthmapview: height - height1 - height2 });
+            this.setState({ maxheight: 0, heightbottom: 0, heigthmapview: height - height1 });
             global.mapAlready = true;
             this.loadData();
         } else {
             global.mapAlready = false;
-            this.setState({ maxheight: height - height1 - height2, heightbottom: height1, heigthmapview: 0 });
+            this.setState({ maxheight: height - height1, heightbottom: height1, heigthmapview: 0 });
             this.refresh();
             //alert('112');
         }
@@ -134,6 +137,8 @@ export default class Main extends Component {
             this.loadData();
         });
     }
+    
+
     loadData(page) {
         if (!global.mapAlready) {
             if (global.locDL === false) {
@@ -185,16 +190,13 @@ export default class Main extends Component {
                 }
             }
             else {
-                // if (global.locgiamax === 0 && global.locgiamin === 0 &&
-                //     global.loctiennghi === '0000000000' && global.locsao === '')
-                //     return;
-                // else {
                 if (global.locgiamax === 0 && global.locgiamin === 0) {
                     if (global.loctiennghi === '0000000000' && global.locsao !== '') {
                         this.setState({
                             refresh: true,
                         })
-
+                        //alert('vao');
+                        alert(global.trangloc + ' --- ' + global.locsao);
                         fetch(global.server + 'getDanhSachKhachSanLocSao.php?trang=' + global.trangloc + '&sosao=' + global.locsao + '&lat=' + global.latsearch + '&long=' + global.longsearch + '&bankinh=' + global.bankinhsearch)
                             .then((response) => response.json())
                             .then((responseJson) => {
@@ -232,7 +234,6 @@ export default class Main extends Component {
                         }
 
                         if (this.state.refresh === false) {
-                            //alert('1111');
                             this.setState({
                                 refresh: true,
                             });
@@ -428,12 +429,7 @@ export default class Main extends Component {
 
 
     }
-    testt() {
-        //alert(this.state.page);
-        //alert(this.state.load1 + ' -- ' + this.state.page);
-        //this.setState({ load1: false, page: 1 });
-
-    }
+    
     loadDataLoc() {
         //alert(global.loctiennghi + ' - ' + global.locgiamax + ' - ' + global.locgiamin + ' - ' + global.locsao);
         //this.setState({ load1: false, page: 1 });
@@ -491,18 +487,7 @@ export default class Main extends Component {
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
-                <TouchableOpacity
-                    onPress={() => { this.refs.ds.scrollToIndex({ animated: true, index: 0, viewPosition: 0 }); }}
-                >
-                    <Text>Up</Text>
-                </TouchableOpacity>
-
-                {/* <TouchableOpacity
-                    onPress={() => { this.testt() }}
-                >
-                    <Text>Load Page 3</Text>
-                </TouchableOpacity> */}
-
+               
                 <View style={{ height: this.state.maxheight }}>
                     <FlatList
                         onEndReachedThreshold={0.2}

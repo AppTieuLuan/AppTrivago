@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import {
   View, Text, Image, Dimensions,
-  StyleSheet, TextInput, TouchableOpacity, ToastAndroid, BackHandler
+  StyleSheet, TextInput, TouchableOpacity, BackHandler, FlatList, TouchableHighlight, KeyboardAvoidingView
 } from 'react-native';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
 import user from '../img/user.png';
@@ -24,7 +24,8 @@ export default class Welcome extends Component {
     super(props);
     this.state = {
       text: '',
-      name: ''
+      name: '',
+      mang: []
     };
     global.latsearch = 10.1686747;
     global.longsearch = 106.6992098;
@@ -78,7 +79,7 @@ export default class Welcome extends Component {
   }
   componentDidMount() {
     //set server
-    //global.server = 'http://192.168.1.13/Demo/';
+    //global.server = 'http://192.168.1.13:8080/Demo/';
     global.server = 'https://webservicestrivago.000webhostapp.com/';
     global.loadchitiet = false;
     global.loadhinhanh = false;
@@ -96,14 +97,58 @@ export default class Welcome extends Component {
       })
       .catch(err => console.log('LOI CHECK LOGIN', err));
   }
+
+  loadDataSearch(text) {
+    //alert("load "+this.state.value)
+    fetch('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + text + '&types=geocode&language=vi&key=AIzaSyC9hXBNhK5zuePc2RftV09n3Ao9IPE2tRA')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        // this.setState({
+        //     mang: responseJson
+        // });
+        //console.log(responseJson);
+        // console.log(responseJson);
+        this.setState({ mang: [] });
+        for (let i = 0; i < responseJson.predictions.length; i++) {
+          //console.log(responseJson.predictions[i].description + '---' + responseJson.predictions[i].place_id);
+          this.setState({
+            mang: this.state.mang.concat({ description: responseJson.predictions[i].description, id: responseJson.predictions[i].place_id }),
+            isloading: false
+          })
+        }
+
+      })
+      .catch((e) => { console.log(e) });
+  }
+
+  loadLatLong(id) {
+    fetch('https://maps.googleapis.com/maps/api/place/details/json?placeid=' + id + '&key=AIzaSyC9hXBNhK5zuePc2RftV09n3Ao9IPE2tRA')
+    .then((response) => response.json())
+    .then((responseJson) => {
+        global.latsearch = responseJson.result.geometry.location.lat;
+        global.longsearch = responseJson.result.geometry.location.lng;
+        //alert(global.latsearch + ' ---- ' + global.longsearch);
+        this.WelSearch();
+    })
+    .catch((e)=>{console.log(e)});
+}
+  loadSearch(text) {
+    this.setState({ text }, function () {
+      if (text !== '') {
+        this.loadDataSearch(text);
+      }
+    });
+
+  }
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <View style={{ backgroundColor: "#FFFFFF" }}>
+      <KeyboardAvoidingView behavior='padding'>
+      <View style={{ backgroundColor: '#FFFFFF' }}>
         <View style={{ height: height / 3 }}>
           <View style={{ alignItems: 'flex-end', flexDirection: 'row' }}>
             <View style={{ flex: 3 }}></View>
-            <View style={{ flex: 3, alignItems: "flex-end" }}>
+            <View style={{ flex: 3, alignItems: 'flex-end' }}>
               <Text style={{ fontSize: 16 }}>{this.state.name}</Text>
             </View>
             <View style={{ flex: 1 }}>
@@ -112,7 +157,7 @@ export default class Welcome extends Component {
                   global.onSignIn ?
                     global.onSignIn.quyen === '1' ? navigate('AccountScreen', { flag: '1' }) :
                       navigate('AccountMemberScreen', { flag: '1' }) :
-                    navigate('SigninScreen', { flag: '1' })
+                    navigate('SigninScreen', { flag: '1' });
                 }
                 }
               >
@@ -122,14 +167,14 @@ export default class Welcome extends Component {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{ alignItems: "center" }}>
+          <View style={{ alignItems: 'center' }}>
             <Image
               source={nameapp}
             />
           </View>
         </View>
 
-        <View style={{ alignItems: "center", height: height / 3 }}>
+        <View style={{ alignItems: 'center', height: height / 3 }}>
           <View>
             <Image
               source={logen}
@@ -171,16 +216,19 @@ export default class Welcome extends Component {
                   </View>
                 </TouchableOpacity>
               </View>
-             
-                <TextInput
-                  style={style.search}
-                  placeholder="Vị trí hiện tại"
-                  underlineColorAndroid="transparent"
-                  value={this.state.text}
-                  onChangeText={(text) => this.setState({ text })}
-                />
-             
+
+              <TextInput
+                style={style.search}
+                placeholder="Vị trí hiện tại"
+                underlineColorAndroid="transparent"
+                value={this.state.text}
+                onChangeText={(text) => {
+                  this.loadSearch(text);
+                }}
+              />
             </View>
+
+
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
               <TouchableOpacity
                 onPress={this.WelSearch}
@@ -194,10 +242,28 @@ export default class Welcome extends Component {
 
           </View>
         </View>
+        <View style={{ height: height / 3, paddingHorizontal: 15 }}>
+          <FlatList
+            data={this.state.mang}
+            renderItem={({ item }) =>
+              <TouchableHighlight
+                onPress={() => {
+                   this.loadLatLong(item.id);             
+                }}
+              >
+                <View style={style.rowFlatlist} key={item.id}>
+                  <View>
+                    <Text>{item.description}</Text>
+                  </View>
 
-        <View style={{ height: height / 3 }}>
+                </View>
+              </TouchableHighlight>
+            }
+            keyExtractor={(item, index) => index}
+          />
         </View>
       </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -247,5 +313,9 @@ var style = StyleSheet.create({
     marginRight: 5,
     marginTop: 10,
 
+  },
+  rowFlatlist: {
+    padding: 10,
+    borderBottomWidth: 0.5
   }
 });

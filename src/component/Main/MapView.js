@@ -27,7 +27,7 @@ export default class MapViewComponent extends Component {
       // latitudeDelta: 0.502,
       // longitudeDelta: 0.502,
       // },
-
+      isshowCallout: false,
       cod: {
         latitude: global.latsearch,
         longitude: global.longsearch,
@@ -65,6 +65,7 @@ export default class MapViewComponent extends Component {
   }
 
   componentDidMount() {
+    this.setState({ loading: true })
   }
   componentWillReceiveProps(newProps) {
     this.setState({
@@ -78,7 +79,7 @@ export default class MapViewComponent extends Component {
       cod
     });
 
-    this.setState({ textt: 'Lấy xong', isVisible: false });
+    this.setState({ isVisible: false });
 
   }
   changeRegion(data) {
@@ -86,14 +87,17 @@ export default class MapViewComponent extends Component {
     this.setState({ codinit: data })
   }
   onPress(data) {
-    let cod = Object.assign({}, this.state.User, { latitude: data.nativeEvent.coordinate.latitude, longitude: data.nativeEvent.coordinate.longitude });
-    this.setState({
-      cod
-    });
-    global.longsearch = data.nativeEvent.coordinate.longitude;
-    global.latsearch = data.nativeEvent.coordinate.latitude;
-    this.setState({ textt: 'Đang lấy DL', isVisible: true });
-    this.props.loaddl();
+    if(!this.state.isshowCallout) {
+      let cod = Object.assign({}, this.state.User, { latitude: data.nativeEvent.coordinate.latitude, longitude: data.nativeEvent.coordinate.longitude });
+      this.setState({
+        cod
+      });
+      global.longsearch = data.nativeEvent.coordinate.longitude;
+      global.latsearch = data.nativeEvent.coordinate.latitude;
+      this.setState({isVisible: true });
+      this.props.loaddl();
+    }
+    this.setState({ isshowCallout: false })
   }
   done(data) {
 
@@ -107,39 +111,6 @@ export default class MapViewComponent extends Component {
 
       });
     }
-  }
-
-  getLatLongDelta(points) {
-    // points should be an array of { latitude: X, longitude: Y }
-    let minX, maxX, minY, maxY;
-
-    // init first point
-    ((point) => {
-      minX = point.latitude;
-      maxX = point.latitude;
-      minY = point.longitude;
-      maxY = point.longitude;
-    });
-
-    // calculate rect
-    points.map((point) => {
-      minX = Math.min(minX, point.latitude);
-      maxX = Math.max(maxX, point.latitude);
-      minY = Math.min(minY, point.longitude);
-      maxY = Math.max(maxY, point.longitude);
-    });
-
-    const midX = (minX + maxX) / 2;
-    const midY = (minY + maxY) / 2;
-    const deltaX = (maxX - minX);
-    const deltaY = (maxY - minY);
-
-    return {
-      latitude: midX,
-      longitude: midY,
-      latitudeDelta: deltaX,
-      longitudeDelta: deltaY
-    };
   }
   render() {
     return (
@@ -162,6 +133,9 @@ export default class MapViewComponent extends Component {
                   coordinate={
                     marker
                   }
+                  onPress={()=>{
+                      this.setState({ isshowCallout: true })
+                  }}
                 //title={marker.latitude.toString()}
                 //description={'h'}
                 >

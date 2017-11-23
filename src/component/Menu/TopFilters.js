@@ -65,11 +65,24 @@ export default class TopFilters extends Component {
                 <View style={styles.viewVote}>
                     <TouchableOpacity
                         onPress={() => {
-                            this.setState({ vote1: !this.state.vote1 });
-                            if (!this.state.vote1)
-                                global.locsao = global.locsao + '1';
-                            else
-                                global.locsao = global.locsao.replace(/1/g, '');
+                            //this.setState({ vote1: !this.state.vote1 });
+                            if (!this.state.vote2 && !this.state.vote3 && !this.state.vote4 && !this.state.vote5) {
+                                if(this.state.vote1) {
+                                    global.locsao = '12345';
+                                    this.setState({ vote1: false });
+                                } else {
+                                    global.locsao = '1';
+                                    this.setState({ vote1: true });
+                                }
+                            } else {
+                                if (this.state.vote1) {
+                                    this.setState({ vote1: false });
+                                    global.locsao = global.locsao.replace(/1/g, '');
+                                } else {
+                                    this.setState({ vote1: true });
+                                    global.locsao = global.locsao.concat('1');
+                                }     
+                            } 
                         }}
                         style={styles.imgView}
                     >
@@ -78,11 +91,23 @@ export default class TopFilters extends Component {
 
                     <TouchableOpacity
                         onPress={() => {
-                            this.setState({ vote2: !this.state.vote2 });
-                            if (!this.state.vote2)
-                                global.locsao = global.locsao + '2';
-                            else
-                                global.locsao = global.locsao.replace(/2/g, '');
+                            if (!this.state.vote1 && !this.state.vote3 && !this.state.vote4 && !this.state.vote5) {
+                                if(this.state.vote2) {
+                                    global.locsao = '12345';
+                                    this.setState({ vote2: false });
+                                } else {
+                                    global.locsao = '2';
+                                    this.setState({ vote2: true });
+                                }
+                            } else {
+                                if (this.state.vote2) {
+                                    this.setState({ vote2: false });
+                                    global.locsao = global.locsao.replace(/2/g, '');
+                                } else {
+                                    this.setState({ vote2: true });
+                                    global.locsao = global.locsao.concat('2');
+                                }     
+                            } 
                         }}
                         style={styles.imgView}
                     >
@@ -91,11 +116,23 @@ export default class TopFilters extends Component {
 
                     <TouchableOpacity
                         onPress={() => {
-                            this.setState({ vote3: !this.state.vote3 });
-                            if (!this.state.vote3)
-                                global.locsao = global.locsao + '3';
-                            else
-                                global.locsao = global.locsao.replace(/3/g, '');
+                            if (!this.state.vote1 && !this.state.vote2 && !this.state.vote4 && !this.state.vote5) {
+                                if(this.state.vote3) {
+                                    global.locsao = '12345';
+                                    this.setState({ vote3: false });
+                                } else {
+                                    global.locsao = '3';
+                                    this.setState({ vote3: true });
+                                }
+                            } else {
+                                if (this.state.vote3) {
+                                    this.setState({ vote3: false });
+                                    global.locsao = global.locsao.replace(/3/g, '');
+                                } else {
+                                    this.setState({ vote3: true });
+                                    global.locsao = global.locsao.concat('3');
+                                }     
+                            }
                         }}
                         style={styles.imgView}
                     >
@@ -104,11 +141,23 @@ export default class TopFilters extends Component {
 
                     <TouchableOpacity
                         onPress={() => {
-                            this.setState({ vote4: !this.state.vote4 });
-                            if (!this.state.vote4)
-                                global.locsao = global.locsao + '4';
-                            else
-                                global.locsao = global.locsao.replace(/4/g, '');
+                            if (!this.state.vote1 && !this.state.vote3 && !this.state.vote2 && !this.state.vote5) {
+                                if(this.state.vote4) {
+                                    global.locsao = '12345';
+                                    this.setState({ vote4: false });
+                                } else {
+                                    global.locsao = '4';
+                                    this.setState({ vote4: true });
+                                }
+                            } else {
+                                if (this.state.vote4) {
+                                    this.setState({ vote4: false });
+                                    global.locsao = global.locsao.replace(/4/g, '');
+                                } else {
+                                    this.setState({ vote4: true });
+                                    global.locsao = global.locsao.concat('4');
+                                }     
+                            }
                         }}
                         style={styles.imgView}
                     >
@@ -117,11 +166,23 @@ export default class TopFilters extends Component {
 
                     <TouchableOpacity
                         onPress={() => {
-                            this.setState({ vote5: !this.state.vote5 });
-                            if (!this.state.vote5)
-                                global.locsao = global.locsao + '5';
-                            else
-                                global.locsao = global.locsao.replace(/5/g, '');
+                            if (!this.state.vote1 && !this.state.vote3 && !this.state.vote4 && !this.state.vote2) {
+                                if(this.state.vote5) {
+                                    global.locsao = '12345';
+                                    this.setState({ vote2: false });
+                                } else {
+                                    global.locsao = '5';
+                                    this.setState({ vote5: true });
+                                }
+                            } else {
+                                if (this.state.vote5) {
+                                    this.setState({ vote5: false });
+                                    global.locsao = global.locsao.replace(/5/g, '');
+                                } else {
+                                    this.setState({ vote5: true });
+                                    global.locsao = global.locsao.concat('5');
+                                }     
+                            }
                         }}
                         style={styles.imgView}
                     >
