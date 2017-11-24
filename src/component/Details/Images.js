@@ -63,7 +63,7 @@ export default class Details extends Component {
             }
         </IndicatorViewPager>
         return (
-            <View style={{ flex: 1}}>
+            <View style={{ flex: 1, backgroundColor: 'black', justifyContent: 'center' }}>
                 {
                     this.state.mang.length ? lst : null
                 }

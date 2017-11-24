@@ -64,6 +64,7 @@ export default class MapViewComponent extends Component {
 
   }
 
+  
   componentDidMount() {
     this.setState({ loading: true })
   }

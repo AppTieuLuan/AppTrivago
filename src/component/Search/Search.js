@@ -16,8 +16,6 @@ export default class Search extends Component {
     search() {
         global.searchData();
         this.goBack1();
-        
-        
     }
     goBack1() {
         this.props.navigation.goBack();
@@ -27,11 +25,6 @@ export default class Search extends Component {
         fetch('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + this.state.value + '&types=geocode&language=vi&key=AIzaSyC9hXBNhK5zuePc2RftV09n3Ao9IPE2tRA')
         .then((response) => response.json())
         .then((responseJson) => {
-            // this.setState({
-            //     mang: responseJson
-            // });
-            //console.log(responseJson);
-            // console.log(responseJson);
             this.setState({ mang: [] });
             for (let i = 0; i < responseJson.predictions.length; i++)
             {  
@@ -52,15 +45,6 @@ export default class Search extends Component {
             global.latsearch = responseJson.result.geometry.location.lat;
             global.longsearch = responseJson.result.geometry.location.lng;
             this.search();
-            // this.setState({mang: []})
-            // for (let i = 0 ; i<responseJson.predictions.length; i++)
-            // {  
-            //     //console.log(responseJson.predictions[i].description + '---' + responseJson.predictions[i].place_id);
-            //     this.setState({
-            //         mang: this.state.mang.concat({description: responseJson.predictions[i].description, id:responseJson.predictions[i].place_id})
-            //     })
-            // }
-            //alert(responseJson.result.geometry.location.lat + ' ----- ' + responseJson.result.geometry.location.lng);
         })
         .catch((e)=>{console.log(e)});
     }
@@ -69,15 +53,19 @@ export default class Search extends Component {
             <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableOpacity
+                        style={{ justifyContent: 'center', paddingRight: 5 }}
                         onPress={() => { this.props.navigation.goBack() }}
                     >
+                    <View style={{ justifyContent: 'center', alignContent: 'center'}}>
                         <Image style={{ width: 25, height: 25 }} source={icback} />
-                    </TouchableOpacity>
-                    <View style={{ flex: 5 }}>
+                    </View>
+                    </TouchableOpacity> 
+                    <View style={{ flex: 1, justifyContent: 'center'}}>
+
                         <TextInput 
-                            //onFocus = { () => { navigate('SearchScreen', {navtigation: navigate })}}
                             placeholder='Tìm kiếm'
                             underlineColorAndroid='rgba(0,0,0,0)'
+                            
                             onChangeText={(value) => {
                                 this.setState({ value, isloading: true });
                                 this.loadData();
@@ -85,7 +73,6 @@ export default class Search extends Component {
                             value={this.state.value}
                         />
                     </View>
-                
                 </View>
                 <ActivityIndicator
                     animating={this.state.isloading}
@@ -95,6 +82,7 @@ export default class Search extends Component {
                     renderItem={({ item }) =>
                     <TouchableHighlight
                        onPress={() => {
+                           global.diadiem = item.description;
                            this.loadLatLong(item.id);             
                         }}
                     >
@@ -126,14 +114,15 @@ var styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     header: {
+
         flexDirection: 'row',
         backgroundColor: 'white',
-        height: 40,
+        height: 45,
         padding: 4,
-        alignItems: 'center',
+        justifyContent: 'center',
         borderBottomWidth: 0.5,
         paddingHorizontal: 5,
-        marginTop: 10
+        //pa: 10
     },
     rowFlatlist: {
         padding: 10,

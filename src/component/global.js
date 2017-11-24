@@ -5,7 +5,7 @@ module.export = {
     locgiamax: 0,
     locgiamin: 0,
     locsao: 0,
-   
+    diadiem: null,
     quyen: null,
     locDL: false,
     trangloc: 1,

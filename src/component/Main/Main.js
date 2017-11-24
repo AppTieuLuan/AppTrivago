@@ -12,10 +12,7 @@ import opemenu from '../img/openmenu.png';
 import icsearch from '../img/Search.png';
 import icMap from '../img/Map.png';
 import icAc from '../img/Account.png';
-// import imgex from '../img/imgexam.png';
-// import s1 from '../img/sad.png';
-// import s2 from '../img/s2.png';
-// import s3 from '../img/s3.png';
+
 import icrt1 from '../img/icrt1.png';
 import icrt2 from '../img/icrt2.png';
 import icrt3 from '../img/icrt3.png';
@@ -42,7 +39,7 @@ export default class Main extends Component {
             page: 1,
             closeApp: true,
             arrMap: [],
-           
+            diadiem: ''
 
         };
         global.searchData = this.loadDataFromSearch.bind(this);
@@ -78,28 +75,14 @@ export default class Main extends Component {
    
     componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
+        this.setState({
+            diadiem: global.diadiem
+        });
     }
     componentDidMount() {
-            //BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
-            
-            
-            //return this.state.closeApp;
-           // alert(this.state.closeApp);
-            
-            //   if (rs) {
-            //       return true;
-            //   } else {
-            //       return false;
-            //   }
-              //return rs;
-        //});
         this.loadData(this.state.page);
     }
     refresh() {
-        // this.setState({ page: 1, mang: [] });
-        // //global.locDL = false;
-        // this.loadDataRefresh();
-
         global.trangloc = 1;
         this.setState({
             mang: [],
@@ -129,6 +112,7 @@ export default class Main extends Component {
     }
     loadDataFromSearch() {
         this.setState({
+            diadiem: global.diadiem,
             page: 1,
             mang: []
         }, function () {
@@ -482,14 +466,8 @@ export default class Main extends Component {
                             <Image style={styles.imgHeader} source={opemenu} />
                         </TouchableWithoutFeedback>
                     </View>
-                    <View style={{ flex: 5 }}>
-
-                        <TextInput
-                            //onFocus = { () => { navigate('SearchScreen', {navtigation: navigate })}}
-                            placeholder='Tìm kiếm'
-                            underlineColorAndroid='rgba(0,0,0,0)'
-                        />
-
+                    <View style={{ flex: 5, alignItems: 'center' }}>
+                        <Text numberOfLines={1} >{this.state.diadiem}</Text>
                     </View>
                     <View style={{ flex: 4, justifyContent: 'space-between', flexDirection: 'row', paddingRight: 5 }}>
                         <TouchableOpacity
@@ -561,7 +539,7 @@ export default class Main extends Component {
                                                     <View style={{ flex: 1, borderLeftWidth: 1, borderLeftColor: '#e9ebee' }}>
                                                         <View style={{ flex: 1, paddingHorizontal: 2, paddingVertical: 2 }}>
                                                             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                                                                <Text style={{ fontSize: 10 }}>Giá từ</Text>
+                                                                <Text style={{ fontSize: 10 }}>Giá 1 ngày từ</Text>
                                                                 <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#248f24' }}>{item.gia}</Text>
                                                             </View>
                                                         </View>

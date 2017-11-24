@@ -77,9 +77,10 @@ export default class MapViewComponent extends Component {
         latitudeDelta: 0.015,
         longitudeDelta: 0.0121
       },
-      coordinate: [
+      coordinate: [{
         latitude: data.latitude,
         longitude: data.longitude,
+      }
       ],
       mang: [],
       lat: data.latitude,

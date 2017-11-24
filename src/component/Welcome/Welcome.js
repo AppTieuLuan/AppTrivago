@@ -112,7 +112,7 @@ export default class Welcome extends Component {
     global.loaddanhgia = false;
     global.loadbando = false;
     global.loadingFetch = true;
-
+    global.diadiem = '';
     setInterval(refreshToken, 30000);
     getToken()
       .then(token => checkLogin(token))
@@ -129,11 +129,6 @@ export default class Welcome extends Component {
     fetch('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=' + text + '&types=geocode&language=vi&key=AIzaSyC9hXBNhK5zuePc2RftV09n3Ao9IPE2tRA')
       .then((response) => response.json())
       .then((responseJson) => {
-        // this.setState({
-        //     mang: responseJson
-        // });
-        //console.log(responseJson);
-        // console.log(responseJson);
         this.setState({ mang: [] });
         for (let i = 0; i < responseJson.predictions.length; i++) {
           //console.log(responseJson.predictions[i].description + '---' + responseJson.predictions[i].place_id);
@@ -207,29 +202,6 @@ export default class Welcome extends Component {
             />
           </View>
           <View style={style.khungsearch}>
-            {/* <View style={{ flex: 1 }}>
-                <Text>dfgfdgfg</Text>
-
-            </View>
-            <View style={{ flex: 6, margin: 3 }}>
-              <TextInput style={style.search}
-                placeholder="Bạn muốn đi đâu?"
-                underlineColorAndroid="transparent"
-                value={this.state.text}
-                onChangeText={(text) => this.setState({ text })}
-              >
-              </TextInput>
-            </View>
-            <View style={{ flex: 1, margin: 10 }}>
-              <TouchableOpacity
-                onPress={this.WelSearch}
-              >
-                <Image style={style.iconsearch}
-                  source={search}
-                />
-              </TouchableOpacity>
-            </View> */}
-
             <View style={style.khungtimkiem}>
               <View style={{}}>
                 <TouchableOpacity
@@ -272,6 +244,7 @@ export default class Welcome extends Component {
             renderItem={({ item }) =>
               <TouchableHighlight
                 onPress={() => {
+                  global.diadiem = item.description;
                    this.loadLatLong(item.id);             
                 }}
               >
