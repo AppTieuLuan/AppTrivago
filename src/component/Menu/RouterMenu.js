@@ -14,13 +14,7 @@ export const TabFilters = TabNavigator(
                 tabBarLabel: 'Lọc dữ liệu'
             }
         }
-        // ,
-        // TabExtraFilter: {
-        //     screen: ExtraFilters,
-        //     navigationOptions: {
-        //         tabBarLabel: 'Extra Filters'
-        //     }
-        // }
+       
     },
     {
         tabBarPosition: 'top',

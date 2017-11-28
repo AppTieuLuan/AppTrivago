@@ -54,9 +54,7 @@ export default class Main extends Component {
         global.trangloc = 1;
         global.locDL = true;
 
-        //global.server = 'http://192.168.1.20:8080/Demo/';
-
-        //global.server = 'https://webservicestrivago.000webhostapp.com/';
+       
     }
     onBackPress () {
         Alert.alert(
@@ -382,7 +380,7 @@ export default class Main extends Component {
                     global.locsao = '12345';
                 }
                 if (global.locgiamax !== 0 && global.locgiamin !== 0) {
-                    fetch(global.server.concat('getDanhSachBanDoKhongTienNghi.php?&sosao=' + global.locsao + '&lat=' + global.latsearch + '&long=' + global.longsearch + '&bankinh=' + global.bankinhsearch))
+                    fetch(global.server.concat('getDanhSachBanDoKhongTienNghi.php?&sosao=' + global.locsao + '&lat=' + global.latsearch + '&long=' + global.longsearch + '&bankinh=' + global.bankinhsearch + '&giamax=' + global.locgiamax + '&giamin=' + global.locgiamin))
                         .then((response) => response.json())
                         .then((responseJson) => {
                             this.setState({

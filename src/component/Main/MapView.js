@@ -184,9 +184,11 @@ export default class MapViewComponent extends Component {
             }}>
               <View style={{
                 backgroundColor: '#333333',
+                //backgroundColor: 'rgba(52, 52, 52, 0.8)',
                 borderRadius: 10,
                 width: 80,
                 height: 80,
+                
                 padding: 5,
                 justifyContent: 'center',
                 alignItems: 'center'

@@ -169,7 +169,7 @@ export default class TopFilters extends Component {
                             if (!this.state.vote1 && !this.state.vote3 && !this.state.vote4 && !this.state.vote2) {
                                 if(this.state.vote5) {
                                     global.locsao = '12345';
-                                    this.setState({ vote2: false });
+                                    this.setState({ vote5: false });
                                 } else {
                                     global.locsao = '5';
                                     this.setState({ vote5: true });
