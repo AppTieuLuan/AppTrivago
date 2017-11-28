@@ -8,7 +8,9 @@ import {
   StyleSheet,
   Dimensions,
   Image,
-  Alert
+  Alert,
+  TouchableWithoutFeedback,
+  Keyboard
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -146,83 +148,98 @@ export default class ChangePass extends Component {
   render() {
     return (
       <Wallpaper>
-        <View style={styles.logo}>
-          <Logo name={'ĐỔI MẬT KHẨU'} />
-        </View>
-        <View style={styles.textinput}>
-          <KeyboardAvoidingView behavior='padding'
-            style={styles.container}>
-            <View style={styles.inputWrapper}>
-              <Image source={passwordImg}
-                style={styles.inlineImg} />
-              <TextInput style={styles.input}
-                placeholder='Nhập mật khẩu cũ'
-                secureTextEntry={this.state.showpass}
-                autoCapitalize='none'
-                returnKeyType='done'
-                autoCorrect={false}
-                value={this.state.password}
-                onChangeText={password => this.setState({ password })}
-                placeholderTextColor='white'
-                underlineColorAndroid='transparent' />
-
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.btnEye}
-                onPress={this.showPass.bind(this)}
-              >
-                <Image source={eyeImg} style={styles.iconEye} />
-              </TouchableOpacity>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <View style={{flex: 1}}>
+            <View style={styles.logo}>
+              <Logo name={'ĐỔI MẬT KHẨU'} />
             </View>
-            <View style={styles.inputWrapper}>
-              <Image source={passwordImg}
-                style={styles.inlineImg} />
-              <TextInput style={styles.input}
-                placeholder='Nhập mật khẩu mới'
-                secureTextEntry={this.state.shownewpass}
-                autoCorrect={false}
-                autoCapitalize='none'
-                returnKeyType='done'
-                value={this.state.newpassword}
-                onChangeText={newpassword => this.setState({ newpassword })}
-                placeholderTextColor='white'
-                underlineColorAndroid='transparent' />
+            <View style={styles.textinput}>
+              <KeyboardAvoidingView behavior='padding'
+                style={styles.container}>
+                <View style={styles.inputWrapper}>
+                  <Image source={passwordImg}
+                    style={styles.inlineImg} />
+                  <TextInput style={styles.input}
+                    autoFocus={true}
+                    returnKeyType={"next"}
+                    onSubmitEditing={(event) => {
+                      this.refs.NewPassInput.focus();
+                    }}
+                    placeholder='Nhập mật khẩu cũ'
+                    secureTextEntry={this.state.showpass}
+                    autoCapitalize='none'
+                    returnKeyType='done'
+                    autoCorrect={false}
+                    value={this.state.password}
+                    onChangeText={password => this.setState({ password })}
+                    placeholderTextColor='white'
+                    underlineColorAndroid='transparent' />
 
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.btnEye}
-                onPress={this.newshowPass.bind(this)}
-              >
-                <Image source={eyeImg} style={styles.iconEye} />
-              </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.btnEye}
+                    onPress={this.showPass.bind(this)}
+                  >
+                    <Image source={eyeImg} style={styles.iconEye} />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.inputWrapper}>
+                  <Image source={passwordImg}
+                    style={styles.inlineImg} />
+                  <TextInput style={styles.input}
+                    ref='NewPassInput'
+                    returnKeyType={"next"}
+                    onSubmitEditing={(event) => {
+                      this.refs.ReNewPassInput.focus();
+                    }}
+                    placeholder='Nhập mật khẩu mới'
+                    secureTextEntry={this.state.shownewpass}
+                    autoCorrect={false}
+                    autoCapitalize='none'
+                    returnKeyType='done'
+                    value={this.state.newpassword}
+                    onChangeText={newpassword => this.setState({ newpassword })}
+                    placeholderTextColor='white'
+                    underlineColorAndroid='transparent' />
+
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.btnEye}
+                    onPress={this.newshowPass.bind(this)}
+                  >
+                    <Image source={eyeImg} style={styles.iconEye} />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.inputWrapper}>
+                  <Image source={passwordImg}
+                    style={styles.inlineImg} />
+                  <TextInput style={styles.input}
+                    ref='ReNewPassInput'
+                    placeholder='Xác nhận mật khẩu'
+                    secureTextEntry={this.state.showrenewpass}
+                    autoCorrect={false}
+                    autoCapitalize='none'
+                    returnKeyType='done'
+                    value={this.state.renewpassword}
+                    onChangeText={renewpassword => this.setState({ renewpassword })}
+                    placeholderTextColor='white'
+                    underlineColorAndroid='transparent' />
+
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.btnEye}
+                    onPress={this.renewshowPass.bind(this)}
+                  >
+                    <Image source={eyeImg} style={styles.iconEye} />
+                  </TouchableOpacity>
+                </View>
+
+              </KeyboardAvoidingView>
+              <ButtonSubmit click={this.OnChangePass.bind(this)}
+                text={'Thay đổi ngay'} />
             </View>
-            <View style={styles.inputWrapper}>
-              <Image source={passwordImg}
-                style={styles.inlineImg} />
-              <TextInput style={styles.input}
-                placeholder='Xác nhận mật khẩu'
-                secureTextEntry={this.state.showrenewpass}
-                autoCorrect={false}
-                autoCapitalize='none'
-                returnKeyType='done'
-                value={this.state.renewpassword}
-                onChangeText={renewpassword => this.setState({ renewpassword })}
-                placeholderTextColor='white'
-                underlineColorAndroid='transparent' />
-
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.btnEye}
-                onPress={this.renewshowPass.bind(this)}
-              >
-                <Image source={eyeImg} style={styles.iconEye} />
-              </TouchableOpacity>
-            </View>
-
-          </KeyboardAvoidingView>
-          <ButtonSubmit click={this.OnChangePass.bind(this)}
-            text={'Thay đổi ngay'} />
-        </View>
+          </View>
+        </TouchableWithoutFeedback>
       </Wallpaper>
     )
   }

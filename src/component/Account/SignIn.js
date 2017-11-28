@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   View, TextInput, Text,
   TouchableOpacity, StyleSheet,
-  Dimensions, Image, Alert, KeyboardAvoidingView
+  Dimensions, Image, Alert, KeyboardAvoidingView,
+  TouchableWithoutFeedback, Keyboard, ScrollView
 } from 'react-native';
 import signIn from '../../api/signIn';
 import global from '../global';
@@ -72,7 +73,11 @@ export default class SignIn extends Component {
         console.log(global.onSignIn);
         this.replaceScreen();
       })
-      .catch(err => alert(err));
+      .catch(err => {
+        let load = true;// callback gửi thông điệp để tắt animation
+        cb(load);
+        alert('Vui lòng kiểm tra lại đường truyền mạng');
+      });
   }
   replaceScreen = () => {
     const { flag } = this.props.navigation.state.params;
@@ -121,53 +126,62 @@ export default class SignIn extends Component {
     const { email, password, showPass, press } = this.state;
     return (
       <Wallpaper>
-        <View style={styles.logo}>
-          <Logo name={'ĐĂNG NHẬP'} />
-        </View>
-        <View style={styles.textinput}>
-          <KeyboardAvoidingView behavior='padding'
-            style={styles.container}>
-            <View style={styles.inputWrapper}>
-              <Image source={usernameImg}
-                style={styles.inlineImg} />
-              <TextInput style={styles.input}
-                placeholder='Nhập email'
-                autoCapitalize='none'
-                returnKeyType='done'
-                autoCorrect={false}
-                value={email}
-                onChangeText={email => this.setState({ email })}
-                placeholderTextColor='white'
-                underlineColorAndroid='transparent' />
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <ScrollView>
+            <View style={styles.logo}>
+              <Logo name={'ĐĂNG NHẬP'} />
             </View>
-            <View style={styles.inputWrapper}>
-              <Image source={passwordImg}
-                style={styles.inlineImg} />
-              <TextInput style={styles.input}
-                placeholder='Nhập mật khẩu'
-                secureTextEntry={showPass}
-                autoCorrect={false}
-                autoCapitalize='none'
-                returnKeyType='done'
-                value={password}
-                onChangeText={password => this.setState({ password })}
-                placeholderTextColor='white'
-                underlineColorAndroid='transparent' />
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.btnEye}
-                onPress={this.showPass}
-              >
-                <Image source={eyeImg} style={styles.iconEye} />
-              </TouchableOpacity>
+            <View style={styles.textinput}>
+              <KeyboardAvoidingView behavior='padding'
+                style={styles.container}>
+                <View style={styles.inputWrapper}>
+                  <Image source={usernameImg}
+                    style={styles.inlineImg} />
+                  <TextInput style={styles.input}
+                    returnKeyType={"next"}
+                    onSubmitEditing={(event) => {
+                      this.refs.PassText.focus();
+                    }}
+                    placeholder='Nhập email'
+                    autoCapitalize='none'
+                    returnKeyType='done'
+                    autoCorrect={false}
+                    value={email}
+                    onChangeText={email => this.setState({ email })}
+                    placeholderTextColor='white'
+                    underlineColorAndroid='transparent' />
+                </View>
+                <View style={styles.inputWrapper}>
+                  <Image source={passwordImg}
+                    style={styles.inlineImg} />
+                  <TextInput style={styles.input}
+                    ref='PassText'
+                    placeholder='Nhập mật khẩu'
+                    secureTextEntry={showPass}
+                    autoCorrect={false}
+                    autoCapitalize='none'
+                    returnKeyType='done'
+                    value={password}
+                    onChangeText={password => this.setState({ password })}
+                    placeholderTextColor='white'
+                    underlineColorAndroid='transparent' />
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.btnEye}
+                    onPress={this.showPass}
+                  >
+                    <Image source={eyeImg} style={styles.iconEye} />
+                  </TouchableOpacity>
+                </View>
+              </KeyboardAvoidingView>
+
+              <ButtonSubmit click={this.onSignIn.bind(this)} />
+
+              <SignupSection onclick={this.onclick.bind(this)} />
+
             </View>
-          </KeyboardAvoidingView>
-
-          <ButtonSubmit click={this.onSignIn.bind(this)} />
-
-          <SignupSection onclick={this.onclick.bind(this)} />
-
-        </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
       </Wallpaper>
     );
   }
@@ -177,7 +191,9 @@ const styles = StyleSheet.create({
   logo: {
     flex: 2,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 40,
+    marginTop: 40
   },
   textinput: {
     flex: 3,

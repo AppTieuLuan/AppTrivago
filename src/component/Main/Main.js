@@ -19,10 +19,12 @@ import icrt3 from '../img/icrt3.png';
 import icrt4 from '../img/icrt4.png';
 import icrt5 from '../img/icrt5.png';
 
+import up from '../img/up.png';
+
 
 const { height, width } = Dimensions.get('window');
 const height1 = height / 13;
-//const height2 = height / 12;
+const height2 = height / 20;
 
 export default class Main extends Component {
     constructor(props) {
@@ -31,7 +33,7 @@ export default class Main extends Component {
             mang: [],
             refresh: false,
             map: true,
-            maxheight: height - height1,
+            maxheight: height - height1 - height2,
             heightbottom: height1,
             heigthmapview: 0,
             isModalVisible: false,
@@ -39,7 +41,8 @@ export default class Main extends Component {
             page: 1,
             closeApp: true,
             arrMap: [],
-            diadiem: ''
+            diadiem: '',
+            upTop: false
 
         };
         global.searchData = this.loadDataFromSearch.bind(this);
@@ -54,9 +57,7 @@ export default class Main extends Component {
         global.trangloc = 1;
         global.locDL = true;
 
-        //global.server = 'http://192.168.1.20:8080/Demo/';
-
-        //global.server = 'https://webservicestrivago.000webhostapp.com/';
+       
     }
     onBackPress () {
         Alert.alert(
@@ -105,7 +106,7 @@ export default class Main extends Component {
             this.loadData();
         } else {
             global.mapAlready = false;
-            this.setState({ maxheight: height - height1, heightbottom: height1, heigthmapview: 0 });
+            this.setState({ maxheight: height - height1 - height2, heightbottom: height1, heigthmapview: 0 });
             this.refresh();
             //alert('112');
         }
@@ -382,7 +383,7 @@ export default class Main extends Component {
                     global.locsao = '12345';
                 }
                 if (global.locgiamax !== 0 && global.locgiamin !== 0) {
-                    fetch(global.server.concat('getDanhSachBanDoKhongTienNghi.php?&sosao=' + global.locsao + '&lat=' + global.latsearch + '&long=' + global.longsearch + '&bankinh=' + global.bankinhsearch))
+                    fetch(global.server.concat('getDanhSachBanDoKhongTienNghi.php?&sosao=' + global.locsao + '&lat=' + global.latsearch + '&long=' + global.longsearch + '&bankinh=' + global.bankinhsearch + '&giamax=' + global.locgiamax + '&giamin=' + global.locgiamin))
                         .then((response) => response.json())
                         .then((responseJson) => {
                             this.setState({
@@ -501,6 +502,9 @@ export default class Main extends Component {
                         //ListHeaderComponent={(<HeaderFlatList />)}
                         refreshing={this.state.refresh}
                         onRefresh={() => { this.refresh(); }}
+                        onScroll={(e) => {
+                            this.setState({upTop: true});
+                        }}
                         data={this.state.mang}
                         renderItem={({ item }) =>
                             <View style={styles.rowFlatlist}>
@@ -561,6 +565,23 @@ export default class Main extends Component {
                             </View>
                         }
                     />
+                    {
+                        (this.state.upTop && this.state.mang.length > 0) ? (
+
+                            <View style={{ alignItems: 'flex-end', top: 0, bottom: 0, right: 0, left: 0, marginRight: 10, marginBottom: 10, position: 'absolute', justifyContent: 'flex-end' }} >
+                                <TouchableOpacity
+                                    onPress={() => { 
+                                        this.refs.ds.scrollToIndex({ animated: true, index: 0, viewPosition: 0 });
+                                        setTimeout(() => {
+                                            this.setState({upTop: false}); 
+                                        }, 500);
+                                        }}
+                                >
+                                    <Image source={up} style={{ height: 30, width: 30 }} />
+                                </TouchableOpacity>
+                            </View>
+                        ) : null
+                    }
                     <View style={{ height: this.state.heigthmapview }}>
                         <MapViewComponent loaddl={this.loadData.bind(this)} goDetails={this.goDetails.bind(this)} bankinh={global.bankinhsearch * 1000} data={this.state.arrMap} />
                         {/* <MapViewComponent /> */}

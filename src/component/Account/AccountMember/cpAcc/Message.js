@@ -206,7 +206,7 @@ export default class Message extends Component {
     }
     render() {
         return (
-            <View>
+            <View style={{flex: 1}}>
                 {this.renderflaglist()}
                 <Modal
                     animationType="slide"
