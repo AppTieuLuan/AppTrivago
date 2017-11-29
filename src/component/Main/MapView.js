@@ -35,8 +35,8 @@ export default class MapViewComponent extends Component {
       codinit: {
         latitude: global.latsearch,
         longitude: global.longsearch,
-        latitudeDelta: 0.502,
-        longitudeDelta: 0.502,
+        latitudeDelta: 0.2,
+        longitudeDelta: 0.2,
       },
       markers: [],
       radius: global.bankinhsearch * 1000,
@@ -64,7 +64,7 @@ export default class MapViewComponent extends Component {
 
   }
 
-  
+
   componentDidMount() {
     this.setState({ loading: true })
   }
@@ -88,14 +88,14 @@ export default class MapViewComponent extends Component {
     this.setState({ codinit: data })
   }
   onPress(data) {
-    if(!this.state.isshowCallout) {
+    if (!this.state.isshowCallout) {
       let cod = Object.assign({}, this.state.User, { latitude: data.nativeEvent.coordinate.latitude, longitude: data.nativeEvent.coordinate.longitude });
       this.setState({
         cod
       });
       global.longsearch = data.nativeEvent.coordinate.longitude;
       global.latsearch = data.nativeEvent.coordinate.latitude;
-      this.setState({isVisible: true });
+      this.setState({ isVisible: true });
       this.props.loaddl();
     }
     this.setState({ isshowCallout: false })
@@ -120,7 +120,7 @@ export default class MapViewComponent extends Component {
           style={{ flex: 1 }}
           onPress={this.onPress.bind(this)}
           moveOnMarkerPress={false}
-          onRegionChangeComplete={(data)=>{this.changeRegion(data)}}
+          onRegionChangeComplete={(data) => { this.changeRegion(data) }}
           region={this.state.codinit}
         >
           {
@@ -134,8 +134,8 @@ export default class MapViewComponent extends Component {
                   coordinate={
                     marker
                   }
-                  onPress={()=>{
-                      this.setState({ isshowCallout: true })
+                  onPress={() => {
+                    this.setState({ isshowCallout: true })
                   }}
                 //title={marker.latitude.toString()}
                 //description={'h'}
@@ -166,7 +166,7 @@ export default class MapViewComponent extends Component {
               : null
           }
         </MapView>
-        <Modal
+        {/* <Modal
           transparent={true}
           visible={this.state.isVisible}
           onRequestClose={() => this.setState({ isVisible: false })}
@@ -196,6 +196,42 @@ export default class MapViewComponent extends Component {
                 <Spinner size={40} type={'Circle'} color={'white'} />
                 <Text style={{ fontSize: 13, color: 'white' }}>Loading...</Text>
               </View>
+            </View>
+          </TouchableOpacity>
+        </Modal> */}
+
+        <Modal
+          transparent={true}
+          visible={this.state.isVisible}
+          onRequestClose={() => this.setState({ isVisible: false })}
+        >
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => {
+              this.setState({ isVisible: false })
+            }}
+          >
+            <View style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            }}>
+              {/* <View style={{
+                               // backgroundColor: '#333333',
+                               //backgroundColor: 'rgba(52, 52, 52, 0.5)',
+                                //borderRadius: 10,
+                                //width: 80,
+                                //height: 80,
+                                padding: 5,
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                               <Spinner size={40} type={'Circle'} color={'white'} /> 
+                                <Text style={{ fontSize: 13, color: 'white' }}>Loading...</Text>
+                            </View> */}
+              <ActivityIndicator size={65} />
+              <Text style={{ fontSize: 15, color: 'white' }}>Loading...</Text>
             </View>
           </TouchableOpacity>
         </Modal>

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import {
-    View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, ToastAndroid, Modal
+    View, Text, StyleSheet, Dimensions, TouchableOpacity, Image, ToastAndroid, Modal, ActivityIndicator 
 } from 'react-native';
 import global from '../global';
 import { TbDetails } from './RouterDetails';
-const { height, width } = Dimensions.get('window');
-import { IndicatorViewPager, PagerDotIndicator } from 'rn-viewpager';
+const { height } = Dimensions.get('window');
+
 import icback from '../img/icback.png';
 import iclove from '../img/love.png';
 import iclove_ac from '../img/love_active.png';
-var Spinner = require('react-native-spinkit');
 
 export default class Details extends Component {
 
@@ -116,20 +115,24 @@ export default class Details extends Component {
                         <View style={{
                             flex: 1,
                             justifyContent: 'center',
-                            alignItems: 'center'
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
                         }}>
-                            <View style={{
-                                backgroundColor: '#333333',
-                                borderRadius: 10,
-                                width: 80,
-                                height: 80,
+                            {/* <View style={{
+                               // backgroundColor: '#333333',
+                               //backgroundColor: 'rgba(52, 52, 52, 0.5)',
+                                //borderRadius: 10,
+                                //width: 80,
+                                //height: 80,
                                 padding: 5,
                                 justifyContent: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Spinner size={40} type={'Circle'} color={'white'} />
+                               <Spinner size={40} type={'Circle'} color={'white'} /> 
                                 <Text style={{ fontSize: 13, color: 'white' }}>Loading...</Text>
-                            </View>
+                            </View> */}
+                            <ActivityIndicator size={65} />
+                            <Text style={{ fontSize: 15, color: 'white' }}>Loading...</Text>
                         </View>
                     </TouchableOpacity>
                 </Modal>

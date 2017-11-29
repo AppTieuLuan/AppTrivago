@@ -418,7 +418,7 @@ export default class TopFilters extends Component {
                     <Slider
                         value={global.bankinhsearch}
                         minimumValue={1}
-                        maximumValue={100}
+                        maximumValue={7}
                         step={1}
                         thumbTouchSize={{ width: 50, height: 50 }}
                         onValueChange={(value) => {

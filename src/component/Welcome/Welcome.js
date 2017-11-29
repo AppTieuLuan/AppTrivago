@@ -31,7 +31,7 @@ export default class Welcome extends Component {
     };
     global.latsearch = '';
     global.longsearch = '';
-    global.bankinhsearch = 20;
+    global.bankinhsearch = 7;
     global.mapAlready = false;
     global.loadDataMap = false;
 
