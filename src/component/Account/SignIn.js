@@ -101,9 +101,12 @@ export default class SignIn extends Component {
       });
       this.props.navigation.dispatch(resetAction);
     } else {
+
+      global.mapAlready = false;
       const resetAction = NavigationActions.reset({
         index: 1,
         actions: [
+         
           NavigationActions.navigate({ routeName: 'MainScreen' }),
           global.onSignIn.quyen === '1' ?
             NavigationActions.navigate({

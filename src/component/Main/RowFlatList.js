@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import {
-    View, TouchableOpacity, TouchableWithoutFeedback, StyleSheet, Dimensions, Image,
+    View, StyleSheet, Image,
     Text
 } from 'react-native';
-import s1 from '../img/sad.png';
-import s2 from '../img/s2.png';
-import s3 from '../img/s3.png';
+
+
 import global from '../global';
 
 import icrt1 from '../img/icrt1.png';
@@ -14,19 +13,19 @@ import icrt3 from '../img/icrt3.png';
 import icrt4 from '../img/icrt4.png';
 import icrt5 from '../img/icrt5.png';
 
-
-const { height, width } = Dimensions.get('window');
-
 export default class RowFlatList extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            initialRender: true
+        }
     }
 
     render() {
         return (
             <View style={styles.rowFlatlist}>
                 <View style={{ flex: 1 }}>
-                    <Image source={{ uri: this.props.item.hinh }} style={{ height: 112, width: 112, flex: 1 }} />
+                    <Image source={{ uri: this.props.item.hinh }} onLayout={() => this.setState({ initialRender: false })} key={`${this.state.initialRender}`} style={{ height: 112, width: 112, flex: 1 }} />
                 </View>
                 <View style={{ flex: 2, marginLeft: 4 }}>
                     <View style={{ flex: 1, paddingBottom: 4 }}>
@@ -42,14 +41,12 @@ export default class RowFlatList extends Component {
                         <View style={{ flex: 1, borderRightWidth: 1, borderRightColor: '#e9ebee' }}>
 
                             <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
-                                <Image resizeMode={'contain'} source={this.props.item.sosao == 1 ? icrt1 : (this.props.item.sosao == 2 ? icrt2 : (this.props.item.sosao == 3 ? icrt3 : (this.props.item.sosao == 4 ? icrt4 : icrt5)))} style={{ flex: 1 }} />
+                                <Image resizeMode={'contain'} source={ parseFloat(this.props.item.sosao) <= 1 ? icrt1 : (this.props.item.sosao == 2 ? icrt2 : (this.props.item.sosao == 3 ? icrt3 : (this.props.item.sosao == 4 ? icrt4 : icrt5)))} style={{ flex: 1 }} />
                             </View>
 
                             <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
-                                {/* <Text numberOfLines={1} style={{ fontSize: 12 }}>91/100</Text>
-                                <Text numberOfLines={1} style={{ fontSize: 10 }}>135 bình luận</Text> */}
                                 <Text numberOfLines={1} style={{ fontSize: 10 }}>{this.props.item.sodanhgia} lượt đánh giá</Text>
-                                <Text numberOfLines={1} style={{ fontSize: 10 }}>{this.props.item.sobl} bình luận</Text>
+                                <Text numberOfLines={1} style={{ fontSize: 10 }}>{this.props.item.sobl} bình luận {this.props.item.sosao}</Text>
                             </View>
                         </View>
 

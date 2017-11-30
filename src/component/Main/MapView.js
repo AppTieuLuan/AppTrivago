@@ -63,8 +63,6 @@ export default class MapViewComponent extends Component {
   renderSpinner() {
 
   }
-
-
   componentDidMount() {
     this.setState({ loading: true })
   }
@@ -75,11 +73,21 @@ export default class MapViewComponent extends Component {
       markers: newProps.data
     });
 
+
+
     let cod = Object.assign({}, { latitude: global.latsearch, longitude: global.longsearch });
     this.setState({
       cod
     });
 
+
+    if (global.manhinhtimkiem) {
+      let codinit = Object.assign({}, { latitude: global.latsearch, longitude: global.longsearch, latitudeDelta: this.state.codinit.latitudeDelta, longitudeDelta: this.state.codinit.longitudeDelta });
+      this.setState({
+        codinit
+      });
+      global.manhinhtimkiem = false;
+    }
     this.setState({ isVisible: false });
 
   }
@@ -116,7 +124,7 @@ export default class MapViewComponent extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <MapView
+        <MapView.Animated
           style={{ flex: 1 }}
           onPress={this.onPress.bind(this)}
           moveOnMarkerPress={false}
@@ -165,7 +173,7 @@ export default class MapViewComponent extends Component {
               />
               : null
           }
-        </MapView>
+        </MapView.Animated>
         {/* <Modal
           transparent={true}
           visible={this.state.isVisible}

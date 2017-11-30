@@ -14,6 +14,7 @@ export default class Search extends Component {
         }
     }
     search() {
+        global.manhinhtimkiem = true;
         global.searchData();
         this.goBack1();
     }

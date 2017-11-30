@@ -21,7 +21,7 @@ module.export = {
     loadhinhanh: null,
     loaddanhgia: null,
     loadbando: null,
-
+    manhinhtimkiem: null,
     onSignIn: null,
     address: '',
     lat: '',

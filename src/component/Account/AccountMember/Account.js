@@ -1,12 +1,12 @@
 import React,{ Component } from 'react';
 import {
-    View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions
+    View, Text, StyleSheet, ScrollView, Image, Dimensions
 } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import saveToken from '../../../api/saveToken';
 import global from '../../global';
 
-const {height, width} = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 import BTNAC from './view/buttonAccount';
 
@@ -44,6 +44,7 @@ export default class Account extends Component {
         });
         this.props.navigation.dispatch(resetAction);
       }else{
+        global.mapAlready = false;
         const resetAction = NavigationActions.reset({
           index: 0,
           actions: [

@@ -113,6 +113,7 @@ export default class Welcome extends Component {
     global.loadbando = false;
     global.loadingFetch = true;
     global.diadiem = '';
+    global.manhinhtimkiem = false;
     setInterval(refreshToken, 30000);
     getToken()
       .then(token => checkLogin(token))
