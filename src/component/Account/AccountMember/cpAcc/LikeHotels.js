@@ -6,7 +6,8 @@ import {
   Image,
   Dimensions,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import bgSrc from '../images/bg.png';
 import like from '../images/ksyt.png';
@@ -23,11 +24,15 @@ export default class LikeHotels extends Component {
     this.state = {
       flag: true,
       mang: [],
-      refresh: true
+      refresh: true,
+      loading: false,
+      f: false,
+      page: 1
     };
   }
-  componentDidMount() {
-    getlikehotels(global.onSignIn.id)
+  loadData() {
+    this.setState({ refresh: true });
+    getlikehotels(global.onSignIn.id, this.state.page)
       .then(res => {
         if (res.list === 'KHONG_CO') {
           this.setState({ flag: false });
@@ -41,21 +46,13 @@ export default class LikeHotels extends Component {
       })
       .catch(err => console.log(err));
   }
+  componentDidMount() {
+    this.loadData();
+  }
   refresh() {
-    this.setState({ refresh: true });
-    getlikehotels(global.onSignIn.id)
-      .then(res => {
-        if (res.list === 'KHONG_CO') {
-          this.setState({ flag: false });
-        } else {
-          this.setState({
-            flag: true,
-            mang: res.list,
-            refresh: false
-          });
-        }
-      })
-      .catch(err => console.log(err));
+    this.setState({ page: 1, mang: [] }, function () {
+      this.loadData();
+    });
   }
   removehotel(id) {
     removelikehotel(global.onSignIn.id, id)
@@ -67,28 +64,66 @@ export default class LikeHotels extends Component {
       .catch(err => console.log(err));
     this.refresh();
   }
+  loadMore() {
+    if (!this.state.f) {
+      this.setState({ loading: true, page: this.state.page + 1 });
+    }
+    getlikehotels(global.onSignIn.id, this.state.page)
+      .then(res => {
+        if (res.over) {
+          this.setState({ f: true, loading: false });
+          return false;
+        }
+        this.setState({ mang: this.state.mang.concat(res.list), loading: false });
+      })
+      .catch(err => console.log(err));
+  }
   render() {
     let draw = this.state.flag ?
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <FlatList
+          ListFooterComponent={(
+            <View style={{ padding: 10 }}>
+              {
+                !this.state.loading ?
+                  (null) :
+                  (
+                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                      <ActivityIndicator size={24} />
+                      <Text>   Loading ...</Text>
+                    </View>
+                  )
+              }
+
+            </View>
+          )}
           refreshing={this.state.refresh}
           onRefresh={() => { this.refresh() }}
+          onEndReachedThreshold={0.2}
+          onEndReached={() => { this.loadMore(); }}
           data={this.state.mang}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) =>
-            <View style={{ padding: 5 }}>
-              <Image style={{ width: width * 0.95, height: height / 3, borderRadius: 15 }} source={{ uri: item.hinhanh }} />
-              <View style={{ flexDirection: 'row', position: 'absolute' }}>
-                <View style={{ flex: 4 }}>
-                  <Text style={{ color: '#fff', fontSize: 16, top: 10, left: 10 }}>{item.ten}</Text>
-                </View>
-                <View style={{ flex: 1, left: 10, alignItems: "center", justifyContent: 'center', top: 10 }}>
-                  <TouchableOpacity onPress={() => this.removehotel(item.id)}>
-                    <Image source={like} style={styles.inlineImg} />
-                  </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                global.idKS = item.id;
+                this.props.navigation.navigate('DetailScreen', { name: item.ten, id: item.id })
+              }}
+            >
+              <View style={{ padding: 5 }}>
+                <Image style={{ width: width * 0.95, height: height / 3, borderRadius: 15 }} source={{ uri: item.hinhanh }} />
+                <View style={{ flexDirection: 'row', position: 'absolute' }}>
+                  <View style={{ flex: 4 }}>
+                    <Text style={{ color: '#fff', fontSize: 16, top: 10, left: 10 }}>{item.ten}</Text>
+                  </View>
+                  <View style={{ flex: 1, left: 10, alignItems: "center", justifyContent: 'center', top: 10 }}>
+                    <TouchableOpacity onPress={() => this.removehotel(item.id)}>
+                      <Image source={like} style={styles.inlineImg} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
           }
         />
       </View> :

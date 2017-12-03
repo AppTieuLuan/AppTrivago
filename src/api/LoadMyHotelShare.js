@@ -1,7 +1,7 @@
 import global from '../component/global';
 
-const LoadMyHotelShare = (userid) => (
-    fetch(global.server + 'loadMyHotelShare.php',
+const LoadMyHotelShare = (userid, page) => (
+    fetch(global.server + 'loadMyHotelShare.php?page='+page,
     {
         method: 'POST',
         headers: {
