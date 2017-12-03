@@ -79,58 +79,62 @@ export default class LikeHotels extends Component {
       .catch(err => console.log(err));
   }
   render() {
-    let draw = this.state.flag ?
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <FlatList
-          ListFooterComponent={(
-            <View style={{ padding: 10 }}>
-              {
-                !this.state.loading ?
-                  (null) :
-                  (
-                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                      <ActivityIndicator size={24} />
-                      <Text>   Loading ...</Text>
-                    </View>
-                  )
-              }
-
-            </View>
-          )}
-          refreshing={this.state.refresh}
-          onRefresh={() => { this.refresh() }}
-          onEndReachedThreshold={0.2}
-          onEndReached={() => { this.loadMore(); }}
-          data={this.state.mang}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) =>
-            <TouchableOpacity
-              onPress={() => {
-                global.idKS = item.id;
-                this.props.navigation.navigate('DetailScreen', { name: item.ten, id: item.id })
-              }}
-            >
-              <View style={{ padding: 5 }}>
-                <Image style={{ width: width * 0.95, height: height / 3, borderRadius: 15 }} source={{ uri: item.hinhanh }} />
-                <View style={{ flexDirection: 'row', position: 'absolute' }}>
-                  <View style={{ flex: 4 }}>
-                    <Text style={{ color: '#fff', fontSize: 16, top: 10, left: 10 }}>{item.ten}</Text>
-                  </View>
-                  <View style={{ flex: 1, left: 10, alignItems: "center", justifyContent: 'center', top: 10 }}>
-                    <TouchableOpacity onPress={() => this.removehotel(item.id)}>
-                      <Image source={like} style={styles.inlineImg} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </TouchableOpacity>
-          }
-        />
-      </View> :
-      <Image source={bgSrc} style={{ height: height * 0.9, width: width }} />
     return (
-      <View>
-        {draw}
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        {
+          this.state.flag ?
+            (<View>
+              <FlatList
+                ListFooterComponent={(
+                  <View style={{ padding: 10 }}>
+                    {
+                      !this.state.loading ?
+                        (null) :
+                        (
+                          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                            <ActivityIndicator size={24} />
+                            <Text>   Loading ...</Text>
+                          </View>
+                        )
+                    }
+
+                  </View>
+                )}
+                refreshing={this.state.refresh}
+                onRefresh={() => { this.refresh() }}
+                onEndReachedThreshold={0.2}
+                onEndReached={() => { this.loadMore(); }}
+                data={this.state.mang}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) =>
+                  <TouchableOpacity
+                    onPress={() => {
+                      global.idKS = item.id;
+                      this.props.navigation.navigate('DetailScreen', { name: item.ten, id: item.id })
+                    }}
+                  >
+                    <View style={{ padding: 5 }}>
+                      <Image style={{ width: width * 0.95, height: height / 3, borderRadius: 15 }} source={{ uri: item.hinhanh }} />
+                      <View style={{ flexDirection: 'row', position: 'absolute' }}>
+                        <View style={{ flex: 4 }}>
+                          <Text style={{ color: '#fff', fontSize: 16, top: 10, left: 10 }}>{item.ten}</Text>
+                        </View>
+                        <View style={{ flex: 1, left: 10, alignItems: "center", justifyContent: 'center', top: 10 }}>
+                          <TouchableOpacity onPress={() => this.removehotel(item.id)}>
+                            <Image source={like} style={styles.inlineImg} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                }
+              />
+            </View>)
+            :
+            (<View>
+              <Image source={bgSrc} style={{ height: height * 0.9, width: width }} />
+            </View>)
+        }
       </View>
     )
   }
