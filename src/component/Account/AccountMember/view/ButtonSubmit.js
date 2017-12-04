@@ -75,7 +75,7 @@ export default class ButtonSubmit extends Component {
 						{this.state.isLoading ?
 							<Image source={spinner} style={styles.image} />
 							:
-							<Text style={styles.text}>Đăng nhập ngay</Text>
+							<Text style={styles.text}>{this.props.text}</Text>
 						}
 					</TouchableOpacity>
 					<Animated.View style={[styles.circle, { transform: [{ scale: changeScale }] }]} />

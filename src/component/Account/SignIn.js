@@ -177,7 +177,7 @@ export default class SignIn extends Component {
                 </View>
               </KeyboardAvoidingView>
 
-              <ButtonSubmit click={this.onSignIn.bind(this)} />
+              <ButtonSubmit click={this.onSignIn.bind(this)} text={'Đăng nhập ngay'} />
 
               <SignupSection onclick={this.onclick.bind(this)} />
 
