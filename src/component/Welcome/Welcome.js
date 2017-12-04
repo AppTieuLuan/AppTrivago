@@ -15,6 +15,7 @@ import checkLogin from '../../api/checkLogin';
 import getToken from '../../api/getToken';
 import saveToken from '../../api/saveToken';
 import icdinhvi from '../img/icdinhvi.png';
+import back from '../img/back.png';
 
 import { NavigationActions } from 'react-navigation';
 
@@ -27,7 +28,8 @@ export default class Welcome extends Component {
       text: '',
       name: '',
       mang: [],
-      closeapp: true
+      closeapp: true,
+      IsSearch: false
     };
     global.latsearch = '';
     global.longsearch = '';
@@ -37,8 +39,8 @@ export default class Welcome extends Component {
 
   }
   WelSearch = () => {
-    if(global.latsearch == null || global.longsearch == null || global.latsearch == '' || global.longsearch == '') {
-      ToastAndroid.show('Nhập địa điểm bạn muốn tìm kiếm',ToastAndroid.SHORT);
+    if (global.latsearch == null || global.longsearch == null || global.latsearch == '' || global.longsearch == '') {
+      ToastAndroid.show('Nhập địa điểm bạn muốn tìm kiếm', ToastAndroid.SHORT);
     } else {
       global.keysearch = this.state.text;
       const resetAction = NavigationActions.reset({
@@ -49,23 +51,23 @@ export default class Welcome extends Component {
       });
       this.props.navigation.dispatch(resetAction);
     }
-    
+
     //this.props.navigation.navigate('MainScreen');
   }
 
-  onBackPress () {
-        Alert.alert(
-            'Xác nhận thoát ứng dụng',
-            'Bạn có chắc muống thoát ứng dụng ?',
-            [
-              
-              {text: 'Cancel', onPress: () =>  {  } , style: 'cancel'},
-              {text: 'OK', onPress: () => { BackHandler.exitApp(); }  },
-            ],
-            { cancelable: true }
-          );
+  onBackPress() {
+    Alert.alert(
+      'Xác nhận thoát ứng dụng',
+      'Bạn có chắc muống thoát ứng dụng ?',
+      [
 
-        return true;
+        { text: 'Cancel', onPress: () => { }, style: 'cancel' },
+        { text: 'OK', onPress: () => { BackHandler.exitApp(); } },
+      ],
+      { cancelable: true }
+    );
+
+    return true;
   }
   componentWillMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackPress);
@@ -145,15 +147,15 @@ export default class Welcome extends Component {
 
   loadLatLong(id) {
     fetch('https://maps.googleapis.com/maps/api/place/details/json?placeid=' + id + '&key=AIzaSyC9hXBNhK5zuePc2RftV09n3Ao9IPE2tRA')
-    .then((response) => response.json())
-    .then((responseJson) => {
+      .then((response) => response.json())
+      .then((responseJson) => {
         global.latsearch = responseJson.result.geometry.location.lat;
         global.longsearch = responseJson.result.geometry.location.lng;
         //alert(global.latsearch + ' ---- ' + global.longsearch);
         this.WelSearch();
-    })
-    .catch((e)=>{console.log(e)});
-}
+      })
+      .catch((e) => { console.log(e) });
+  }
   loadSearch(text) {
     this.setState({ text }, function () {
       if (text !== '') {
@@ -166,101 +168,132 @@ export default class Welcome extends Component {
     const { navigate } = this.props.navigation;
     return (
       <KeyboardAvoidingView behavior='padding'>
-      <View style={{ backgroundColor: '#FFFFFF' }}>
-        <View style={{ height: height / 3 }}>
-          <View style={{ alignItems: 'flex-end', flexDirection: 'row' }}>
-            <View style={{ flex: 3 }}></View>
-            <View style={{ flex: 3, alignItems: 'flex-end' }}>
-              <Text style={{ fontSize: 16 }}>{this.state.name}</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  global.onSignIn ?
-                    global.onSignIn.quyen === '1' ? navigate('AccountScreen', { flag: '1' }) :
-                      navigate('AccountMemberScreen', { flag: '1' }) :
-                    navigate('SigninScreen', { flag: '1' });
-                }
-                }
-              >
-                <Image style={style.img}
-                  source={user}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={{ alignItems: 'center' }}>
-            <Image
-              source={nameapp}
-            />
-          </View>
-        </View>
+        {
+          this.state.IsSearch ? (
+            <View style={{ backgroundColor: '#FFFFFF', height: "100%" }}>
+              <View style={style.khungsearch}>
+                <View style={{ alignItems: 'flex-start', justifyContent: 'center' }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ IsSearch: false });
+                    }}
+                  >
+                    <Image
+                      style={style.iconsearch}
+                      source={back}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={style.khungtimkiem}>
+                  <TextInput
+                    style={style.search}
+                    ref="searchtrue"
+                    placeholder="Nhập địa điểm bạn muốn đi"
+                    underlineColorAndroid="transparent"
+                    value={this.state.text}
+                    onChangeText={(text) => {
+                      this.loadSearch(text);
+                    }}
+                  />
+                </View>
 
-        <View style={{ alignItems: 'center', height: height / 3 }}>
-          <View>
-            <Image
-              source={logen}
-            />
-          </View>
-          <View style={style.khungsearch}>
-            <View style={style.khungtimkiem}>
-              <View style={{}}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.layViTriHienTai();
-                  }}
-                >
-                  <View>
-                    <Image source={icdinhvi} style={{ width: 30, height: 30 }} />
-                  </View>
-                </TouchableOpacity>
               </View>
+              <FlatList
+                data={this.state.mang}
+                renderItem={({ item }) =>
+                  <TouchableHighlight
+                    onPress={() => {
+                      global.diadiem = item.description;
+                      this.loadLatLong(item.id);
+                    }}
+                  >
+                    <View style={style.rowFlatlist} key={item.id}>
+                      <View>
+                        <Text>{item.description}</Text>
+                      </View>
 
-              <TextInput
-                style={style.search}
-                placeholder="Vị trí hiện tại"
-                underlineColorAndroid="transparent"
-                value={this.state.text}
-                onChangeText={(text) => {
-                  this.loadSearch(text);
-                }}
+                    </View>
+                  </TouchableHighlight>
+                }
+                keyExtractor={(item, index) => index}
               />
             </View>
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <TouchableOpacity
-                onPress={this.WelSearch}
-              >
-                <Image
-                  style={style.iconsearch}
-                  source={search}
-                />
-              </TouchableOpacity>
-            </View>
-
-          </View>
-        </View>
-        <View style={{ height: height / 3, paddingHorizontal: 15 }}>
-          <FlatList
-            data={this.state.mang}
-            renderItem={({ item }) =>
-              <TouchableHighlight
-                onPress={() => {
-                  global.diadiem = item.description;
-                   this.loadLatLong(item.id);             
-                }}
-              >
-                <View style={style.rowFlatlist} key={item.id}>
-                  <View>
-                    <Text>{item.description}</Text>
+          ) :
+            (
+              <View style={{ backgroundColor: '#FFFFFF', height: '100%' }}>
+                <View style={{ height: height / 3 }}>
+                  <View style={{ alignItems: 'flex-end', flexDirection: 'row' }}>
+                    <View style={{ flex: 3 }}></View>
+                    <View style={{ flex: 3, alignItems: 'flex-end' }}>
+                      <Text style={{ fontSize: 16 }}>{this.state.name}</Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          global.onSignIn ?
+                            global.onSignIn.quyen === '1' ? navigate('AccountScreen', { flag: '1' }) :
+                              navigate('AccountMemberScreen', { flag: '1' }) :
+                            navigate('SigninScreen', { flag: '1' });
+                        }
+                        }
+                      >
+                        <Image style={style.img}
+                          source={user}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
-
+                  <View style={{ alignItems: 'center' }}>
+                    <Image
+                      source={nameapp}
+                    />
+                  </View>
                 </View>
-              </TouchableHighlight>
-            }
-            keyExtractor={(item, index) => index}
-          />
-        </View>
-      </View>
+
+                <View style={{ alignItems: 'center', height: height / 3 }}>
+                  <View>
+                    <Image
+                      source={logen}
+                    />
+                  </View>
+                  <View style={style.khungsearch}>
+                    <View style={style.khungtimkiem}>
+                      <View style={{}}>
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.layViTriHienTai();
+                          }}
+                        >
+                          <View>
+                            <Image source={icdinhvi} style={{ width: 30, height: 30 }} />
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+
+                      <TextInput
+                        style={style.search}
+                        ref="searchfalse"
+                        placeholder="Vị trí hiện tại"
+                        underlineColorAndroid="transparent"
+                        value={''}
+                        onFocus={() => this.setState({ IsSearch: true, mang: [] })}
+                      />
+                    </View>
+                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                      <TouchableOpacity
+                        onPress={this.WelSearch}
+                      >
+                        <Image
+                          style={style.iconsearch}
+                          source={search}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            )
+        }
       </KeyboardAvoidingView>
     )
   }

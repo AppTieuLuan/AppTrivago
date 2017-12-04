@@ -147,7 +147,6 @@ export default class SignIn extends Component {
                     }}
                     placeholder='Nhập email'
                     autoCapitalize='none'
-                    returnKeyType='done'
                     autoCorrect={false}
                     value={email}
                     onChangeText={email => this.setState({ email })}

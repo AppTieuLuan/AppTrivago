@@ -168,7 +168,6 @@ export default class ChangePass extends Component {
                     placeholder='Nhập mật khẩu cũ'
                     secureTextEntry={this.state.showpass}
                     autoCapitalize='none'
-                    returnKeyType='done'
                     autoCorrect={false}
                     value={this.state.password}
                     onChangeText={password => this.setState({ password })}
@@ -196,7 +195,6 @@ export default class ChangePass extends Component {
                     secureTextEntry={this.state.shownewpass}
                     autoCorrect={false}
                     autoCapitalize='none'
-                    returnKeyType='done'
                     value={this.state.newpassword}
                     onChangeText={newpassword => this.setState({ newpassword })}
                     placeholderTextColor='white'

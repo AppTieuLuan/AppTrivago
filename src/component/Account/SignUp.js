@@ -162,7 +162,6 @@ export default class SignUp extends Component {
                     }}
                     placeholder='Nhập họ tên'
                     autoCapitalize='none'
-                    returnKeyType='done'
                     autoCorrect={false}
                     value={name}
                     onChangeText={name => this.setState({ name })}
@@ -180,7 +179,6 @@ export default class SignUp extends Component {
                     }}
                     placeholder='Nhập email'
                     autoCapitalize='none'
-                    returnKeyType='done'
                     autoCorrect={false}
                     value={email}
                     onChangeText={email => this.setState({ email })}
@@ -200,7 +198,6 @@ export default class SignUp extends Component {
                     secureTextEntry={showPass}
                     autoCorrect={false}
                     autoCapitalize='none'
-                    returnKeyType='done'
                     value={password}
                     onChangeText={password => this.setState({ password })}
                     placeholderTextColor='white'
