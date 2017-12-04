@@ -105,7 +105,7 @@ export default class Welcome extends Component {
   }
   componentDidMount() {
     //set server
-    //global.server = 'http://192.168.1.13:8080/Demo/';
+    //global.server = 'http://192.168.1.5/Demo/';
     global.server = 'https://webservicestrivago.000webhostapp.com/';
     global.loadchitiet = false;
     global.loadhinhanh = false;

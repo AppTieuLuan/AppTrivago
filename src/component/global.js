@@ -14,7 +14,7 @@ module.export = {
     userdangnhap: null,
     latsearch: 10.1686747,
     longsearch: 106.6992098,
-    bankinhsearch: 70,
+    bankinhsearch: 100,
     mapAlready: false,
     closeModalLoadDetail: null,
     loadchitiet: null,

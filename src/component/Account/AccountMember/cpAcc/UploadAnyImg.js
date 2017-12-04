@@ -196,7 +196,7 @@ export default class UploadAnyImg extends Component {
           );
         }
       })
-      .catch(e => console.log(e));
+      .catch(e => alert(e));
   }
   render() {
     return (

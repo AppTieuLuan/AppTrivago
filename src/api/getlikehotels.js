@@ -1,7 +1,7 @@
 import global from '../component/global';
 
-const likehotels = (userid) => (
-    fetch(global.server+'getlikehotels.php',
+const likehotels = (userid, page) => (
+    fetch(global.server+'getlikehotels.php?page='+page,
     {
         method: 'POST',
         headers: {

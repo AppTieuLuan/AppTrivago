@@ -32,34 +32,50 @@ export default class HotelShared extends Component {
             height: 40,
             refresh: false,
             loading: false,
-            ishare: true
+            ishare: true,
+            page: 1
         };
     }
     refresh() {
         this.setState({ page: 1, mang: [] }, function () {
             this.loadDataRefresh();
         });
-
     }
     loadDataRefresh() {
-        this.setState({ loading: true });
+        this.setState({ refresh: true });
         this.loadData();
     }
     componentDidMount() {
+        this.setState({
+            refresh: true
+        })
         this.loadData();
     }
     loadData() {
-        LoadMyHotelShare(global.onSignIn.id)
+        LoadMyHotelShare(global.onSignIn.id, this.state.page)
             .then(res => {
                 if (res.list === 'KHONG_CO') {
                     this.setState({ ishare: false });
                 } else {
-                    this.setState({ mang: res.list, ishare: true, loading: false });
+                    this.setState({ mang: res.list, ishare: true, loading: false, refresh: false });
                 }
             })
             .catch(err => console.log(err));
     }
-
+    loadMore() {
+        if(!this.state.flag){
+            this.setState({loading: true, page: this.state.page + 1});
+        }
+        LoadMyHotelShare(global.onSignIn.id, this.state.page)
+            .then(res => {
+                if(res.over){
+                    this.setState({flag: true, loading: false});
+                    return false;
+                }
+                this.setState({ mang: this.state.mang.concat(res.list), loading: false });
+            })
+            .catch(err => console.log(err));
+    }
     render() {
         const { navigate } = this.props.navigation;
         return (
@@ -83,6 +99,8 @@ export default class HotelShared extends Component {
                         )}
                         refreshing={this.state.refresh}
                         onRefresh={() => { this.refresh() }}
+                        onEndReachedThreshold={0.2}
+                        onEndReached={() => { this.loadMore(); }}
                         data={this.state.mang}
                         keyExtractor={item => item.id}
                         renderItem={({ item }) =>
