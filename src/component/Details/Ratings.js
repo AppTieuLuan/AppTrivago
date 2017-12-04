@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
     View, FlatList, Text, Image, TextInput, StyleSheet, TouchableOpacity,
-    ActivityIndicator, ToastAndroid, Modal, BackHandler
+    ActivityIndicator, ToastAndroid, Modal, BackHandler, TouchableWithoutFeedback
 } from 'react-native';
 import global from '../global';
 import iconaccount from '../img/iconaccount.png';
@@ -13,6 +13,7 @@ import iclike from '../img/iclike.png';
 import icrep from '../img/icreply.png';
 import icback from '../img/back.png';
 import icsend from '../img/send.png';
+
 export default class Ratings extends Component {
     constructor(props) {
         super(props);
@@ -32,7 +33,15 @@ export default class Ratings extends Component {
             indexmang: 0,
             mangReply: [],
             loadingRepy: true,
-            pageReply: 1
+            pageReply: 1,
+            boxXoaChinhSua: false,
+            boxSuaBL: false,
+            heigh3: 40,
+            suabl: '',
+            indexSuaXoa: 0,
+            binhluancon: false,
+            boxXacNhanXoa: false,
+            indexBL: 0
         }
     }
 
@@ -109,6 +118,39 @@ export default class Ratings extends Component {
 
 
     }
+    longPress(index) {
+        // alert(index);
+        this.setState({
+            binhluancon: false,
+            indexBL: index
+        })
+        if (global.onSignIn) {
+            if (global.onSignIn.id == this.state.mang[index].iduser) {
+                this.setState({
+                    boxXoaChinhSua: true,
+                    indexSuaXoa: index
+                })
+            }
+        }
+    }
+
+    longPress2(index) {
+        // alert(index);
+        this.setState({
+            binhluancon: true
+        });
+        if (global.onSignIn) {
+            if (global.onSignIn.id == this.state.mangReply[index].iduser) {
+                this.setState({
+                    boxXoaChinhSua: true,
+                    indexSuaXoa: index
+                });
+
+            }
+        }
+    }
+
+
     loadThemBinhLuan() {
         this.loadData();
     }
@@ -149,6 +191,78 @@ export default class Ratings extends Component {
         }
     }
 
+
+    xoaBinhLuan() {
+        if (this.state.binhluancon) {
+            this.setState({
+                boxXoaChinhSua: false,
+                boxXacNhanXoa: true
+            });
+            //alert('Xóa bl con id là ' + this.state.mangReply[this.state.indexSuaXoa].id);
+        } else {
+            //alert('Xóa bl lớn id là ' + this.state.mang[this.state.indexSuaXoa].id);
+            this.setState({
+                boxXoaChinhSua: false,
+                boxXacNhanXoa: true
+            });
+        }
+    }
+
+    xacNhanXoa() {
+
+
+        this.setState({
+            boxXacNhanXoa: false
+        });
+
+        if (this.state.binhluancon) {
+            //alert('Xóa BL có id ' + this.state.mangReply[this.state.indexSuaXoa].id + ' ---- ' + this.state.mangReply[this.state.indexSuaXoa].binhluan);
+            fetch(global.server.concat('xoaBinhLuanReply.php?idbl=' + this.state.mangReply[this.state.indexSuaXoa].id))
+                .then((response) => response.text())
+                .then((responseJson) => {
+                    if (responseJson === '1') {
+                        let temp = this.state.mangReply;
+                        temp.splice(this.state.indexSuaXoa, 1);
+                        this.setState({
+                            mangReply: temp,
+                            
+                        });
+
+                        temp = this.state.mang;
+                        //temp.splice(this.state.indexSuaXoa, 1);
+                        temp[this.state.indexBL].sobl = temp[this.state.indexBL].sobl - 1;
+                        this.setState({
+                            mang: temp,
+                            //boxXacNhanXoa: false
+                        });
+
+                        ToastAndroid.show('Thành công !', ToastAndroid.SHORT);
+                    } else {
+                        ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT);
+                    }
+                })
+                .catch((e) => { ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT); });
+        } else {
+            // alert('Xóa BL có id ' + this.state.mang[this.state.indexSuaXoa].id + ' ---- ' + this.state.mang[this.state.indexSuaXoa].binhluan);
+            fetch(global.server.concat('xoaBinhLuan.php?idbl=' + this.state.mang[this.state.indexSuaXoa].id + '&iduser=' + global.onSignIn.id))
+                .then((response) => response.text())
+                .then((responseJson) => {
+                    if (responseJson == '1') {
+                        let temp = this.state.mang;
+                        temp.splice(this.state.indexSuaXoa, 1);
+                        this.setState({
+                            mang: temp,
+                            //boxXacNhanXoa: false
+                        });
+
+                        ToastAndroid.show('Thành công !', ToastAndroid.SHORT);
+                    } else {
+                        ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT);
+                    }
+                })
+                .catch((e) => { ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT); });
+        }
+    }
     guiTraLoi() {
         if (this.state.comment != '') {
             if (global.onSignIn) {
@@ -170,7 +284,7 @@ export default class Ratings extends Component {
                             let today = new Date();
                             mangReply.unshift({ id: maxId, ten: global.onSignIn.hoten, binhluan: this.state.comment, ngay: today.getDate(), thang: today.getMonth() + 1, nam: today.getFullYear() });
                             let temp = this.state.mang;
-                            temp[this.state.indexmang].sobl ++;
+                            temp[this.state.indexmang].sobl++;
                             this.setState({
                                 mangReply,
                                 comment: '',
@@ -268,6 +382,79 @@ export default class Ratings extends Component {
 
     }
 
+    suaBinhLuan() {
+        //alert('Sửa BL')
+        if (!this.state.binhluancon) {
+            this.setState({
+                boxXoaChinhSua: false,
+                boxSuaBL: true,
+                suabl: this.state.mang[this.state.indexSuaXoa].binhluan
+            });
+        } else {
+            this.setState({
+                boxXoaChinhSua: false,
+                boxSuaBL: true,
+                suabl: this.state.mangReply[this.state.indexSuaXoa].binhluan
+            });
+
+            //alert(this.state.mangReply[this.state.indexSuaXoa].binhluan);
+        }
+
+    }
+
+    capNhatBL() {
+        //alert('suaBinhLuan.php?noidung=' + this.state.suabl + '&idbl=' + this.state.mang[this.state.indexSuaXoa].id);
+        
+        if (!this.state.binhluancon) {
+            fetch(global.server.concat('suaBinhLuan.php?noidung=' + this.state.suabl + '&idbl=' + this.state.mang[this.state.indexSuaXoa].id))
+                .then((response) => response.text())
+                .then((responseJson) => {
+                    if (responseJson == '1') {
+
+                        let temp = this.state.mang;
+                        temp[this.state.indexSuaXoa].binhluan = this.state.suabl;
+                        //temp[index].solike = parseInt(temp[index].solike) - 1;
+
+                        this.setState({
+                            mang: temp,
+                            suabl: '',
+                            boxSuaBL: false
+                        });
+                        ToastAndroid.show('Thành công !!', ToastAndroid.SHORT);
+                    } else {
+                        ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT);
+                    }
+                })
+                .catch((e) => { ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT); });
+        } else {
+
+            //alert()
+            fetch(global.server.concat('suaBinhLuanReply.php?noidung=' + this.state.suabl + '&idbl=' + this.state.mangReply[this.state.indexSuaXoa].id))
+                .then((response) => response.text())
+                .then((responseJson) => {
+                    if (responseJson == '1') {
+
+                        let temp = this.state.mangReply;
+                        temp[this.state.indexSuaXoa].binhluan = this.state.suabl;
+                        //temp[index].solike = parseInt(temp[index].solike) - 1;
+
+                        this.setState({
+                            mangReply: temp,
+                            suabl: '',
+                            boxSuaBL: false
+                        });
+                        ToastAndroid.show('Thành công !!', ToastAndroid.SHORT);
+                    } else {
+                        ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT);
+                    }
+                })
+                .catch((e) => { ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT); });
+
+            //alert(this.state.mangReply[this.state.indexSuaXoa].id + '------' + this.state.mangReply[this.state.indexSuaXoa].binhluan);
+            //alert('suaBinhLuanReply.php?noidung=' + this.state.suabl + '&idbl=' + this.state.mang[this.state.indexSuaXoa].id);
+        }
+
+    }
     componentDidMount() {
         this.loadData();
         this.getDanhGia();
@@ -346,62 +533,68 @@ export default class Ratings extends Component {
                     keyExtractor={item => item.id}
                     renderItem={({ item, index }) =>
                         <View key={item.id} style={{ paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#e9ebee' }}>
-                            <View style={{ flexDirection: 'row', padding: 10 }}>
-                                <Image source={iconaccount} style={{ width: 25, height: 25 }} />
-                                <View style={{ borderWidth: 1, padding: 5, flex: 1, marginLeft: 5, borderRadius: 5, borderColor: '#e9ebee' }}>
-                                    <Text style={{ fontWeight: 'bold' }}>{item.ten}</Text>
-                                    <Text>{item.binhluan}</Text>
+                            <TouchableOpacity
+                                onLongPress={() => {
+                                    this.longPress(index);
+                                }}
+                            >
+                                <View style={{ flexDirection: 'row', padding: 10 }}>
+                                    <Image source={iconaccount} style={{ width: 25, height: 25 }} />
+                                    <View style={{ borderWidth: 1, padding: 5, flex: 1, marginLeft: 5, borderRadius: 5, borderColor: '#e9ebee' }}>
+                                        <Text style={{ fontWeight: 'bold' }}>{item.ten}</Text>
+                                        <Text>{item.binhluan}</Text>
 
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 10 }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 10 }}>
 
-                                        <Text style={{ color: '#a3a6ad', fontSize: 12, marginRight: 10 }}>{item.ngay} tháng {item.thang} {item.nam}</Text>
+                                            <Text style={{ color: '#a3a6ad', fontSize: 12, marginRight: 10 }}>{item.ngay} tháng {item.thang} {item.nam}</Text>
 
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.thichBothic(index);
-                                            }}
-                                        >
-                                            <Text style={{ color: '#4564a1', fontSize: 12, marginRight: 10, textDecorationLine: 'underline' }} >{item.islike == 0 ? 'Thích' : 'Bỏ thích'}</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                this.setState({ isVisiblemodalReply: true, mangReply: [], loadingRepy: true, pageReply: 1, indexmang: index, comment: '' },
-                                                    function () {
-                                                        this.loadReply(index);
-                                                    });
-                                            }}
-                                        >
-                                            <Text style={{ color: '#4564a1', fontSize: 12, marginRight: 10, textDecorationLine: 'underline' }} >Trả lời</Text>
-                                        </TouchableOpacity>
-                                        {item.solike != 0 ?
-                                            <View style={{ flexDirection: 'row', height: 15 }}>
-                                                <Image source={iclike} style={{ height: 15, width: 15 }} />
-                                                <Text style={{ paddingLeft: 5, color: '#4564a1', fontSize: 12 }}>{parseInt(item.solike, 10)}</Text>
-                                            </View>
-                                            : null
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    this.thichBothic(index);
+                                                }}
+                                            >
+                                                <Text style={{ color: '#4564a1', fontSize: 12, marginRight: 10, textDecorationLine: 'underline' }} >{item.islike == 0 ? 'Thích' : 'Bỏ thích'}</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    this.setState({ indexBL: index, isVisiblemodalReply: true, mangReply: [], loadingRepy: true, pageReply: 1, indexmang: index, comment: '' },
+                                                        function () {
+                                                            this.loadReply(index);
+                                                        });
+                                                }}
+                                            >
+                                                <Text style={{ color: '#4564a1', fontSize: 12, marginRight: 10, textDecorationLine: 'underline' }} >Trả lời</Text>
+                                            </TouchableOpacity>
+                                            {item.solike != 0 ?
+                                                <View style={{ flexDirection: 'row', height: 15 }}>
+                                                    <Image source={iclike} style={{ height: 15, width: 15 }} />
+                                                    <Text style={{ paddingLeft: 5, color: '#4564a1', fontSize: 12 }}>{parseInt(item.solike, 10)}</Text>
+                                                </View>
+                                                : null
+                                            }
+                                        </View>
+                                        {
+                                            item.sobl != 0 ?
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <Image source={icrep} style={{ height: 15, width: 15 }} />
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            this.setState({ isVisiblemodalReply: true, mangReply: [], loadingRepy: true, pageReply: 1, indexmang: index, comment: '', indexBL: index },
+                                                                function () {
+                                                                    this.loadReply(index);
+                                                                });
+
+                                                        }}
+                                                    >
+                                                        <Text style={{ color: '#4564a1', fontSize: 12, marginLeft: 10, textDecorationLine: 'underline' }} >Xem {item.sobl} câu trả lời</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                                : null
                                         }
+
                                     </View>
-                                    {
-                                        item.sobl != 0 ?
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <Image source={icrep} style={{ height: 15, width: 15 }} />
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        this.setState({ isVisiblemodalReply: true, mangReply: [], loadingRepy: true, pageReply: 1, indexmang: index, comment: '' },
-                                                            function () {
-                                                                this.loadReply(index);
-                                                            });
-
-                                                    }}
-                                                >
-                                                    <Text style={{ color: '#4564a1', fontSize: 12, marginLeft: 10, textDecorationLine: 'underline' }} >Xem {item.sobl} câu trả lời</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                            : null
-                                    }
-
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         </View>
                     }
                     ListFooterComponent={(
@@ -425,6 +618,161 @@ export default class Ratings extends Component {
                         </View>
                     )}
                 />
+
+
+
+
+                <Modal
+                    transparent={true}
+                    visible={this.state.boxXoaChinhSua}
+                    onRequestClose={() => this.setState({ boxXoaChinhSua: false })}
+                >
+                    <TouchableOpacity
+                        style={{ flex: 1 }}
+                        onPress={() => {
+                            this.setState({ boxXoaChinhSua: false })
+                        }}
+                    >
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                        }}>
+                            <View style={{
+                                backgroundColor: 'white',
+                                //padding: 5,
+
+
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: 100,
+                                borderRadius: 6
+                            }}
+                            >
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderBottomWidth: 0.25,
+                                        borderBottomColor: '#a6aaaa'
+                                    }}
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.suaBinhLuan();
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                paddingHorizontal: 50,
+                                                paddingVertical: 5
+                                            }}
+                                        >
+                                            <Text>Sửa bình luận</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+
+                                    }}
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.xoaBinhLuan();
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                paddingHorizontal: 50,
+                                                paddingVertical: 5
+                                            }}
+                                        >
+                                            <Text>Xóa bình luận</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+
+
+
+                <Modal
+                    transparent={true}
+                    visible={this.state.boxXacNhanXoa}
+                    onRequestClose={() => this.setState({ boxXacNhanXoa: false })}
+                >
+                    <TouchableOpacity
+                        style={{ flex: 1 }}
+                        onPress={() => {
+                            this.setState({ boxXacNhanXoa: false })
+                        }}
+                    >
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                        }}>
+                            <TouchableWithoutFeedback>
+                                <View
+                                    style={{
+                                        backgroundColor: 'white',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        //height: 100,
+                                        borderRadius: 6,
+                                        paddingHorizontal: 8,
+                                        paddingVertical: 15
+                                    }}
+                                >
+
+                                    <Text style={{ paddingBottom: 15 }}>Bạn có chắc muốn xóa bình luận này không ?</Text>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.setState({
+                                                    boxXacNhanXoa: false
+                                                });
+                                            }}
+                                        >
+                                            <Text style={{ paddingHorizontal: 10 }}>HỦY</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.xacNhanXoa();
+                                            }}
+                                        >
+                                            <Text style={{ paddingHorizontal: 10, color: '#4564a1' }}>XÓA</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    {/* <View
+                                    style={{
+                                        flex: 1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderBottomWidth: 0.25,
+                                        borderBottomColor: '#a6aaaa'
+                                    }}
+                                >
+                                   <Text>Bạn có chắc muốn xóa bình luận này không ?</Text> 
+                                </View> */}
+
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+
 
                 <Modal
                     animationType="slide"
@@ -454,17 +802,26 @@ export default class Ratings extends Component {
                                     keyExtractor={item => item.id}
                                     renderItem={({ item, index }) =>
                                         <View key={item.id} style={{ paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#e9ebee' }}>
+
                                             <View style={{ flexDirection: 'row', padding: 10 }}>
                                                 <Image source={iconaccount} style={{ width: 25, height: 25 }} />
-                                                <View style={{ borderWidth: 1, padding: 5, flex: 1, marginLeft: 5, borderRadius: 5, borderColor: '#e9ebee' }}>
-                                                    <Text style={{ fontWeight: 'bold' }}>{item.ten}</Text>
-                                                    <Text>{item.binhluan}</Text>
-                                                    <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 10 }}>
-                                                        <Text style={{ color: '#a3a6ad', fontSize: 12, marginRight: 10 }}>{item.ngay} tháng {item.thang} {item.nam}</Text>
-                                                    </View>
 
+                                                <View style={{ borderWidth: 1, padding: 5, flex: 1, marginLeft: 5, borderRadius: 5, borderColor: '#e9ebee' }}>
+                                                    <TouchableOpacity
+                                                        onLongPress={() => {
+                                                            this.longPress2(index);
+                                                        }}
+                                                    >
+                                                        <Text style={{ fontWeight: 'bold' }}>{item.ten}</Text>
+                                                        <Text>{item.binhluan}</Text>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center', paddingBottom: 10 }}>
+                                                            <Text style={{ color: '#a3a6ad', fontSize: 12, marginRight: 10 }}>{item.ngay} tháng {item.thang} {item.nam}</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
                                                 </View>
+
                                             </View>
+
                                         </View>
                                     }
                                     ListFooterComponent={(
@@ -521,6 +878,78 @@ export default class Ratings extends Component {
                         </View>
                     </View>
                 </Modal>
+
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={this.state.boxSuaBL}
+                    onRequestClose={() => { this.setState({ boxSuaBL: false }) }}
+                >
+                    <View style={{ flex: 1, backgroundColor: 'black' }}>
+                        <View style={{ flex: 1, borderRadius: 15, backgroundColor: 'white' }}>
+                            <View style={{ flex: 1 }}>
+                                <View style={{ alignItems: 'center', flexDirection: 'row', padding: 10, borderBottomWidth: 0.5, borderBottomColor: '#e9ebee' }}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({ boxSuaBL: false, suabl: '' });
+                                        }}
+                                    >
+                                        <View style={{ alignSelf: 'flex-end' }}>
+                                            <Image source={icback} style={{ height: 25, width: 25 }} />
+                                        </View>
+                                    </TouchableOpacity>
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+                                        <Text style={{ fontWeight: 'bold' }}>Chỉnh sửa</Text>
+                                    </View>
+                                </View>
+
+                                <View style={{ flexDirection: 'row', padding: 10 }}>
+                                    <Image source={iconaccount} style={{ width: 25, height: 25 }} />
+                                    <View style={{ borderWidth: 1, flex: 1, marginLeft: 10, borderRadius: 5, borderColor: '#e9ebee' }}>
+                                        <TextInput
+                                            underlineColorAndroid='rgba(0,0,0,0)'
+                                            placeholder="Bình luận của bạn ..."
+                                            onChangeText={(suabl) => this.setState({ suabl })}
+                                            value={this.state.suabl}
+                                            multiline={true}
+                                            numberOfLines={3}
+                                            onContentSizeChange={(event) => {
+                                                this.setState({ height3: event.nativeEvent.contentSize.height })
+                                            }}
+                                            style={[styles.default3, { height: Math.max(35, this.state.height3) }]}
+                                        />
+                                    </View>
+                                </View>
+
+                                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingRight: 10 }}>
+                                    <TouchableOpacity
+                                        onPress={() => { this.capNhatBL(); }}
+                                    >
+                                        <Text style={{ padding: 7, paddingLeft: 10, backgroundColor: '#4267b2', borderRadius: 5, color: 'white' }}>   Cập nhật   </Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            this.setState({
+                                                boxSuaBL: false,
+                                                suabl: ''
+                                            });
+                                        }}
+                                    >
+                                        <Text style={{ padding: 7, paddingLeft: 10, marginLeft: 10, backgroundColor: '#4267b2', borderRadius: 5, color: 'white' }}>   Hủy   </Text>
+                                    </TouchableOpacity>
+
+                                </View>
+
+                            </View>
+
+                        </View>
+                    </View>
+                </Modal>
+
+
+
             </View>
         )
     }
@@ -532,5 +961,11 @@ const styles = StyleSheet.create({
     default2: {
         height: 40,
         flex: 10
+    },
+    default3: {
+        height: 40,
+        borderRadius: 5,
+        borderColor: '#e9ebee',
+        borderWidth: 1
     }
 })

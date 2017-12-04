@@ -124,7 +124,7 @@ export default class MapViewComponent extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <MapView.Animated
+        <MapView
           style={{ flex: 1 }}
           onPress={this.onPress.bind(this)}
           moveOnMarkerPress={false}
@@ -173,7 +173,7 @@ export default class MapViewComponent extends Component {
               />
               : null
           }
-        </MapView.Animated>
+        </MapView>
         {/* <Modal
           transparent={true}
           visible={this.state.isVisible}
