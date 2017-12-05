@@ -145,7 +145,7 @@ export default class HotelShared extends Component {
                                                             <TouchableOpacity
                                                                 onPress={() => {
                                                                     global.idks = item.id;
-                                                                    this.props.navigation.navigate('UploadImgScreen');
+                                                                    this.props.navigation.navigate('UploadImgScreen', {id: false});
                                                                 }}
                                                                 style={{ flexDirection: 'row', flex: 1 }}
                                                             >

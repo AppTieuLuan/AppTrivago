@@ -30,6 +30,18 @@ import UploadAnyImg from './Account/AccountMember/cpAcc/UploadAnyImg';
 
 var { height, width } = Dimensions.get('window');
 
+export const SideMenu = DrawerNavigator(
+    {
+        MainSide: {
+            screen: Main
+        }
+    },
+    {
+        drawerWidth: 0.8 * width,
+        drawerPosition: 'left',
+        contentComponent: props => <Menu {...props} />
+    }
+);
 export const MainStack = StackNavigator({
     WelcomeScreen: {
         screen: Welcome,
@@ -38,7 +50,7 @@ export const MainStack = StackNavigator({
         }
     },
     MainScreen: {
-        screen: Main,
+        screen: SideMenu,
         navigationOptions: {
             header: null
         }
@@ -90,7 +102,7 @@ export const MainStack = StackNavigator({
             header: null
         }
     },
-    
+
     SigninScreen: {
         screen: SignIn,
         navigationOptions: {
@@ -100,7 +112,7 @@ export const MainStack = StackNavigator({
     SignupScreen: {
         screen: SignUp,
         navigationOptions: {
-            headerTitle: 'Quay lại đăng nhập'
+            headerTitle: 'Quay lại'
         }
     },
     LikeScreen: {
@@ -146,16 +158,16 @@ export const MainStack = StackNavigator({
         }
     }
 });
-
-export const SideMenu = DrawerNavigator (
-    {
-        MainSide: {
-            screen: MainStack
-        }
-    },
-    {
-        drawerWidth: 0.8 * width,
-        drawerPosition: 'left',
-        contentComponent: props => <Menu {...props} />
+const prevGetStateForActionHomeStack = MainStack.router.getStateForAction;
+MainStack.router.getStateForAction = (action, state) => {
+    if (state && action.type === 'ReplaceCurrentScreen') {
+        const routes = state.routes.slice(0, state.routes.length - 1);
+        routes.push(action);
+        return {
+            ...state,
+            routes,
+            index: routes.length - 1,
+        };
     }
-)
+    return prevGetStateForActionHomeStack(action, state);
+};

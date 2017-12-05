@@ -9,7 +9,7 @@ import { MainStack, SideMenu } from './Router';
 export default class App extends Component {
     render() {
         return (
-            <SideMenu />
+            <MainStack />
         )
     }
 }

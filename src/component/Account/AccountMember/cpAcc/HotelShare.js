@@ -246,17 +246,12 @@ export default class HotelShare extends Component {
     this.setState({ tiennghi: temp });
   }
   replaceUpload(id) {
-    const resetAction = NavigationActions.reset({
-      index: 1,
-      actions: [
-        NavigationActions.navigate({ routeName: 'AccountMemberScreen' }),
-        NavigationActions.navigate({
-          routeName: 'UploadImgScreen',
-          params: { id }
-        })
-      ]
+    this.props.navigation.dispatch({
+      key: 'UploadImgScreen',
+      type: 'ReplaceCurrentScreen',
+      routeName: 'UploadImgScreen',
+      params: { id },
     });
-    this.props.navigation.dispatch(resetAction);
   }
   onSuccess(id) {
     Alert.alert(

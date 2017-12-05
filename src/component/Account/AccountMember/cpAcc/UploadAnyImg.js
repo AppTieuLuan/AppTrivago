@@ -9,7 +9,8 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
-  Modal
+  Modal,
+  FlatList
 } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
@@ -48,7 +49,7 @@ export default class UploadAnyImg extends Component {
       len: 0,
       arriddelete: [],
       refresh: false,
-
+      mang: ['1', '2', '3', '4', '5', '6', '7']
     };
   }
   componentDidMount() {
@@ -64,16 +65,25 @@ export default class UploadAnyImg extends Component {
     // );
     //console.log(global.idks);
     this.setState({ refresh: true });
-    getImg(global.idks)
-      .then(res => {
-        this.setState({ refresh: false });
-        this.setState({ arrimg: res });
-        let arr = this.state.arrimg;
-        let len = arr.length;
-        this.setState({ len });
-        console.log(res);
-      })
-      .catch(err => console.log(err));
+    let ff = this.props.navigation.state.params.id;
+    if (ff) {
+      this.setState({ refresh: false });
+      this.setState({ arrimg: [] });
+      let arr = this.state.arrimg;
+      let len = arr.length;
+      this.setState({ len });
+    } else {
+      getImg(global.idks)
+        .then(res => {
+          this.setState({ refresh: false });
+          this.setState({ arrimg: res });
+          let arr = this.state.arrimg;
+          let len = arr.length;
+          this.setState({ len });
+          console.log(res);
+        })
+        .catch(err => console.log(err));
+    }
   }
   //Mở trình chọn ảnh hoặc chụp ảnh
   ShowImgPicker() {
@@ -171,7 +181,9 @@ export default class UploadAnyImg extends Component {
   }
   // Tải ảnh lên
   UploadSubmit(cb) {
-    Upload(this.state.arriddelete, this.state.arrimgbase64, global.idks)
+    let IDobject = this.props.navigation.state.params.id;
+    let idks = IDobject ? IDobject.id : global.idks;
+    Upload(this.state.arriddelete, this.state.arrimgbase64, idks)
       .then(res => {
         let load = true;// gửi thông điệp đi để tắt animation
         cb(load);
@@ -209,6 +221,10 @@ export default class UploadAnyImg extends Component {
                   <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ top: 10, fontSize: 20, color: 'black' }}>Ảnh đã thêm trước đó</Text>
                     <View style={{ top: 20, marginBottom: 20 }}>
+                      {/* <View>
+                         <Image source={{ uri: this.state.arrimg[0].link }}
+                         style={{ height: 250, width: 250, marginBottom: 10, borderRadius: 10 }} />
+                      </View> */}
                       {
                         this.state.arrimg.map((e, index) => (
                           <View key={index} style={{ flexDirection: 'row' }}>

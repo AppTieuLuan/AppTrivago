@@ -188,6 +188,7 @@ export default class Welcome extends Component {
                   <TextInput
                     style={style.search}
                     ref="searchtrue"
+                    autoFocus={true}
                     placeholder="Nhập địa điểm bạn muốn đi"
                     underlineColorAndroid="transparent"
                     value={this.state.text}
