@@ -30,6 +30,7 @@ export default class TrangQuanLyAdmin extends Component {
     Logout() {
         saveToken('');
         global.onSignIn = null;
+        global.mapAlready = false;
         this.replaceScreen();
     }
     replaceScreen = () => {
@@ -86,7 +87,7 @@ export default class TrangQuanLyAdmin extends Component {
                             <BTNAC
                                 text={'Cá nhân'}
                                 source={mk}
-                                click={this.goQLKS.bind(this)}
+                                // click={this.goQLKS.bind(this)}
                             />
                             <BTNAC
                                 text={'Đăng xuất'}

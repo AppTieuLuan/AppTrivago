@@ -1,4 +1,4 @@
-import React,{ Component } from 'react';
+import React, { Component } from 'react';
 import {
     View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, FlatList, Dimensions,
     Image, ScrollView, TextInput, ToastAndroid, ActivityIndicator
@@ -35,73 +35,88 @@ export default class QuanLyKhachSan extends Component {
         this.setState({ modalVisible: visible });
     }
     xacnhan() {
-        if(this.state.mang[this.state.index].tinhtrang === '1') {
+        if (this.state.mang[this.state.index].tinhtrang === '1') {
             fetch(global.server.concat('khoaKhachSan.php'),
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json'
-                },
-                body: JSON.stringify({ id: this.state.mang[this.state.index].key })
-            })
-            .then(res => res.text())
-            .then(res => {
-                this.refs.modal3.close();
-                if (res === '1') {
-                    ToastAndroid.show('Thành công', ToastAndroid.SHORT);
-                    // this.state.mang[this.state.index].tinhtrang = '0';
-                    let mang = this.state.mang;
-                    mang[this.state.index].tinhtrang = '0';
-                    this.setState({ mang })
-                }
-                else {
-                    alert('Lỗi !!')
-                }
-            })
-            .catch((e)=>{console.log(e)});
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json'
+                    },
+                    body: JSON.stringify({ id: this.state.mang[this.state.index].key })
+                })
+                .then(res => res.text())
+                .then(res => {
+                    this.refs.modal3.close();
+                    if (res === '1') {
+                        ToastAndroid.show('Thành công', ToastAndroid.SHORT);
+                        // this.state.mang[this.state.index].tinhtrang = '0';
+                        let mang = this.state.mang;
+                        mang[this.state.index].tinhtrang = '0';
+                        this.setState({ mang })
+                    }
+                    else {
+                        alert('Lỗi !!')
+                    }
+                })
+                .catch((e) => { console.log(e) });
         } else {
             fetch(global.server.concat('moKhoaKhachSan.php'),
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json'
-                },
-                body: JSON.stringify({ id: this.state.mang[this.state.index].key })
-            })
-            .then(res => res.text())
-            .then(res => {
-                 this.refs.modal3.close();
-                 if (res === '1') {
-                     ToastAndroid.show('Thành công', ToastAndroid.SHORT);
-                    // this.state.mang[this.state.index].tinhtrang = '0';
-                     let mang = this.state.mang;
-                     mang[this.state.index].tinhtrang = '1';
-                     this.setState({ mang })
-                 }
-                 else {
-                     alert('Lỗi !!')
-                 }
-            })
-            .catch((e)=>{console.log(e)});
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json'
+                    },
+                    body: JSON.stringify({ id: this.state.mang[this.state.index].key })
+                })
+                .then(res => res.text())
+                .then(res => {
+                    this.refs.modal3.close();
+                    if (res === '1') {
+                        ToastAndroid.show('Thành công', ToastAndroid.SHORT);
+                        // this.state.mang[this.state.index].tinhtrang = '0';
+                        let mang = this.state.mang;
+                        mang[this.state.index].tinhtrang = '1';
+                        this.setState({ mang })
+                    }
+                    else {
+                        alert('Lỗi !!')
+                    }
+                })
+                .catch((e) => { console.log(e) });
         }
 
     }
     xoa() {
         this.refs.modal3.close();
-        //alert(this.state.value);
+        // alert(global.server.concat('adminXoaKhachSan.php?idks=' + this.state.mang[this.state.index].key +
+        // '&iduser=' + this.state.mang[this.state.index].user +
+        // '&tieude=' + this.state.mang[this.state.index].ten +
+        // '&noidung=' + this.state.value));
+        // /*
+        fetch(global.server.concat('adminXoaKhachSan.php?idks=' + this.state.mang[this.state.index].key +
+            '&iduser=' + this.state.mang[this.state.index].user +
+            '&tieude=' + this.state.mang[this.state.index].ten +
+            '&noidung=' + this.state.value))
+            .then((response) => response.text())
+            .then((responseJson) => {
+                if (responseJson == '1') {
 
-        let { mang } = this.state;
-        //var maxId = Math.max.apply(null, mang.map(item => item.id)) + 1;
-        mang.splice(this.state.index, 1);
+                    let { mang } = this.state;
+                    mang.splice(this.state.index, 1);
 
-        this.setState({
-            mang,
-            value: ''
-        })
-        //alert(this.state.mang.length);
-       // alert(this.state.index)
+                    this.setState({
+                        mang,
+                        value: ''
+                    });
+                    ToastAndroid.show('Thành công !', ToastAndroid.SHORT);
+                } else {
+                    ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT);
+                }
+                //alert(responseJson);
+            })
+            .catch((e) => { ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT); });
     }
 
     loadThem() {
@@ -111,54 +126,58 @@ export default class QuanLyKhachSan extends Component {
     }
 
     refresh() {
-        this.setState({ page: 1, mang: [] }, function() {
+        this.setState({ page: 1, mang: [] }, function () {
             this.loadDataRefresh();
         });
-        
+
     }
 
-    loadDataRefresh(){
+    loadDataRefresh() {
         this.setState({
             refresh: true
         })
         fetch(global.server.concat('getQuanLyDsKhachSan.php?trang=1'))
-        .then((response) => response.json())
-        .then((responseJson) => {
-            this.setState({
-                mang: responseJson,
-                refresh: false,
-                page: 1,
-                loading: false
-            });
-        })
-        .catch((e)=>{console.log(e)});
+            .then((response) => response.json())
+            .then((responseJson) => {
+                this.setState({
+                    mang: responseJson,
+                    refresh: false,
+                    page: 1,
+                    loading: false
+                });
+            })
+            .catch((e) => { console.log(e) });
     }
 
     loadKhachSanDuyet() {
         if (this.state.refresh === false) {
-           // global.trangloc = 1;
+            // global.trangloc = 1;
             this.setState({
                 refresh: true
             })
             fetch(global.server.concat('getQuanLyDsKhachSan.php?trang=') + this.state.page)
-            .then((response) => response.json())
-            .then((responseJson) => {
-                if(responseJson.length > 0)
-                    
-                    this.setState({
-                        mang: this.state.mang.concat(responseJson),
-                        refresh: false,
-                        page: this.state.page + 1,
-                        loading: false
-                    });
-                else{
-                    this.setState({ 
-                        refresh: false,
-                    });
-                }
-            })
-            .catch((e) => { console.log(e) });
+                .then((response) => response.json())
+                .then((responseJson) => {
+                    if (responseJson.length > 0)
+
+                        this.setState({
+                            mang: this.state.mang.concat(responseJson),
+                            refresh: false,
+                            page: this.state.page + 1,
+                            loading: false
+                        });
+                    else {
+                        this.setState({
+                            refresh: false,
+                        });
+                    }
+                })
+                .catch((e) => { console.log(e) });
         }
+    }
+
+    xoaKhachSan(index) {
+
     }
     componentDidMount() {
         this.loadKhachSanDuyet();
@@ -173,11 +192,11 @@ export default class QuanLyKhachSan extends Component {
                         <Image style={{ width: 25, height: 25 }} source={icback} />
                     </TouchableOpacity>
                     <Text numberOfLines={1} style={{ fontWeight: 'bold', paddingLeft: 10 }}>Quản lý khách sạn</Text>
-                    
+
                 </View>
                 <FlatList
-                ListFooterComponent={(
-                        <View style= {{ padding: 10 }}>
+                    ListFooterComponent={(
+                        <View style={{ padding: 10 }}>
                             {
                                 !this.state.loading ?
                                     (
@@ -199,121 +218,123 @@ export default class QuanLyKhachSan extends Component {
                     refreshing={this.state.refresh}
                     onRefresh={() => { this.refresh() }}
                     data={this.state.mang}
-                    renderItem={({ item , index } ) =>
+                    renderItem={({ item, index }) =>
                         <View style={styles.rowFlatlist}>
                             <TouchableWithoutFeedback
-                                onPress={() => { 
+                                onPress={() => {
                                     {/* global.idKS = item.key;
                                     navigate('ChiTiet', { name: item.ten, id: item.key }) */}
-                                    }}
+                                }}
                             >
-                             <View style={{ height: width / 3, flexDirection: 'row', backgroundColor: 'white', borderRadius: 5 }}>
-                                        <Image source={{ uri: item.hinh }} style={{ height: width / 3, width: width / 3, flex: 1 }}/>
-                                        <View style={{ flex: 2 }}>
-                                            <View style={{ flex: 1 }}>
-                                                <View style={{ flex: 1, paddingLeft: 5, paddingVertical: 2, paddingRight: 2 }}>
-                                                    <Text numberOfLines={1} style={{ fontWeight: 'bold' }}>{item.ten}</Text>
-                                                    <Text numberOfLines={1}>{item.diachi}</Text>
-                                                </View>
-                                                <View style = {{ flex: 2, borderTopWidth: 1, borderTopColor: '#e9ebee', flexDirection: 'row' }}>
-                                                    <View style={{ flex: 1 }}>
-                                                       
-                                                        <View style={{ flex: 1, paddingHorizontal: 2, paddingVertical: 2 }}>
-                                                            <TouchableOpacity
-                                                                style={{flexDirection: 'row', flex: 1 }}
-                                                                onPress={() => { 
-                                                                                this.setState({ index }, function () {
-                                                                                                            this.xacnhan();
-                                                                                                        })
-                                                                                //this.xacnhan();
-                                                                            }}
-                                                            >
-                                                                <View style={{ flex: 2, paddingVertical: 2 }}>
-                                                                    <Image resizeMode={'contain'} source={item.tinhtrang === '1' ? imglock : imgunlock } style={{ flex: 1 }} />
-                                                                </View> 
-                                                                
-                                                                <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
-                                                                    <Text style={{ fontSize: 12 }}>{item.tinhtrang === '1' ? 'Khóa' : 'Mở khóa' }</Text>
-                                                                </View>
-                                                            </TouchableOpacity>
-                                                        </View>
-                                                       
-                                                        <View style={{ flex: 1, borderTopWidth: 1, borderTopColor: '#e9ebee', paddingHorizontal: 2, paddingVertical: 2}}>
+                                <View style={{ height: width / 3, flexDirection: 'row', backgroundColor: 'white', borderRadius: 5 }}>
+                                    <Image source={{ uri: item.hinh }} style={{ height: width / 3, width: width / 3, flex: 1 }} />
+                                    <View style={{ flex: 2 }}>
+                                        <View style={{ flex: 1 }}>
+                                            <View style={{ flex: 1, paddingLeft: 5, paddingVertical: 2, paddingRight: 2 }}>
+                                                <Text numberOfLines={1} style={{ fontWeight: 'bold' }}>{item.ten}</Text>
+                                                <Text numberOfLines={1}>{item.diachi}</Text>
+                                            </View>
+                                            <View style={{ flex: 2, borderTopWidth: 1, borderTopColor: '#e9ebee', flexDirection: 'row' }}>
+                                                <View style={{ flex: 1 }}>
+
+                                                    <View style={{ flex: 1, paddingHorizontal: 2, paddingVertical: 2 }}>
                                                         <TouchableOpacity
-                                                                style={{flexDirection: 'row', flex: 1 }}
-                                                                onPress={() => {
-                                                                    this.refs.modal3.open();
-                                                                    this.setState({ index })
-                                                                }}
+                                                            style={{ flexDirection: 'row', flex: 1 }}
+                                                            onPress={() => {
+                                                                this.setState({ index }, function () {
+                                                                    this.xacnhan();
+                                                                })
+                                                                //this.xacnhan();
+                                                            }}
                                                         >
-                                                                <View style={{ flex: 2, paddingVertical: 2 }}>
-                                                                    <Image resizeMode={'contain'} source={imghuy} style={{ flex: 1 }} />
-                                                                </View> 
-                                                                
-                                                                <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
-                                                                    <Text style={{ fontSize: 12 }}>Xóa</Text>
-                                                                </View>
-                                                        </TouchableOpacity>
-                                                        
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ flex: 1, borderLeftWidth: 1, borderLeftColor: '#e9ebee'}}>
-                                                        <View style={{ flex: 1, paddingHorizontal: 2, paddingVertical: 2 }}>
-                                                            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                                                                <Text style={{ fontSize: 10 }}>Giá từ</Text>
-                                                                <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#248f24' }}>{item.gia}</Text>
+                                                            <View style={{ flex: 2, paddingVertical: 2 }}>
+                                                                <Image resizeMode={'contain'} source={item.tinhtrang === '1' ? imglock : imgunlock} style={{ flex: 1 }} />
                                                             </View>
-                                                        </View>
 
-                                                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                                            <TouchableOpacity
-                                                                onPress = {()=>{
-                                                                    global.idKS = item.key;
-                                                                    this.props.navigation.navigate('DetailScreen', { name: item.ten, id: item.key })
-                                                                }}
-                                                            >
-                                                                <Text style = {{ backgroundColor: '#248f24', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 3, color: 'white' }}>Chi tiết</Text>
-                                                            </TouchableOpacity>
-                                                        </View>
+                                                            <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
+                                                                <Text style={{ fontSize: 12 }}>{item.tinhtrang === '1' ? 'Khóa' : 'Mở khóa'}</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    </View>
+
+                                                    <View style={{ flex: 1, borderTopWidth: 1, borderTopColor: '#e9ebee', paddingHorizontal: 2, paddingVertical: 2 }}>
+                                                        <TouchableOpacity
+                                                            style={{ flexDirection: 'row', flex: 1 }}
+                                                            onPress={() => {
+                                                                this.refs.modal3.open();
+                                                                this.setState({ index });
+                                                                //alert(item.key);
+                                                                //this.xoaKhachSan(index);
+                                                            }}
+                                                        >
+                                                            <View style={{ flex: 2, paddingVertical: 2 }}>
+                                                                <Image resizeMode={'contain'} source={imghuy} style={{ flex: 1 }} />
+                                                            </View>
+
+                                                            <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
+                                                                <Text style={{ fontSize: 12 }}>Xóa</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
 
                                                     </View>
+                                                </View>
+                                                <View style={{ flex: 1, borderLeftWidth: 1, borderLeftColor: '#e9ebee' }}>
+                                                    <View style={{ flex: 1, paddingHorizontal: 2, paddingVertical: 2 }}>
+                                                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                                                            <Text style={{ fontSize: 10 }}>Giá từ</Text>
+                                                            <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#248f24' }}>{item.gia}</Text>
+                                                        </View>
+                                                    </View>
+
+                                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                global.idKS = item.key;
+                                                                this.props.navigation.navigate('DetailScreen', { name: item.ten, id: item.key })
+                                                            }}
+                                                        >
+                                                            <Text style={{ backgroundColor: '#248f24', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 3, color: 'white' }}>Chi tiết</Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+
                                                 </View>
                                             </View>
                                         </View>
                                     </View>
+                                </View>
                             </TouchableWithoutFeedback>
                         </View>
                     }
                 />
                 <Modal style={styles.modal} position={"center"} ref={"modal3"} isDisabled={this.state.isDisabled}>
                     <View style={styles.viewinsideModal}>
-                        <Text style={{fontWeight: 'bold'}}>Lý do xóa</Text>
+                        <Text style={{ fontWeight: 'bold' }}>Lý do xóa</Text>
                     </View>
                     <ScrollView style={{ paddingVertical: 10 }}>
                         <View style={{ borderWidth: 1, flex: 1, marginHorizontal: 10, borderRadius: 5, borderColor: '#e9ebee' }}>
-                                <TextInput
-                                    underlineColorAndroid='rgba(0,0,0,0)'
-                                    placeholder="... "
-                                    onChangeText={(value) => this.setState({ value })}
-                                    value={this.state.value}
-                                    multiline={true}
-                                    numberOfLines={3}
-                                    onContentSizeChange={(event) => {
-                                        this.setState({ height: event.nativeEvent.contentSize.height })
-                                    }}
-                                    style={[{height: 40}, { height: Math.max(35, this.state.height) }]}
-                                />
+                            <TextInput
+                                underlineColorAndroid='rgba(0,0,0,0)'
+                                placeholder="... "
+                                onChangeText={(value) => this.setState({ value })}
+                                value={this.state.value}
+                                multiline={true}
+                                numberOfLines={3}
+                                onContentSizeChange={(event) => {
+                                    this.setState({ height: event.nativeEvent.contentSize.height })
+                                }}
+                                style={[{ height: 40 }, { height: Math.max(35, this.state.height) }]}
+                            />
                         </View>
                     </ScrollView>
-                    
+
                     <TouchableOpacity
-                        onPress={()=>{ this.xoa() }}
+                        onPress={() => { this.xoa() }}
                     >
                         <View style={styles.viewinsideModa2}>
-                            <Text style={{fontWeight: 'bold'}}>Gửi</Text>
+                            <Text style={{ fontWeight: 'bold' }}>Gửi</Text>
                         </View>
                     </TouchableOpacity>
-                </Modal>    
+                </Modal>
             </View>
         )
     }
@@ -337,7 +358,7 @@ const styles = StyleSheet.create({
         width: 0.9 * width,
         height: 0.4 * height,
         borderRadius: 5,
-        
+
     },
     viewinsideModal: {
         padding: 10,
@@ -361,7 +382,7 @@ const styles = StyleSheet.create({
         height: 40,
         padding: 4,
         alignItems: 'center',
-        
+
         borderBottomWidth: 1,
         paddingHorizontal: 5
     }
