@@ -80,10 +80,10 @@ export default class LikeHotels extends Component {
   }
   render() {
     return (
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ justifyContent: 'center', alignItems: 'center'}}>
         {
           this.state.flag ?
-            (<View>
+            (<View style={{ height: '99%', width: '98%', }}>
               <FlatList
                 ListFooterComponent={(
                   <View style={{ padding: 10 }}>
