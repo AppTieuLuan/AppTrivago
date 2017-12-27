@@ -7,7 +7,8 @@ import {
   Dimensions,
   FlatList,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 import bgSrc from '../images/bg.png';
 import like from '../images/ksyt.png';
@@ -78,6 +79,17 @@ export default class LikeHotels extends Component {
       })
       .catch(err => console.log(err));
   }
+  alertRemoveHotel(id, name){
+    Alert.alert(
+      'Thông báo',
+      'Bạn có muốn xóa khách sạn '+ name +' khỏi danh sách yêu thích?',
+      [
+        { text: 'OK', onPress: () => this.removehotel(id) },
+        { text: 'Cancle', onPress: false}
+      ],
+      { cancelable: false }
+    );
+  }
   render() {
     return (
       <View style={{ justifyContent: 'center', alignItems: 'center'}}>
@@ -120,7 +132,7 @@ export default class LikeHotels extends Component {
                           <Text style={{ color: '#fff', fontSize: 16, top: 10, left: 10 }}>{item.ten}</Text>
                         </View>
                         <View style={{ flex: 1, left: 10, alignItems: "center", justifyContent: 'center', top: 10 }}>
-                          <TouchableOpacity onPress={() => this.removehotel(item.id)}>
+                          <TouchableOpacity onPress={() => this.alertRemoveHotel(item.id, item.ten)}>
                             <Image source={like} style={styles.inlineImg} />
                           </TouchableOpacity>
                         </View>
