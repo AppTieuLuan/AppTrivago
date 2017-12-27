@@ -60,10 +60,27 @@ export default class LikeHotels extends Component {
       .then(res => {
         if (res === 'THANH_CONG') {
           console.log("Xóa thành công!!");
+          this.refresh();
+        }
+        else {
+          Alert.alert(
+            'Thông báo',
+            'Vui lòng thử lại!',
+            [
+              { text: 'OK' }
+            ],
+            { cancelable: false }
+          );
         }
       })
-      .catch(err => console.log(err));
-    this.refresh();
+      .catch(err => Alert.alert(
+        'Thông báo',
+        'Vui lòng kiểm tra lại kết nối của bạn!',
+        [
+          { text: 'OK' }
+        ],
+        { cancelable: false }
+      ));
   }
   loadMore() {
     if (!this.state.f) {
@@ -79,20 +96,20 @@ export default class LikeHotels extends Component {
       })
       .catch(err => console.log(err));
   }
-  alertRemoveHotel(id, name){
+  alertRemoveHotel(id, name) {
     Alert.alert(
       'Thông báo',
-      'Bạn có muốn xóa khách sạn '+ name +' khỏi danh sách yêu thích?',
+      'Bạn có muốn xóa khách sạn ' + name + ' khỏi danh sách yêu thích?',
       [
         { text: 'OK', onPress: () => this.removehotel(id) },
-        { text: 'Cancle', onPress: false}
+        { text: 'Cancle', onPress: false }
       ],
       { cancelable: false }
     );
   }
   render() {
     return (
-      <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         {
           this.state.flag ?
             (<View style={{ height: '99%', width: '98%', }}>
