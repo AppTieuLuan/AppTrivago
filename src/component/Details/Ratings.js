@@ -24,7 +24,7 @@ export default class Ratings extends Component {
             dangnhap: false,
             loading: false,
             page: 1,
-            diemso: 38,
+            diemso: 0,
             starCount: 1,
             sodanhgias: 0,
             isVisiblemodalReply: false,
@@ -59,17 +59,18 @@ export default class Ratings extends Component {
                     })
                     .then(res => res.text())
                     .then(res => {
-                        if (res === '1') {
+                        if (res !== '-1') {
                             ToastAndroid.show('Thành công', ToastAndroid.SHORT);
                             const { mang } = this.state;
-                            let maxId = Math.max.apply(null, mang.map(item => item.id)) + 1;
+                            //let maxId = Math.max.apply(null, mang.map(item => item.id)) + 1;
                             let today = new Date();
-                            mang.unshift({ id: maxId, ten: global.onSignIn.hoten, binhluan: this.state.value, ngay: today.getDate(), thang: today.getMonth() + 1, nam: today.getFullYear(), solike: 0, sobl: 0, islike: 0 });
+                            mang.unshift({ id: parseInt(res,10), ten: global.onSignIn.hoten, binhluan: this.state.value, ngay: today.getDate(), thang: today.getMonth() + 1, nam: today.getFullYear(), solike: 0, sobl: 0, islike: 0, iduser: global.onSignIn.id });
 
                             this.setState({
                                 mang,
                                 value: '',
                             });
+                            //alert(parseInt(res,10));
                         }
                         else {
                             alert(this.state.value);
@@ -165,6 +166,7 @@ export default class Ratings extends Component {
                 .then((response) => response.text())
                 .then((responseJson) => {
                     if (responseJson === '1') {
+                        this.getDanhGia();
                         ToastAndroid.show('Đánh giá của bạn đã được ghi nhận !', ToastAndroid.SHORT);
                     } else {
                         ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT);
@@ -182,10 +184,24 @@ export default class Ratings extends Component {
             fetch(global.server.concat('getDanhGiaUser.php?user=' + global.onSignIn.id + '&idks=' + global.idKS))
                 .then((response) => response.json())
                 .then((responseJson) => {
+
+                    //alert(responseJson);
                     this.setState({
                         starCount: parseInt(responseJson.danhgia, 10),
-                        sodanhgias: parseInt(responseJson.sodanhgia, 10)
+                        sodanhgias: parseInt(responseJson.sodanhgia, 10),
+                        diemso: parseInt(responseJson.diemso * 100 / 5, 10)
+                        //diemso: parseInt(responseJson.diemso, 10)
                     });
+
+                    // if(responseJson.diemso === null){
+                    //     this.setState({
+                    //         diemso: 0,
+                    //     });
+                    // } else {
+                    //     this.setState({
+                    //         diemso: parseInt(parent(responseJson.diemso, 10) * 100 / 5)
+                    //     })
+                    // }
                 })
                 .catch((e) => { ToastAndroid.show('Có lỗi xảy ra. Thử lại sau !', ToastAndroid.SHORT); });
         }
@@ -277,12 +293,12 @@ export default class Ratings extends Component {
                     })
                     .then(res => res.text())
                     .then(res => {
-                        if (res === '1') {
+                        if (res !== '-1') {
                             ToastAndroid.show('Thành công', ToastAndroid.SHORT);
                             const { mangReply } = this.state;
-                            let maxId = Math.min.apply(null, mangReply.map(item => item.id)) - 1;
+                            //let maxId = Math.min.apply(null, mangReply.map(item => item.id)) - 1;
                             let today = new Date();
-                            mangReply.unshift({ id: maxId, ten: global.onSignIn.hoten, binhluan: this.state.comment, ngay: today.getDate(), thang: today.getMonth() + 1, nam: today.getFullYear() });
+                            mangReply.unshift({ id: parseInt(res, 10), ten: global.onSignIn.hoten, binhluan: this.state.comment, ngay: today.getDate(), thang: today.getMonth() + 1, nam: today.getFullYear(), iduser: global.onSignIn.id });
                             let temp = this.state.mang;
                             temp[this.state.indexmang].sobl++;
                             this.setState({
@@ -290,6 +306,9 @@ export default class Ratings extends Component {
                                 comment: '',
                                 mang: temp
                             });
+
+                            //alert(parseInt(res,10));
+
                         }
                         else {
                             ToastAndroid.show('Lỗi! Thử lại..', ToastAndroid.SHORT);

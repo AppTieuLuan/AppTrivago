@@ -46,7 +46,7 @@ export default class RowFlatList extends Component {
 
                             <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
                                 <Text numberOfLines={1} style={{ fontSize: 10 }}>{this.props.item.sodanhgia} lượt đánh giá</Text>
-                                <Text numberOfLines={1} style={{ fontSize: 10 }}>{this.props.item.sobl} bình luận {this.props.item.sosao}</Text>
+                                <Text numberOfLines={1} style={{ fontSize: 10 }}>{this.props.item.sobl} bình luận</Text>
                             </View>
                         </View>
 
