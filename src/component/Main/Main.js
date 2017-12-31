@@ -18,7 +18,7 @@ import icrt2 from '../img/icrt2.png';
 import icrt3 from '../img/icrt3.png';
 import icrt4 from '../img/icrt4.png';
 import icrt5 from '../img/icrt5.png';
-
+import icnort from '../img/icnort.png';
 import up from '../img/up.png';
 
 
@@ -527,7 +527,7 @@ export default class Main extends Component {
                                                         <View style={{ flex: 1, paddingHorizontal: 2, paddingVertical: 2, flexDirection: 'row' }}>
                                                             {/* <Image resizeMode={'contain'} source={item.key%2===0 ? s1: s3} style={{ flex: 1 }} /> */}
                                                             <View style={{ flex: 2, paddingVertical: 2 }}>
-                                                                <Image resizeMode={'contain'} source={item.sosao == 1 ? icrt1 : (item.sosao == 2 ? icrt2 : (item.sosao == 3 ? icrt3 : (item.sosao == 4 ? icrt4 : icrt5 ) ))} style={{ flex: 1 }} />
+                                                                <Image resizeMode={'contain'} source={ parseFloat(item.sosao) === 0 ? icnort : (parseFloat(item.sosao) <= 1 ? icrt1 : (parseFloat(item.sosao) <= 2 ? icrt2 : (parseFloat(item.sosao) <= 3 ? icrt3 : (parseFloat(item.sosao) <= 4 ? icrt4 : icrt5 )) ))} style={{ flex: 1 }} />
                                                             </View>
 
                                                             <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
