@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   inputWrapper: {
-    height: height / 12,
+    height: 50,
   },
   inlineImg: {
     position: 'absolute',

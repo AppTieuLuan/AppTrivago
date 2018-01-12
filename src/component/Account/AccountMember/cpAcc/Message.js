@@ -85,7 +85,7 @@ export default class Message extends Component {
 
     }
     onRefresh() {
-        this.setState({ refresh: true, mang: [] });
+        this.setState({ refresh: true, mang: [], end: false});
         GetMessage(global.onSignIn.id, 1)
             .then(res => {
                 this.setState({ refresh: false });
